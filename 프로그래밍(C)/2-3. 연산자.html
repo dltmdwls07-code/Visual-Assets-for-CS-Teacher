@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2-3. 연산자(Operator) 강의노트</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;800&family=Fira+Code:wght@400;500&display=swap');
+        body { font-family: 'Pretendard', sans-serif; scroll-behavior: smooth; }
+        .code-font { font-family: 'Fira Code', monospace; }
+        .concept-card { transition: transform 0.2s; }
+        .concept-card:hover { transform: translateY(-5px); }
+        .copy-toast { visibility: hidden; opacity: 0; transition: 0.3s; z-index: 9999; }
+        .copy-toast.show { visibility: visible; opacity: 1; }
+        pre { margin: 0 !important; border-radius: 0.75rem !important; font-size: 0.9rem !important; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 pb-20">
+
+    <header class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-16 px-6 relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiIGZpbGw9IiNmZmYiLz48L3N2Zz4=')]"></div>
+        <div class="max-w-4xl mx-auto relative z-10">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="bg-white/20 px-3 py-1 rounded-full text-sm font-semibold tracking-wider border border-white/30 backdrop-blur-md">Chapter 2. C 프로그래밍의 기초</span>
+            </div>
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-4 flex items-center gap-4">
+                <i data-lucide="calculator" class="w-10 h-10"></i>
+                3. 연산자 (Operator)
+            </h1>
+            <p class="text-lg text-indigo-100 opacity-90 max-w-2xl font-medium leading-relaxed mb-8">
+                데이터를 가공하고 계산하기 위한 연산자의 종류를 배우고, 우선순위와 결합 법칙을 통해 복합적인 수식을 이해합니다.
+            </p>
+
+            <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
+                <h3 class="text-indigo-100 font-bold mb-2 flex items-center gap-2">
+                    <i data-lucide="lightbulb" class="w-5 h-5"></i> Think & Objective
+                </h3>
+                <p class="text-lg font-medium mb-4 text-white">"컴퓨터는 연산의 순서를 어떻게 결정할까요?"</p>
+                <ul class="space-y-2 text-sm text-indigo-50">
+                    <li class="flex items-center gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400"></i> 연산, 비교, 논리 등의 여러 종류의 연산자의 의미를 알고 프로그래밍에 적절하게 사용할 수 있다.</li>
+                    <li class="flex items-center gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400"></i> 다양한 연산자를 활용하여 프로그래밍 할 수 있다.</li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-6 mt-12 space-y-12">
+
+        <section class="concept-card bg-white rounded-3xl p-8 shadow-sm border border-slate-200">
+            <div class="flex items-center gap-4 mb-6">
+                <div class="bg-indigo-100 p-3 rounded-2xl text-indigo-600">
+                    <i data-lucide="plus-minus" class="w-8 h-8"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-slate-800">1. 산술 및 대입 연산자</h2>
+            </div>
+
+            <div class="space-y-6">
+                <div class="bg-slate-50 rounded-2xl border border-slate-200 overflow-hidden">
+                    <div class="p-4 bg-slate-100/50 border-b border-slate-200">
+                        <h5 class="font-bold text-slate-800 flex items-center gap-2">
+                            <span class="bg-indigo-500 text-white text-xs px-2 py-1 rounded-full">86.c</span>
+                            연산자 우선순위
+                        </h5>
+                    </div>
+                    <div class="relative group bg-[#1d1f21]">
+                        <div class="flex items-center justify-between px-4 py-2 border-b border-white/10">
+                            <span class="text-xs font-medium text-slate-400 code-font">86.c</span>
+                            <button onclick="copyCode('code-86')" class="text-slate-400 hover:text-white transition-colors flex items-center gap-1 text-xs">
+                                <i data-lucide="copy" class="w-3 h-3"></i> 복사
+                            </button>
+                        </div>
+                        <div class="p-4">
+<pre><code id="code-86" class="language-c">#include &lt;stdio.h&gt;
+int main()
+{
+	int result = 4 + 3 * 5;
+	printf("%d", result);
+	return 0;
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 rounded-2xl border border-slate-200 overflow-hidden">
+                    <div class="p-4 bg-slate-100/50 border-b border-slate-200">
+                        <h5 class="font-bold text-slate-800 flex items-center gap-2">
+                            <span class="bg-indigo-500 text-white text-xs px-2 py-1 rounded-full">87-1.c</span>
+                            5칙 연산 (나머지 포함)
+                        </h5>
+                    </div>
+                    <div class="relative group bg-[#1d1f21]">
+                        <div class="flex items-center justify-between px-4 py-2 border-b border-white/10">
+                            <span class="text-xs font-medium text-slate-400 code-font">87-1.c</span>
+                            <button onclick="copyCode('code-87-1')" class="text-slate-400 hover:text-white transition-colors flex items-center gap-1 text-xs">
+                                <i data-lucide="copy" class="w-3 h-3"></i> 복사
+                            </button>
+                        </div>
+                        <div class="p-4">
+<pre><code id="code-87-1" class="language-c">#include &lt;stdio.h&gt;
+int main()
+{
+	int i = 13, j = 5;
+	printf("%d %d %d %d %d", i + j, i - j, i*j, i / j, i%j);
+	return 0;
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 rounded-2xl border border-slate-200 overflow-hidden">
+                    <div class="p-4 bg-slate-100/50 border-b border-slate-200">
+                        <h5 class="font-bold text-slate-800 flex items-center gap-2">
+                            <span class="bg-indigo-500 text-white text-xs px-2 py-1 rounded-full">87-2.c</span>
+                            대입 연산
+                        </h5>
+                    </div>
+                    <div class="relative group bg-[#1d1f21]">
+                        <div class="flex items-center justify-between px-4 py-2 border-b border-white/10">
+                            <span class="text-xs font-medium text-slate-400 code-font">87-2.c</span>
+                            <button onclick="copyCode('code-87-2')" class="text-slate-400 hover:text-white transition-colors flex items-center gap-1 text-xs">
+                                <i data-lucide="copy" class="w-3 h-3"></i> 복사
+                            </button>
+                        </div>
+                        <div class="p-4">
+<pre><code id="code-87-2" class="language-c">#include &lt;stdio.h&gt;
+int main()
+{
+	int i = 13, j = 5;
+	i = j;
+	printf("%d\n", i);
+	return 0;
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="concept-card bg-white rounded-3xl p-8 shadow-sm border border-slate-200">
+            <div class="flex items-center gap-4 mb-6">
+                <div class="bg-purple-100 p-3 rounded-2xl text-purple-600">
+                    <i data-lucide="trending-up" class="w-8 h-8"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-slate-800">2. 증감 연산자 (++, --)</h2>
+            </div>
+
+            <div class="bg-slate-50 rounded-2xl border border-slate-200 overflow-hidden">
+                <div class="p-4 bg-slate-100/50 border-b border-slate-200">
+                    <h5 class="font-bold text-slate-800 flex items-center gap-2">
+                        <span class="bg-indigo-500 text-white text-xs px-2 py-1 rounded-full">88.c</span>
+                        전치 vs 후치 연산의 차이
+                    </h5>
+                </div>
+                <div class="relative group bg-[#1d1f21]">
+                    <div class="flex items-center justify-between px-4 py-2 border-b border-white/10">
+                        <span class="text-xs font-medium text-slate-400 code-font">88.c</span>
+                        <button onclick="copyCode('code-88')" class="text-slate-400 hover:text-white transition-colors flex items-center gap-1 text-xs">
+                            <i data-lucide="copy" class="w-3 h-3"></i> 복사
+                        </button>
+                    </div>
+                    <div class="p-4">
+<pre><code id="code-88" class="language-c">#include &lt;stdio.h&gt;
+int main()
+{
+	int i = 13, j = 5, temp,
+		a = 10, b = 20, c = 30, d = 40;
+	temp = ++i; printf("%d %d\n", temp, i);
+	temp = i++; printf("%d %d\n", temp, i);
+	temp = --j; printf("%d %d\n", temp, j);
+	temp = j--; printf("%d %d\n", temp, j);
+	++a; b++; --c; d--;
+	printf("%d %d %d %d", a, b, c, d);
+	return 0;
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="concept-card bg-white rounded-3xl p-8 shadow-sm border border-slate-200">
+            <div class="flex items-center gap-4 mb-6">
+                <div class="bg-emerald-100 p-3 rounded-2xl text-emerald-600">
+                    <i data-lucide="git-branch" class="w-8 h-8"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-slate-800">3. 관계, 삼항 및 논리 연산자</h2>
+            </div>
+
+            <div class="space-y-6">
+                <div class="bg-slate-50 rounded-2xl border border-slate-200 overflow-hidden">
+                    <div class="p-4 bg-slate-100/50 border-b border-slate-200">
+                        <h5 class="font-bold text-slate-800 flex items-center gap-2">
+                            <span class="bg-indigo-500 text-white text-xs px-2 py-1 rounded-full">89-1.c</span>
+                            관계 연산자
+                        </h5>
+                    </div>
+                    <div class="relative group bg-[#1d1f21]">
+                        <div class="flex items-center justify-between px-4 py-2 border-b border-white/10">
+                            <span class="text-xs font-medium text-slate-400 code-font">89-1.c</span>
+                            <button onclick="copyCode('code-89-1')" class="text-slate-400 hover:text-white transition-colors flex items-center gap-1 text-xs">
+                                <i data-lucide="copy" class="w-3 h-3"></i> 복사
+                            </button>
+                        </div>
+                        <div class="p-4">
+<pre><code id="code-89-1" class="language-c">#include &lt;stdio.h&gt;
+int main()
+{
+	int i = 13, j = 5;
+	printf("%d %d %d %d %d %d",
+		i<j, i>j, i <= j, i >= j, i != j, i == j);
+	return 0;
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 rounded-2xl border border-slate-200 overflow-hidden">
+                    <div class="p-4 bg-slate-100/50 border-b border-slate-200">
+                        <h5 class="font-bold text-slate-800 flex items-center gap-2">
+                            <span class="bg-indigo-500 text-white text-xs px-2 py-1 rounded-full">89-2.c</span>
+                            삼항 연산자
+                        </h5>
+                    </div>
+                    <div class="relative group bg-[#1d1f21]">
+                        <div class="flex items-center justify-between px-4 py-2 border-b border-white/10">
+                            <span class="text-xs font-medium text-slate-400 code-font">89-2.c</span>
+                            <button onclick="copyCode('code-89-2')" class="text-slate-400 hover:text-white transition-colors flex items-center gap-1 text-xs">
+                                <i data-lucide="copy" class="w-3 h-3"></i> 복사
+                            </button>
+                        </div>
+                        <div class="p-4">
+<pre><code id="code-89-2" class="language-c">#include &lt;stdio.h&gt;
+int main()
+{
+	int i = 13, j = 5, result;
+	result = i < j ? 10 : 100;
+	printf("%d", result);
+	return 0;
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 rounded-2xl border border-slate-200 overflow-hidden">
+                    <div class="p-4 bg-slate-100/50 border-b border-slate-200">
+                        <h5 class="font-bold text-slate-800 flex items-center gap-2">
+                            <span class="bg-indigo-500 text-white text-xs px-2 py-1 rounded-full">90-1.c</span>
+                            논리 연산자
+                        </h5>
+                    </div>
+                    <div class="relative group bg-[#1d1f21]">
+                        <div class="flex items-center justify-between px-4 py-2 border-b border-white/10">
+                            <span class="text-xs font-medium text-slate-400 code-font">90-1.c</span>
+                            <button onclick="copyCode('code-90-1')" class="text-slate-400 hover:text-white transition-colors flex items-center gap-1 text-xs">
+                                <i data-lucide="copy" class="w-3 h-3"></i> 복사
+                            </button>
+                        </div>
+                        <div class="p-4">
+<pre><code id="code-90-1" class="language-c">#include &lt;stdio.h&gt;
+int main()
+{
+	int i = 13, j = 5, temp;
+	printf("%d %d\n", i == 13 && j == 5, i == 13 && j == 4);
+	printf("%d %d\n", i == 13 || j == 4, i == 12 || j == 4);
+	temp = i; printf("%d ", !temp);
+	temp = 0; printf("%d", !temp);
+	return 0;
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-red-50 rounded-2xl border border-red-100 overflow-hidden">
+                    <div class="p-4 bg-red-100/50 border-b border-red-200">
+                        <h5 class="font-bold text-red-800 flex items-center gap-2">
+                            <span class="bg-red-500 text-white text-xs px-2 py-1 rounded-full">90-2.c</span>
+                            <i data-lucide="alert-triangle" class="w-4 h-4"></i> 주의: 단락 회로 평가(Short-Circuit)
+                        </h5>
+                    </div>
+                    <div class="relative group bg-[#1d1f21]">
+                        <div class="flex items-center justify-between px-4 py-2 border-b border-white/10">
+                            <span class="text-xs font-medium text-slate-400 code-font">90-2.c</span>
+                            <button onclick="copyCode('code-90-2')" class="text-slate-400 hover:text-white transition-colors flex items-center gap-1 text-xs">
+                                <i data-lucide="copy" class="w-3 h-3"></i> 복사
+                            </button>
+                        </div>
+                        <div class="p-4">
+<pre><code id="code-90-2" class="language-c">#include &lt;stdio.h&gt;
+int main()
+{
+	int i = 13, j = 5;
+	if (i < 10 && ++j > 3) {}
+	printf("%d %d\n", i, j);
+	return 0;
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="concept-card bg-white rounded-3xl p-8 shadow-sm border border-slate-200">
+            <div class="flex items-center gap-4 mb-6">
+                <div class="bg-blue-100 p-3 rounded-2xl text-blue-600">
+                    <i data-lucide="cpu" class="w-8 h-8"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-slate-800">4. 비트 연산자</h2>
+            </div>
+
+            <div class="space-y-6">
+                <div class="bg-slate-50 rounded-2xl border border-slate-200 overflow-hidden">
+                    <div class="p-4 bg-slate-100/50 border-b border-slate-200">
+                        <h5 class="font-bold text-slate-800 flex items-center gap-2">
+                            <span class="bg-indigo-500 text-white text-xs px-2 py-1 rounded-full">91-1.c</span>
+                            비트 논리 연산자 (&, |, ^, ~)
+                        </h5>
+                    </div>
+                    <div class="relative group bg-[#1d1f21]">
+                        <div class="flex items-center justify-between px-4 py-2 border-b border-white/10">
+                            <span class="text-xs font-medium text-slate-400 code-font">91-1.c</span>
+                            <button onclick="copyCode('code-91-1')" class="text-slate-400 hover:text-white transition-colors flex items-center gap-1 text-xs">
+                                <i data-lucide="copy" class="w-3 h-3"></i> 복사
+                            </button>
+                        </div>
+                        <div class="p-4">
+<pre><code id="code-91-1" class="language-c">#include &lt;stdio.h&gt;
+int main()
+{
+	int i = 13;  // 00000000 00000000 00000000 00001101
+	int j = 5;   // 00000000 00000000 00000000 00000101
+	printf("%d %d %d %d", i&j, i | j, i^j, ~i);
+	return 0;
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 rounded-2xl border border-slate-200 overflow-hidden">
+                    <div class="p-4 bg-slate-100/50 border-b border-slate-200">
+                        <h5 class="font-bold text-slate-800 flex items-center gap-2">
+                            <span class="bg-indigo-500 text-white text-xs px-2 py-1 rounded-full">91-2.c</span>
+                            시프트 연산자 (<<, >>)
+                        </h5>
+                    </div>
+                    <div class="relative group bg-[#1d1f21]">
+                        <div class="flex items-center justify-between px-4 py-2 border-b border-white/10">
+                            <span class="text-xs font-medium text-slate-400 code-font">91-2.c</span>
+                            <button onclick="copyCode('code-91-2')" class="text-slate-400 hover:text-white transition-colors flex items-center gap-1 text-xs">
+                                <i data-lucide="copy" class="w-3 h-3"></i> 복사
+                            </button>
+                        </div>
+                        <div class="p-4">
+<pre><code id="code-91-2" class="language-c">#include &lt;stdio.h&gt;
+int main()
+{
+	int i = 13;  // 00000000 00000000 00000000 00001101
+	int j = 5;   // 00000000 00000000 00000000 00000101
+	printf("%d %d %d %d", i << 2, i >> 2, j << 3, j >> 3);
+	return 0;
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="concept-card bg-white rounded-3xl p-8 shadow-sm border border-slate-200">
+            <div class="flex items-center gap-4 mb-6">
+                <div class="bg-orange-100 p-3 rounded-2xl text-orange-600">
+                    <i data-lucide="code-2" class="w-8 h-8"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-slate-800">5. 연산자 응용 예제 종합</h2>
+            </div>
+
+            <div class="space-y-6">
+                <div class="bg-slate-50 rounded-2xl border border-slate-200 overflow-hidden">
+                    <div class="p-4 bg-slate-100/50 border-b border-slate-200">
+                        <h5 class="font-bold text-slate-800 flex items-center gap-2">
+                            <span class="bg-indigo-500 text-white text-xs px-2 py-1 rounded-full">92.c</span>
+                            정기예금 이자 계산기
+                        </h5>
+                    </div>
+                    <div class="relative group bg-[#1d1f21]">
+                        <div class="flex items-center justify-between px-4 py-2 border-b border-white/10">
+                            <span class="text-xs font-medium text-slate-400 code-font">92.c</span>
+                            <button onclick="copyCode('code-92')" class="text-slate-400 hover:text-white transition-colors flex items-center gap-1 text-xs">
+                                <i data-lucide="copy" class="w-3 h-3"></i> 복사
+                            </button>
+                        </div>
+                        <div class="p-4">
+<pre><code id="code-92" class="language-c">#include &lt;stdio.h&gt;
+int main()
+{
+	int money, duration;
+	double rate;
+	double result;
+	printf("정기예금 금액을 입력해 주세요 :");
+	scanf("%d", &money);
+	printf("정기예금 이율을 입력해 주세요 :");
+	scanf("%lf", &rate);
+	printf("정기예금 기간을 입력해 주세요 :");
+	scanf("%d", &duration);
+	result = money + money * duration * 0.01 * rate;
+	printf("%d원을 %.1f%%이율로 %d년간 예치 후 원리 합계는 %.0f입니다.",
+		money, rate, duration, result);
+	return 0;
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 rounded-2xl border border-slate-200 overflow-hidden">
+                    <div class="p-4 bg-slate-100/50 border-b border-slate-200">
+                        <h5 class="font-bold text-slate-800 flex items-center gap-2">
+                            <span class="bg-indigo-500 text-white text-xs px-2 py-1 rounded-full">93.c</span>
+                            사칙연산 계산
+                        </h5>
+                    </div>
+                    <div class="relative group bg-[#1d1f21]">
+                        <div class="flex items-center justify-between px-4 py-2 border-b border-white/10">
+                            <span class="text-xs font-medium text-slate-400 code-font">93.c</span>
+                            <button onclick="copyCode('code-93')" class="text-slate-400 hover:text-white transition-colors flex items-center gap-1 text-xs">
+                                <i data-lucide="copy" class="w-3 h-3"></i> 복사
+                            </button>
+                        </div>
+                        <div class="p-4">
+<pre><code id="code-93" class="language-c">#include &lt;stdio.h&gt;
+int main()
+{
+	int a, b;
+	printf("두 수를 입력하세요 :");
+	scanf("%d %d", &a, &b);
+	printf("%d + %d = %d\n", a, b, a + b);
+	printf("%d - %d = %d\n", a, b, a - b);
+	printf("%d * %d = %d\n", a, b, a * b);
+	printf("%d / %d = %f\n", a, b, (float)(a / b));
+	printf("%d %% %d = %d" , a, b, a % b);
+	return 0;
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 rounded-2xl border border-slate-200 overflow-hidden">
+                    <div class="p-4 bg-slate-100/50 border-b border-slate-200">
+                        <h5 class="font-bold text-slate-800 flex items-center gap-2">
+                            <span class="bg-indigo-500 text-white text-xs px-2 py-1 rounded-full">94-1.c</span>
+                            구속 변환 (마일 → km)
+                        </h5>
+                    </div>
+                    <div class="relative group bg-[#1d1f21]">
+                        <div class="flex items-center justify-between px-4 py-2 border-b border-white/10">
+                            <span class="text-xs font-medium text-slate-400 code-font">94-1.c</span>
+                            <button onclick="copyCode('code-94-1')" class="text-slate-400 hover:text-white transition-colors flex items-center gap-1 text-xs">
+                                <i data-lucide="copy" class="w-3 h-3"></i> 복사
+                            </button>
+                        </div>
+                        <div class="p-4">
+<pre><code id="code-94-1" class="language-c">#include &lt;stdio.h&gt;
+int main()
+{
+	int mileSpeed;
+	double kmSpeed;
+	printf("볼의 속도 입력(마일) : ");
+	scanf("%d", &mileSpeed);
+	kmSpeed = mileSpeed * 1.609;
+	printf("%d마일은 %.3fkm입니다.", mileSpeed, kmSpeed);
+	return 0;
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 rounded-2xl border border-slate-200 overflow-hidden">
+                    <div class="p-4 bg-slate-100/50 border-b border-slate-200">
+                        <h5 class="font-bold text-slate-800 flex items-center gap-2">
+                            <span class="bg-indigo-500 text-white text-xs px-2 py-1 rounded-full">94-2.c</span>
+                            넓이 단위 변환 (제곱미터 → 평)
+                        </h5>
+                    </div>
+                    <div class="relative group bg-[#1d1f21]">
+                        <div class="flex items-center justify-between px-4 py-2 border-b border-white/10">
+                            <span class="text-xs font-medium text-slate-400 code-font">94-2.c</span>
+                            <button onclick="copyCode('code-94-2')" class="text-slate-400 hover:text-white transition-colors flex items-center gap-1 text-xs">
+                                <i data-lucide="copy" class="w-3 h-3"></i> 복사
+                            </button>
+                        </div>
+                        <div class="p-4">
+<pre><code id="code-94-2" class="language-c">#include &lt;stdio.h&gt;
+int main()
+{
+	int squareMeter;
+	double pyeong;
+	printf("제곱미터(m2) : ");
+	scanf("%d", &squareMeter);
+	pyeong = squareMeter * 0.3025;
+	printf("%d제곱미터(m2)는 %.3f평입니다.", squareMeter, pyeong);
+	return 0;
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 rounded-2xl border border-slate-200 overflow-hidden">
+                    <div class="p-4 bg-slate-100/50 border-b border-slate-200">
+                        <h5 class="font-bold text-slate-800 flex items-center gap-2">
+                            <span class="bg-indigo-500 text-white text-xs px-2 py-1 rounded-full">95-1.c</span>
+                            더치페이 계산 1 (균등 분배)
+                        </h5>
+                    </div>
+                    <div class="relative group bg-[#1d1f21]">
+                        <div class="flex items-center justify-between px-4 py-2 border-b border-white/10">
+                            <span class="text-xs font-medium text-slate-400 code-font">95-1.c</span>
+                            <button onclick="copyCode('code-95-1')" class="text-slate-400 hover:text-white transition-colors flex items-center gap-1 text-xs">
+                                <i data-lucide="copy" class="w-3 h-3"></i> 복사
+                            </button>
+                        </div>
+                        <div class="p-4">
+<pre><code id="code-95-1" class="language-c">#include &lt;stdio.h&gt;
+int main()
+{
+	int price, person;
+	printf("총 금액 : ");
+	scanf("%d", &price);
+	printf("총 인원 : ");
+	scanf("%d", &person);
+	printf("%d명이 각각 %d원씩 지불", person, price / person);
+	return 0;
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 rounded-2xl border border-slate-200 overflow-hidden">
+                    <div class="p-4 bg-slate-100/50 border-b border-slate-200">
+                        <h5 class="font-bold text-slate-800 flex items-center gap-2">
+                            <span class="bg-indigo-500 text-white text-xs px-2 py-1 rounded-full">95-2.c</span>
+                            더치페이 계산 2 (나머지 몰아주기)
+                        </h5>
+                    </div>
+                    <div class="relative group bg-[#1d1f21]">
+                        <div class="flex items-center justify-between px-4 py-2 border-b border-white/10">
+                            <span class="text-xs font-medium text-slate-400 code-font">95-2.c</span>
+                            <button onclick="copyCode('code-95-2')" class="text-slate-400 hover:text-white transition-colors flex items-center gap-1 text-xs">
+                                <i data-lucide="copy" class="w-3 h-3"></i> 복사
+                            </button>
+                        </div>
+                        <div class="p-4">
+<pre><code id="code-95-2" class="language-c">#include &lt;stdio.h&gt;
+int main()
+{
+	int price, person;
+	printf("총 금액 : ");
+	scanf("%d", &price);
+	printf("총 인원 : ");
+	scanf("%d", &person);
+	printf("%d명이 각각 %d원씩 지불", person-1, price / person);
+	printf(", 1명 %d원 지불", price - (price/person)*(person-1));
+	return 0;
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="bg-indigo-900 rounded-3xl p-8 text-center mt-12 relative overflow-hidden shadow-xl">
+            <div class="absolute inset-0 opacity-10 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiIGZpbGw9IiNmZmYiLz48L3N2Zz4=')]"></div>
+            <div class="relative z-10">
+                <h3 class="text-2xl font-bold text-white mb-4">핵심 요약</h3>
+                <div class="flex flex-wrap justify-center gap-3">
+                    <div class="px-6 py-3 bg-white/10 backdrop-blur-md rounded-full border border-white/20 text-indigo-100 font-bold">산술(%, /, *)</div>
+                    <div class="px-6 py-3 bg-white/10 backdrop-blur-md rounded-full border border-white/20 text-purple-100 font-bold">증감(++i vs i++)</div>
+                    <div class="px-6 py-3 bg-white/10 backdrop-blur-md rounded-full border border-white/20 text-emerald-100 font-bold">논리(&&, ||, !)</div>
+                    <div class="px-6 py-3 bg-white/10 backdrop-blur-md rounded-full border border-white/20 text-blue-100 font-bold">비트(&, |, ^, ~)</div>
+                </div>
+                <p class="text-indigo-200 mt-6 text-sm font-medium">"복잡한 수식의 우선순위가 헷갈린다면 가장 확실한 방법은 ( ) 괄호를 사용하는 것입니다."</p>
+            </div>
+        </section>
+
+    </main>
+
+    <div id="toast" class="copy-toast fixed bottom-8 left-1/2 -translate-x-1/2 bg-slate-800 text-white px-8 py-4 rounded-2xl shadow-2xl flex items-center gap-3 border border-white/10">
+        <div class="bg-indigo-500 p-1 rounded-full"><i data-lucide="check" class="w-3 h-3 text-white"></i></div>
+        <span class="text-sm font-bold text-white">클립보드에 복사되었습니다!</span>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
+    <script>
+        window.onload = function() {
+            lucide.createIcons();
+            Prism.highlightAll();
+        };
+
+        function copyCode(elementId) {
+            const codeElement = document.getElementById(elementId);
+            const text = codeElement.textContent || codeElement.innerText;
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
+        }
+    </script>
+</body>
+</html>
