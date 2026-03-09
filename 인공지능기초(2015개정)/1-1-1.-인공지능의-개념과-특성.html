@@ -41,20 +41,43 @@
         }
 
         .quiz-btn {
-          width: 100%;
-          padding: 1.25rem;
-          text-align: center;
-          border-radius: 1rem;
-          border: 2px solid #e2e8f0;
-          background: #f8fafc;
-          color: #334155;
-          font-weight: 600;
-          transition: all .2s ease;
+          width: 100%;               /* w-full */
+          padding: 1.25rem;          /* p-5 */
+          text-align: left;           /* text-left */
+          border-radius: 1rem;        /* rounded-2xl */
+          border: 2px solid #e2e8f0; /* border-slate-200 */
+          background-color: #f8fafc;  /* bg-slate-50 */
+          font-weight: 500;           /* font-medium */
+          color: #374151;             /* text-slate-700 */
+          transition: all 0.25s ease;/* transition-all */
         }
 
         .quiz-btn:hover {
-          background: #eef2ff;
-          border-color: #6366f1;
+          background: #f0fdfa;       /* hover:bg-teal-50 */
+          border-color: #5eead4;     /* hover:border-teal-200 */
+        }
+
+        .quiz-btn.correct {
+          background: #4f46e5;       /* bg-indigo-600 */
+          color: white;
+          border-color: #4f46e5;
+        }
+
+        .quiz-btn.wrong {
+          background: #f43f5e;       /* bg-rose-500 */
+          color: white;
+          border-color: #f43f5e;
+        }
+
+        .quiz-btn.disabled {
+          opacity: 0.5;
+          pointer-events: none;
+        }
+
+        .quiz-btn.correct:hover,
+        .quiz-btn.wrong:hover {
+          background: inherit;
+          border-color: inherit;
         }
 
         /* 커스텀 스크롤바 */
@@ -272,7 +295,6 @@
             </div>
         </div>
     </section>
-    <!-- Section 4: 인터랙티브 퀴즈 -->
     <!-- Section 4 -->
     <section id="sec4" class="scroll-mt-24 space-y-12">
         <!-- 헤더 -->
@@ -333,50 +355,6 @@
 </footer>
 <!-- Scripts -->
 <script>
-    // 네비게이션 스크롤 이동
-    function scrollToSection(id) {
-        const element = document.getElementById(id);
-        if (element) {
-            // sticky header 높이(약 70px)를 고려한 스크롤
-            const offset = 80;
-            const elementPosition = element.getBoundingClientRect().top;
-            const offsetPosition = elementPosition + window.pageYOffset - offset;
-
-            window.scrollTo({
-                top: offsetPosition,
-                behavior: "smooth"
-            });
-        }
-    }
-
-    // 스크롤 스파이 (현재 보고 있는 섹션 메뉴 하이라이트)
-    const sections = document.querySelectorAll('section[id]');
-    const navButtons = document.querySelectorAll('.nav-btn');
-
-    window.addEventListener('scroll', () => {
-        let current = '';
-
-        sections.forEach(section => {
-            const sectionTop = section.offsetTop;
-            // 스크롤 위치가 섹션 상단에 근접했을 때
-            if (window.pageYOffset >= (sectionTop - 150)) {
-                current = section.getAttribute('id');
-            }
-        });
-
-        navButtons.forEach(button => {
-            // 기본 스타일로 초기화
-            button.classList.remove('border-indigo-600', 'text-indigo-600', 'font-bold');
-            button.classList.add('border-transparent', 'text-gray-500', 'font-medium');
-
-            // 현재 섹션에 해당하는 버튼 하이라이트
-            if (button.getAttribute('onclick').includes(current) && current !== '') {
-                button.classList.remove('border-transparent', 'text-gray-500', 'font-medium');
-                button.classList.add('border-indigo-600', 'text-indigo-600', 'font-bold');
-            }
-        });
-    });
-
     // 토스트 알림을 관리하기 위한 변수
     let currentToast = null;
 
@@ -419,29 +397,48 @@
     }
 
     // 퀴즈 정답 확인
-    function checkAnswer(questionNum, isCorrect, explanation) {
-        const items = document.querySelectorAll('.quiz-item');
-        const targetItem = items[questionNum - 1];
-        const buttons = targetItem.querySelectorAll('button');
+    function checkAnswer(btn, isCorrect, message){
 
-        if (isCorrect) {
-            showToast(explanation, 'success');
-            // 정답 시 카드 테두리 초록색 효과
-            targetItem.classList.add('border-green-300', 'bg-green-50/30');
-            setTimeout(() => {
-                targetItem.classList.remove('border-green-300', 'bg-green-50/30');
-            }, 1500);
-        } else {
-            showToast(explanation, 'error');
-            // 오답 시 카드 흔들림 효과
-            targetItem.classList.add('translate-x-2', 'border-rose-300');
-            setTimeout(() => targetItem.classList.replace('translate-x-2', '-translate-x-2'), 50);
-            setTimeout(() => targetItem.classList.replace('-translate-x-2', 'translate-x-2'), 100);
-            setTimeout(() => targetItem.classList.replace('translate-x-2', '-translate-x-2'), 150);
-            setTimeout(() => {
-                targetItem.classList.remove('-translate-x-2', 'border-rose-300');
-            }, 200);
+        const container = btn.parentElement;
+        const buttons = container.querySelectorAll('.quiz-btn');
+
+        buttons.forEach(b=>{
+
+            if(!b.dataset.label){
+                b.dataset.label = b.textContent;
+            }
+
+            b.classList.remove('correct','wrong');
+            b.classList.add('disabled');
+        });
+
+        if(isCorrect){
+
+            btn.classList.add('correct');
+
+            btn.innerHTML =
+            `<i class="fa-solid fa-circle-check mr-2"></i>${btn.dataset.label}`;
+
+        }else{
+
+            btn.classList.add('wrong');
+
+            btn.innerHTML =
+            `<i class="fa-solid fa-circle-xmark mr-2"></i>${btn.dataset.label}`;
         }
+
+        showToast(message,isCorrect?'success':'error');
+
+        setTimeout(()=>{
+
+            buttons.forEach(b=>{
+
+                b.classList.remove('correct','wrong','disabled');
+                b.innerHTML = b.dataset.label;
+
+            });
+
+        },3000);
     }
 </script>
 </body>

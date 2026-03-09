@@ -47,20 +47,43 @@
         }
 
         .quiz-btn {
-          width: 100%;
-          padding: 1.25rem;
-          text-align: center;
-          border-radius: 1rem;
-          border: 2px solid #e2e8f0;
-          background: #f8fafc;
-          color: #334155;
-          font-weight: 600;
-          transition: all .2s ease;
+          width: 100%;               /* w-full */
+          padding: 1.25rem;          /* p-5 */
+          text-align: left;           /* text-left */
+          border-radius: 1rem;        /* rounded-2xl */
+          border: 2px solid #e2e8f0; /* border-slate-200 */
+          background-color: #f8fafc;  /* bg-slate-50 */
+          font-weight: 500;           /* font-medium */
+          color: #374151;             /* text-slate-700 */
+          transition: all 0.25s ease;/* transition-all */
         }
 
         .quiz-btn:hover {
-          background: #eef2ff;
-          border-color: #6366f1;
+          background: #f0fdfa;       /* hover:bg-teal-50 */
+          border-color: #5eead4;     /* hover:border-teal-200 */
+        }
+
+        .quiz-btn.correct {
+          background: #4f46e5;       /* bg-indigo-600 */
+          color: white;
+          border-color: #4f46e5;
+        }
+
+        .quiz-btn.wrong {
+          background: #f43f5e;       /* bg-rose-500 */
+          color: white;
+          border-color: #f43f5e;
+        }
+
+        .quiz-btn.disabled {
+          opacity: 0.5;
+          pointer-events: none;
+        }
+
+        .quiz-btn.correct:hover,
+        .quiz-btn.wrong:hover {
+          background: inherit;
+          border-color: inherit;
         }
 
         ::-webkit-scrollbar {
@@ -239,46 +262,33 @@
                 <span class="text-slate-400 text-xs ml-2 font-mono">robot_agent.c</span>
             </div>
             <!-- 코드 영역 -->
-            <div class="bg-[#1e1e2e] p-6 overflow-x-auto text-sm">
-            <pre>
-														<code class="language-c font-mono leading-relaxed text-slate-300">
-															<span class="text-slate-500">// 지능 에이전트(로봇 청소기)의 행동 논리</span>
-															<span class="text-purple-400">void</span>
-															<span class="text-blue-400">startCleaningAgent</span>() {
+            <div class="bg-[#1e1e2e] p-6 overflow-x-auto text-sm"><pre><code class="language-c font-mono leading-relaxed text-slate-300">
+<span class="text-slate-500">// 지능 에이전트(로봇 청소기)의 행동 논리</span>
 
+<span class="text-purple-400">void</span> <span class="text-blue-400">startCleaningAgent</span>() {
+    <span class="text-slate-500">// 목표 지향성: '방이 깨끗해질 때'까지 반복합니다.</span>
+    <span class="text-orange-400">while</span> (checkRoomStatus() != <span class="text-emerald-400">CLEAN</span>) {
 
-															<span class="text-slate-500">// 목표 지향성: 방이 깨끗해질 때까지 반복</span>
-															<span class="text-orange-400">while</span> (checkRoomStatus() !=
-															<span class="text-emerald-400">CLEAN</span>) {
-
-
-															<span class="text-slate-500">// 자율성: 스스로 배터리를 확인</span>
-															<span class="text-orange-400">if</span> (getBatteryLevel() <
-															<span class="text-yellow-400">10</span>) {
-            moveToCharger();
-
-															<span class="text-orange-400">continue</span>;
+        <span class="text-slate-500">// 자율성 1: 스스로 배터리를 확인합니다.</span>
+        <span class="text-orange-400">if</span> (getBatteryLevel() < <span class="text-yellow-400">10</span>) {
+            moveToCharger(); <span class="text-slate-500">// 충전소로 이동</span>
+            <span class="text-orange-400">continue</span>;
         }
 
-
-															<span class="text-slate-500">// 센서로 먼지 위치 탐색</span>
+        <span class="text-slate-500">// 자율성 2: 카메라/센서로 먼지 위치를 스스로 파악합니다.</span>
         Location dirtLoc = findDirt();
 
+        <span class="text-slate-500">// 파악한 위치로 이동하여 청소합니다.</span>
         moveTo(dirtLoc);
         cleanArea();
 
-
-															<span class="text-slate-500">// 협력성: 다른 로봇에게 정보 전달</span>
-        sendMessageToOtherRobot(
-															<span class="text-green-400">"구역 A 청소 완료"</span>);
+        <span class="text-slate-500">// 협력성: 다른 로봇에게 "여긴 내가 청소했어"라고 알립니다.</span>
+        sendMessageToOtherRobot(<span class="text-green-400">"구역 A 청소 완료"</span>);
     }
 
-    print(
-															<span class="text-green-400">"목표 달성! 청소 종료"</span>);
+    print(<span class="text-green-400">"목표 달성! 청소를 종료합니다."</span>);
 }
-
-														</code>
-													</pre>
+</code></pre>
             </div>
         </div>
     </section>
@@ -334,42 +344,48 @@
     <p class="text-slate-400 text-sm">지능 에이전트의 개념과 이해</p>
 </footer>
 <script>
-    function checkAnswer(btn, isCorrect, message) {
-        const container = btn.parentElement;
-        const buttons = container.querySelectorAll('button');
+    function checkAnswer(btn, isCorrect, message){
 
-        // 모든 버튼 상태 초기화
-        buttons.forEach(b => {
-            b.classList.remove('bg-sky-600', 'text-white', 'bg-rose-500', 'border-sky-600', 'border-rose-500', 'text-slate-900');
-            b.classList.add('bg-slate-50', 'text-slate-700');
-            b.disabled = true;
-            b.style.opacity = '0.5';
+        const container = btn.parentElement;
+        const buttons = container.querySelectorAll('.quiz-btn');
+
+        buttons.forEach(b=>{
+
+            if(!b.dataset.label){
+                b.dataset.label = b.textContent;
+            }
+
+            b.classList.remove('correct','wrong');
+            b.classList.add('disabled');
         });
 
-        // 클릭한 버튼 스타일 변경
-        btn.style.opacity = '1';
-        btn.classList.remove('bg-slate-50', 'text-slate-700');
+        if(isCorrect){
 
-        if (isCorrect) {
-            btn.classList.add('bg-sky-600', 'text-white', 'border-sky-600');
-            btn.innerHTML = '<i class="fa-solid fa-circle-check mr-2"></i>' + btn.innerText;
-        } else {
-            btn.classList.add('bg-rose-500', 'text-white', 'border-rose-500');
-            btn.innerHTML = '<i class="fa-solid fa-circle-xmark mr-2"></i>' + btn.innerText;
+            btn.classList.add('correct');
+
+            btn.innerHTML =
+            `<i class="fa-solid fa-circle-check mr-2"></i>${btn.dataset.label}`;
+
+        }else{
+
+            btn.classList.add('wrong');
+
+            btn.innerHTML =
+            `<i class="fa-solid fa-circle-xmark mr-2"></i>${btn.dataset.label}`;
         }
 
-        showToast(message, isCorrect ? 'success' : 'error');
+        showToast(message,isCorrect?'success':'error');
 
-        // 3초 후 리셋
-        setTimeout(() => {
-             buttons.forEach(b => {
-                b.classList.remove('bg-sky-600', 'text-white', 'bg-rose-500', 'border-sky-600', 'border-rose-500');
-                b.classList.add('bg-slate-50', 'text-slate-700');
-                b.innerHTML = b.innerText; // 아이콘 제거
-                b.disabled = false;
-                b.style.opacity = '1';
+        setTimeout(()=>{
+
+            buttons.forEach(b=>{
+
+                b.classList.remove('correct','wrong','disabled');
+                b.innerHTML = b.dataset.label;
+
             });
-        }, 3000);
+
+        },3000);
     }
 
     let currentToast = null;
