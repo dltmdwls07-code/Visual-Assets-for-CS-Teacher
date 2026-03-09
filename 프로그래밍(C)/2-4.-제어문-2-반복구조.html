@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2-4. 제어문(Control Statement) 반복 구조 강의노트</title>
+
+    <!-- Tailwind & Icons -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Prism -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet"/>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;800&family=Fira+Code:wght@400;500&display=swap');
+
+        :root {
+            --page-bg: #f1f5f9;
+            --card-radius: 1.25rem;
+        }
+
+        body {
+            font-family: 'Pretendard', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            scroll-behavior: smooth;
+            background-color: var(--page-bg);
+        }
+
+        .code-font {
+            font-family: 'Fira Code', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        }
+
+        .concept-card {
+            transition: transform 0.18s ease-out, box-shadow 0.18s ease-out, border-color 0.18s ease-out;
+            border-radius: var(--card-radius);
+        }
+        .concept-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 18px 45px rgba(15, 23, 42, 0.12);
+            border-color: rgba(129, 140, 248, 0.4);
+        }
+
+        .copy-toast {
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.25s ease, transform 0.25s ease;
+            z-index: 9999;
+            transform: translate(-50%, 8px);
+        }
+        .copy-toast.show {
+            visibility: visible;
+            opacity: 1;
+            transform: translate(-50%, 0);
+        }
+        pre {
+            margin: 0 !important;
+            padding: 1rem !important;
+            border-radius: 0 0 0.75rem 0.75rem !important;
+            font-size: 0.9rem !important;
+            line-height: 1.5 !important;
+            height: auto !important;
+        }
+        code {
+            display: block !important;
+            white-space: pre !important;
+        }
+        .highlight-error   { color: #f97373; font-weight: 600; }
+        .highlight-correct { color: #4ade80; font-weight: 600; }
+    </style>
+</head>
+<body class="text-slate-900 pb-20">
+
+<!-- Header Section -->
+<header class="bg-gradient-to-r from-blue-600 via-indigo-600 to-indigo-700 text-white py-16 px-6 relative overflow-hidden">
+    <div class="absolute inset-0 opacity-10 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiIGZpbGw9IiNmZmYiLz48L3N2Zz4=')]"></div>
+    <div class="max-w-4xl mx-auto relative z-10">
+        <div class="flex items-center gap-3 mb-4">
+            <span class="inline-flex items-center gap-2 bg-white/15 px-3 py-1 rounded-full text-xs font-semibold tracking-widest border border-white/25 backdrop-blur-md uppercase">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-300"></span>
+                Chapter 2. C 프로그래밍의 기초
+            </span>
+        </div>
+        <h1 class="text-4xl md:text-5xl font-extrabold mb-4 flex items-center gap-4 tracking-tight">
+            <i data-lucide="git-merge" class="w-10 h-10"></i>
+            4. 제어문 (Control Statement), 반복 구조
+        </h1>
+        <p class="text-lg text-blue-100/90 max-w-2xl font-medium leading-relaxed mb-8">
+            프로그램의 흐름을 내 마음대로! 조건에 따라 다른 길을 가거나, 똑같은 작업을 반복하는
+            <span class="font-semibold">제어 구조</span>를 단계적으로 마스터합니다.
+        </p>
+
+        <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/25 shadow-lg shadow-blue-900/20">
+            <h3 class="text-blue-50 font-bold mb-3 flex items-center gap-2 text-sm">
+                <i data-lucide="target" class="w-5 h-5"></i>
+                학습 목표 (Objective)
+            </h3>
+            <ul class="space-y-1.5 text-sm text-blue-50/90">
+                <li class="flex items-start gap-2">
+                    <i data-lucide="check-circle-2" class="mt-0.5 w-4 h-4 text-emerald-300 flex-shrink-0"></i>
+                    <span>순차, 선택, 반복의 제어 구조를 이해하고 예제로 직접 활용할 수 있다.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <i data-lucide="check-circle-2" class="mt-0.5 w-4 h-4 text-emerald-300 flex-shrink-0"></i>
+                    <span>중첩 제어 구조(제어문 안의 제어문)를 다양한 패턴에 적용할 수 있다.</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</header>
+
+<main class="max-w-4xl mx-auto px-6 mt-12 space-y-12">
+
+    <!-- 도입: 제어 구조의 3가지 -->
+    <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 text-center">
+            <div class="bg-slate-100 w-12 h-12 mx-auto rounded-full flex items-center justify-center mb-3 text-slate-600">
+                <i data-lucide="arrow-down" class="w-6 h-6"></i>
+            </div>
+            <h3 class="font-bold text-base mb-1.5">순차 구조</h3>
+            <p class="text-xs md:text-sm text-slate-600 leading-relaxed">
+                위에서 아래로 정해진 순서에 따라 차례대로 코드가 실행되는 가장 기본적인 흐름 구조입니다.
+            </p>
+        </div>
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 text-center">
+            <div class="bg-indigo-100 w-12 h-12 mx-auto rounded-full flex items-center justify-center mb-3 text-indigo-600">
+                <i data-lucide="split" class="w-6 h-6"></i>
+            </div>
+            <h3 class="font-bold text-base mb-1.5">선택 구조</h3>
+            <p class="text-xs md:text-sm text-slate-600 leading-relaxed">
+                주어진 <b>조건</b>의 참·거짓에 따라 서로 다른 코드를 실행하는 분기 구조입니다.
+            </p>
+        </div>
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 text-center">
+            <div class="bg-purple-100 w-12 h-12 mx-auto rounded-full flex items-center justify-center mb-3 text-purple-600">
+                <i data-lucide="repeat-2" class="w-6 h-6"></i>
+            </div>
+            <h3 class="font-bold text-base mb-1.5">반복 구조</h3>
+            <p class="text-xs md:text-sm text-slate-600 leading-relaxed">
+                특정 조건이 만족될 때까지 동일한 코드를 계속 <b>반복 실행</b>하여 작업을 자동화하는 구조입니다.
+            </p>
+        </div>
+    </section>
+
+    <!-- 2. 반복 구조 (반복문) -->
+    <section class="concept-card bg-white border border-slate-200 p-8 shadow-sm">
+        <div class="flex items-center gap-4 mb-5">
+            <div class="bg-purple-100 p-3 rounded-2xl text-purple-600">
+                <i data-lucide="refresh-cw" class="w-8 h-8"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-slate-800 tracking-tight">반복문 (Iteration)</h2>
+        </div>
+
+        <div class="mb-8">
+            <p class="text-slate-600 leading-relaxed">
+                동일한 작업을 수천, 수만 번 직접 타이핑할 필요가 없습니다. <span class="text-emerald-600 font-bold">반복문</span>은 정해진 횟수나 특정 조건이
+                만족될 때까지 코드를 반복해서 실행해 줍니다.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 gap-6 mb-10">
+            <!-- for 기본 -->
+
+            <div class="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                <div>
+                    <h4 class="font-bold text-slate-800">for 문</h4>
+                    <p class="text-[11px] text-slate-500 mt-1">반복 횟수가 명확할 때 (10번 반복 등)</p>
+                </div>
+                <span class="text-[10px] font-black text-emerald-600 bg-emerald-50 px-2 py-1 rounded">횟수 중심</span>
+            </div>
+
+            <div class="bg-slate-50 rounded-2xl border border-slate-200 overflow-hidden">
+
+
+                <div class="px-4 py-3 bg-slate-100/60 border-b border-slate-200">
+                    <h5 class="font-bold text-slate-800 flex items-center gap-2">
+                        <span class="bg-purple-500 text-white text-xs px-2 py-1 rounded-full">for문</span>
+                        횟수가 명확할 때
+                    </h5>
+                </div>
+                <div class="relative bg-[#1d1f21] h-full">
+                    <div class="flex items-center justify-between px-4 py-2 border-b border-white/10">
+                        <span class="text-xs font-medium text-slate-400 code-font">for_basic.c</span>
+                        <button onclick="copyCode('code-for-basic')"
+                                class="inline-flex items-center gap-1.5 text-[11px] text-slate-300 hover:text-white transition-colors">
+                            <i data-lucide="copy" class="w-3 h-3"></i>
+                            복사
+                        </button>
+                    </div>
+                    <div class="p-4">
+<pre><code id="code-for-basic" class="language-c">int sum = 0;
+// for(초기식; 조건식; 증감식)
+for (int i = 1; i <= 10; i++) {
+    sum = sum + i;
+}
+printf("1~10 합: %d", sum);</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- while 기본 -->
+
+            <div class="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                <div>
+                    <h4 class="font-bold text-slate-800">while 문</h4>
+                    <p class="text-[11px] text-slate-500 mt-1">특정 조건이 유지되는 동안 (게임이 끝날 때까지 등)</p>
+                </div>
+                <span class="text-[10px] font-black text-blue-600 bg-blue-50 px-2 py-1 rounded">조건 중심</span>
+            </div>
+
+            <div class="bg-slate-50 rounded-2xl border border-slate-200 overflow-hidden">
+
+                <div class="px-4 py-3 bg-slate-100/60 border-b border-slate-200">
+                    <h5 class="font-bold text-slate-800 flex items-center gap-2">
+                        <span class="bg-purple-500 text-white text-xs px-2 py-1 rounded-full">while문</span>
+                        조건이 중요할 때
+                    </h5>
+                </div>
+                <div class="relative bg-[#1d1f21] h-full">
+                    <div class="flex items-center justify-between px-4 py-2 border-b border-white/10">
+                        <span class="text-xs font-medium text-slate-400 code-font">while_basic.c</span>
+                        <button onclick="copyCode('code-while-basic')"
+                                class="inline-flex items-center gap-1.5 text-[11px] text-slate-300 hover:text-white transition-colors">
+                            <i data-lucide="copy" class="w-3 h-3"></i>
+                            복사
+                        </button>
+                    </div>
+                    <div class="p-4">
+<pre><code id="code-while-basic" class="language-c">int i = 1, sum = 0;
+// 조건식이 참인 동안 반복
+while (i <= 10) {
+    sum += i;
+    i++; // 증감식 필수!
+}
+printf("1~10 합: %d", sum);</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- 무한 루프 경고 -->
+        <div class="bg-orange-50 border-l-4 border-orange-500 px-5 py-4 rounded-r-2xl">
+            <h4 class="font-bold text-orange-700 flex items-center gap-2 mb-2 text-sm">
+                <i data-lucide="alert-triangle" class="w-4 h-4"></i>
+                무한 루프(Infinite Loop) 주의!
+            </h4>
+            <p class="text-xs md:text-sm text-slate-700 mb-2 leading-relaxed">
+                while 문에서 반복 조건을 변화시키는 코드를 빼먹으면 조건이 영원히 참이 되어 프로그램이 멈추지 않을 수 있습니다.
+            </p>
+            <div class="rounded-2xl overflow-hidden shadow-lg border border-slate-100 w-full">
+                <pre><code class="language-c">int i = 0;
+while (i &lt; 5) {
+    printf("안녕하세요\n");
+    // i++; (이 코드가 없으면 i는 계속 0이라 무한 반복됨)
+}</code></pre>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- 반복 구조 (for 문) -->
+    <section class="concept-card bg-white border border-slate-200 p-8 shadow-sm">
+        <div class="flex items-center gap-4 mb-5">
+            <div class="bg-indigo-100 p-3 rounded-2xl text-indigo-600">
+                <i data-lucide="refresh-cw" class="w-8 h-8"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-slate-800 tracking-tight">반복 구조 (for 문)</h2>
+        </div>
+
+        <p class="text-sm md:text-base text-slate-600 mb-6 leading-relaxed">
+            for 문은 가장 자주 사용하는 반복문으로, 반복 횟수를 정확히 알고 있을 때 사용하면 편리합니다.
+        </p>
+
+        <div class="space-y-6">
+            <!-- 103.c -->
+            <div class="bg-slate-50 rounded-2xl border border-slate-200 overflow-hidden flex flex-col">
+                <div class="px-4 py-3 bg-slate-100/60 border-b border-slate-200 flex-none">
+                    <h5 class="font-bold text-slate-800 flex items-center gap-2">
+                        <span class="bg-indigo-500 text-white text-xs px-2 py-1 rounded-full">예제</span>
+                        for문 (구구단 2단)
+                    </h5>
+                </div>
+                <div class="relative bg-[#1d1f21] flex-1">
+                    <div class="flex items-center justify-between px-4 py-2 border-b border-white/10">
+                        <span class="text-xs font-medium text-slate-400 code-font">103.c</span>
+                        <button onclick="copyCode('code-103')"
+                                class="inline-flex items-center gap-1.5 text-[11px] text-slate-300 hover:text-white transition-colors">
+                            <i data-lucide="copy" class="w-3 h-3"></i>
+                            복사
+                        </button>
+                    </div>
+                    <div class="p-4 h-[calc(100%-2.5rem)] overflow-auto">
+<pre><code id="code-103" class="language-c">#include &lt;stdio.h&gt;
+int main()
+{
+    int i;
+    for (i = 1; i < 10; i++)
+    {
+        printf("2 x %d = %2d\n", i, i * 2);
+    }
+    return 0;
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 반복 구조 (while 문) -->
+    <section class="concept-card bg-white border border-slate-200 p-8 shadow-sm">
+        <div class="flex items-center gap-4 mb-5">
+            <div class="bg-indigo-100 p-3 rounded-2xl text-indigo-600">
+                <i data-lucide="refresh-cw" class="w-8 h-8"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-slate-800 tracking-tight">반복 구조 (while 문)</h2>
+        </div>
+
+        <p class="text-sm md:text-base text-slate-600 mb-6 leading-relaxed">
+            while 문은 정확한 반복 횟수를 알 수 없고, 주어진 조건이 참인지 계속 확인하면서 반복해야 할 때 사용합니다.
+        </p>
+
+        <div class="space-y-6">
+            <!-- 104-1.c -->
+            <div class="bg-slate-50 rounded-2xl border border-slate-200 overflow-hidden flex flex-col">
+                <div class="px-4 py-3 bg-slate-100/60 border-b border-slate-200 flex-none">
+                    <h5 class="font-bold text-slate-800 flex items-center gap-2">
+                        <span class="bg-indigo-500 text-white text-xs px-2 py-1 rounded-full">예제</span>
+                        while문 (0 입력시 종료)
+                    </h5>
+                </div>
+                <div class="relative bg-[#1d1f21] flex-1">
+                    <div class="flex items-center justify-between px-4 py-2 border-b border-white/10">
+                        <span class="text-xs font-medium text-slate-400 code-font">104-1.c</span>
+                        <button onclick="copyCode('code-104-1')"
+                                class="inline-flex items-center gap-1.5 text-[11px] text-slate-300 hover:text-white transition-colors">
+                            <i data-lucide="copy" class="w-3 h-3"></i>
+                            복사
+                        </button>
+                    </div>
+                    <div class="p-4 h-[calc(100%-2.5rem)] overflow-auto">
+<pre><code id="code-104-1" class="language-c">#include &lt;stdio.h&gt;
+int main()
+{
+    int answer = 1;
+    while (answer != 0)
+    {
+        scanf("%d", &answer);
+        printf("%d 입력\n", answer);
+    }
+    return 0;
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 104-2.c -->
+            <div class="bg-slate-50 rounded-2xl border border-slate-200 overflow-hidden flex flex-col">
+                <div class="px-4 py-3 bg-slate-100/60 border-b border-slate-200 flex-none">
+                    <h5 class="font-bold text-slate-800 flex items-center gap-2">
+                        <span class="bg-indigo-500 text-white text-xs px-2 py-1 rounded-full">예제</span>
+                        while문 (입력한 수까지 출력)
+                    </h5>
+                </div>
+                <div class="relative bg-[#1d1f21] flex-1">
+                    <div class="flex items-center justify-between px-4 py-2 border-b border-white/10">
+                        <span class="text-xs font-medium text-slate-400 code-font">104-2.c</span>
+                        <button onclick="copyCode('code-104-2')"
+                                class="inline-flex items-center gap-1.5 text-[11px] text-slate-300 hover:text-white transition-colors">
+                            <i data-lucide="copy" class="w-3 h-3"></i>
+                            복사
+                        </button>
+                    </div>
+                    <div class="p-4 h-[calc(100%-2.5rem)] overflow-auto">
+<pre><code id="code-104-2" class="language-c">#include &lt;stdio.h&gt;
+int main()
+{
+    int i = 1, end;
+    printf("수를 입력하세요 : ");
+    scanf("%d", &end);
+    while (i < end + 1) {
+        printf("%d ", i);
+        i++;
+    }
+    return 0;
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 반복 구조 (do-while 문) -->
+    <section class="concept-card bg-white border border-slate-200 p-8 shadow-sm">
+        <div class="flex items-center gap-4 mb-5">
+            <div class="bg-indigo-100 p-3 rounded-2xl text-indigo-600">
+                <i data-lucide="refresh-cw" class="w-8 h-8"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-slate-800 tracking-tight">반복 구조 (do-while 문)</h2>
+        </div>
+
+        <p class="text-sm md:text-base text-slate-600 mb-6 leading-relaxed">
+            do-while 문은 기본적으로 while 문과 비슷하지만, 조건의 참·거짓과 상관없이 먼저 한 번은 실행한 뒤에 조건을 검사한다는 점이 다릅니다.
+        </p>
+
+        <div class="space-y-6">
+            <!-- 105-1.c -->
+            <div class="bg-slate-50 rounded-2xl border border-slate-200 overflow-hidden flex flex-col">
+                <div class="px-4 py-3 bg-slate-100/60 border-b border-slate-200 flex-none">
+                    <h5 class="font-bold text-slate-800 flex items-center gap-2">
+                        <span class="bg-indigo-500 text-white text-xs px-2 py-1 rounded-full">예제</span>
+                        do ~ while문 (조건 확인 나중)
+                    </h5>
+                </div>
+                <div class="relative bg-[#1d1f21] flex-1">
+                    <div class="flex items-center justify-between px-4 py-2 border-b border-white/10">
+                        <span class="text-xs font-medium text-slate-400 code-font">105-1.c</span>
+                        <button onclick="copyCode('code-105-1')"
+                                class="inline-flex items-center gap-1.5 text-[11px] text-slate-300 hover:text-white transition-colors">
+                            <i data-lucide="copy" class="w-3 h-3"></i>
+                            복사
+                        </button>
+                    </div>
+                    <div class="p-4 h-[calc(100%-2.5rem)] overflow-auto">
+<pre><code id="code-105-1" class="language-c">#include &lt;stdio.h&gt;
+int main()
+{
+    int answer;
+    do {
+        scanf("%d", &answer);
+        printf("%d 입력\n", answer);
+    } while (answer != 0);
+    return 0;
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 105-2.c -->
+            <div class="bg-slate-50 rounded-2xl border border-slate-200 overflow-hidden flex flex-col md:col-span-2">
+                <div class="px-4 py-3 bg-slate-100/60 border-b border-slate-200 flex-none">
+                    <h5 class="font-bold text-slate-800 flex items-center gap-2">
+                        <span class="bg-indigo-500 text-white text-xs px-2 py-1 rounded-full">예제</span>
+                        do ~ while문 (소문자 -> 대문자 변환)
+                    </h5>
+                </div>
+                <div class="relative bg-[#1d1f21] flex-1">
+                    <div class="flex items-center justify-between px-4 py-2 border-b border-white/10">
+                        <span class="text-xs font-medium text-slate-400 code-font">105-2.c</span>
+                        <button onclick="copyCode('code-105-2')"
+                                class="inline-flex items-center gap-1.5 text-[11px] text-slate-300 hover:text-white transition-colors">
+                            <i data-lucide="copy" class="w-3 h-3"></i>
+                            복사
+                        </button>
+                    </div>
+                    <div class="p-4 h-[calc(100%-2.5rem)] overflow-auto">
+<pre><code id="code-105-2" class="language-c">#include &lt;stdio.h&gt;
+int main()
+{
+    char ch;
+    do {
+        scanf(" %c", &ch);
+        printf("입력한 소문자 %c는 대문자 %c입니다.\n", ch, ch - 32);
+    } while (ch != 'q');
+    return 0;
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. Iteration Control Statement -->
+    <section class="concept-card bg-white border border-slate-200 rounded-3xl p-6 md:p-8 shadow-sm">
+        <div class="flex items-center gap-3 mb-8">
+            <div class="bg-rose-100 p-2.5 rounded-xl text-rose-600 shrink-0">
+                <i data-lucide="skip-forward" class="w-6 h-6 md:w-7 md:h-7"></i>
+            </div>
+            <h2 class="text-2xl md:text-3xl font-extrabold text-slate-800 tracking-tight">반복 흐름 제어문 (Iteration Control
+                Statement)</h2>
+        </div>
+
+        <div>
+            <p class="text-slate-600 leading-relaxed mb-8 text-sm md:text-base">
+                반복문을 실행하다가 강제로 빠져나오거나, 특정 부분만 건너뛰고 싶을 때 <span
+                    class="text-rose-600 font-bold bg-rose-50 px-1.5 py-0.5 rounded">break</span>와
+                <span class="text-rose-600 font-bold bg-rose-50 px-1.5 py-0.5 rounded">continue</span>를 사용합니다.
+            </p>
+
+            <div class="grid md:grid-cols-2 gap-6 md:gap-8">
+
+                <div class="group flex flex-col min-w-0">
+                    <div class="p-4 md:p-5 bg-rose-50 rounded-t-2xl border-x border-t border-rose-100 flex-shrink-0">
+                        <h4 class="font-bold text-rose-800 text-sm md:text-base flex items-center gap-2">
+                            <i data-lucide="stop-circle" class="w-4 h-4"></i> break (즉시 탈출)
+                        </h4>
+                        <p class="text-[11px] md:text-xs text-rose-700/80 mt-2 leading-normal">
+                            조건을 만족하면 반복문을 <b>그 즉시 완전히 종료</b>합니다.
+                        </p>
+                    </div>
+                    <div class="overflow-x-auto w-full rounded-b-2xl border-x border-b border-rose-100 shadow-sm bg-[#2d2d2d]">
+            <pre class="p-4 text-xs md:text-sm text-white whitespace-pre-wrap break-all md:whitespace-pre"><code
+                    class="language-c">for (int i = 1; i <= 10; i++) {
+    if (i == 5) break;
+    printf("%d ", i);
+}
+// 결과: 1 2 3 4</code></pre>
+                    </div>
+                </div>
+
+                <div class="group flex flex-col min-w-0">
+                    <div class="p-4 md:p-5 bg-amber-50 rounded-t-2xl border-x border-t border-amber-100 flex-shrink-0">
+                        <h4 class="font-bold text-amber-800 text-sm md:text-base flex items-center gap-2">
+                            <i data-lucide="corner-up-right" class="w-4 h-4"></i> continue (건너뛰기)
+                        </h4>
+                        <p class="text-[11px] md:text-xs text-amber-700/80 mt-2 leading-normal">
+                            이어지는 명령문을 무시하고 <b>다음 회차</b>로 넘어갑니다.
+                        </p>
+                    </div>
+                    <div class="overflow-x-auto w-full rounded-b-2xl border-x border-b border-amber-100 shadow-sm bg-[#2d2d2d]">
+            <pre class="p-4 text-xs md:text-sm text-white whitespace-pre-wrap break-all md:whitespace-pre"><code
+                    class="language-c">for (int i = 1; i <= 5; i++) {
+    if (i == 3) continue;
+    printf("%d ", i);
+}
+// 결과: 1 2 4 5</code></pre>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- 반복 흐름 제어 (break 문) -->
+    <section class="concept-card bg-white border border-slate-200 p-8 shadow-sm">
+        <div class="flex items-center gap-4 mb-5">
+            <div class="bg-indigo-100 p-3 rounded-2xl text-indigo-600">
+                <i data-lucide="move-right" class="w-6 h-6"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-slate-800 tracking-tight">반복 흐름 제어문 (break 문)</h2>
+        </div>
+
+        <p class="text-sm md:text-base text-slate-600 mb-6 leading-relaxed">
+            break 문과 continue 문은 조건문이나 반복문의 실행 흐름을 제어하는 명령문입니다.
+        </p>
+
+        <div class="space-y-6">
+            <!-- 106.c -->
+            <div class="bg-slate-50 rounded-2xl border border-slate-200 overflow-hidden flex flex-col">
+                <div class="px-4 py-3 bg-slate-100/60 border-b border-slate-200 flex-none">
+                    <h5 class="font-bold text-slate-800 flex items-center gap-2">
+                        <span class="bg-indigo-500 text-white text-xs px-2 py-1 rounded-full">예제</span>
+                        break 문
+                    </h5>
+                </div>
+                <div class="relative bg-[#1d1f21] flex-1">
+                    <div class="flex items-center justify-between px-4 py-2 border-b border-white/10">
+                        <span class="text-xs font-medium text-slate-400 code-font">106.c</span>
+                        <button onclick="copyCode('code-106')"
+                                class="inline-flex items-center gap-1.5 text-[11px] text-slate-300 hover:text-white transition-colors">
+                            <i data-lucide="copy" class="w-3 h-3"></i>
+                            복사
+                        </button>
+                    </div>
+                    <div class="p-4 h-[calc(100%-2.5rem)] overflow-auto">
+<pre><code id="code-106" class="language-c">#include &lt;stdio.h&gt;
+int main()
+{
+    int answer;
+    while (1)
+    {
+        scanf("%d", &answer);
+        if (answer == 0)
+        {
+            break;
+        }
+        else {
+            printf("%d 입력", answer);
+        }
+    }
+    return 0;
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 반복 흐름 제어 (continue 문) -->
+    <section class="concept-card bg-white border border-slate-200 p-8 shadow-sm">
+        <div class="flex items-center gap-4 mb-5">
+            <div class="bg-indigo-100 p-3 rounded-2xl text-indigo-600">
+                <i data-lucide="move-right" class="w-6 h-6"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-slate-800 tracking-tight">반복 흐름 제어문 (continue 문)</h2>
+        </div>
+
+        <p class="text-sm md:text-base text-slate-600 mb-6 leading-relaxed">
+            continue 문은 현재 반복을 건너뛰고 다음 반복으로 넘어가도록 흐름을 제어하는 명령문입니다.
+        </p>
+
+        <div class="space-y-6">
+            <!-- 107-1.c -->
+            <div class="bg-slate-50 rounded-2xl border border-slate-200 overflow-hidden flex flex-col">
+                <div class="px-4 py-3 bg-slate-100/60 border-b border-slate-200 flex-none">
+                    <h5 class="font-bold text-slate-800 flex items-center gap-2">
+                        <span class="bg-indigo-500 text-white text-xs px-2 py-1 rounded-full">예제</span>
+                        for문과 continue문 (107-1.c)
+                    </h5>
+                </div>
+                <div class="relative bg-[#1d1f21] flex-1">
+                    <div class="flex items-center justify-between px-4 py-2 border-b border-white/10">
+                        <span class="text-xs font-medium text-slate-400 code-font">107-1.c</span>
+                        <button onclick="copyCode('code-107-1')"
+                                class="inline-flex items-center gap-1.5 text-[11px] text-slate-300 hover:text-white transition-colors">
+                            <i data-lucide="copy" class="w-3 h-3"></i>
+                            복사
+                        </button>
+                    </div>
+                    <div class="p-4 h-[calc(100%-2.5rem)] overflow-auto">
+<pre><code id="code-107-1" class="language-c">#include &lt;stdio.h&gt;
+int main()
+{
+    int i, count = 0, answer;
+    scanf("%d", &answer);
+    for (i = 1; i < 101; i++)
+    {
+        if (i % answer != 0)
+        {
+            continue;
+        }
+        count++;
+    }
+    printf("1부터 100까지 수 중에서 %d의 배수는 %d개입니다.",
+        answer, count);
+    return 0;
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 107-2.c -->
+            <div class="bg-slate-50 rounded-2xl border border-slate-200 overflow-hidden flex flex-col">
+                <div class="px-4 py-3 bg-slate-100/60 border-b border-slate-200 flex-none">
+                    <h5 class="font-bold text-slate-800 flex items-center gap-2">
+                        <span class="bg-indigo-500 text-white text-xs px-2 py-1 rounded-full">예제</span>
+                        while문과 continue문 (107-2.c)
+                    </h5>
+                </div>
+                <div class="relative bg-[#1d1f21] flex-1">
+                    <div class="flex items-center justify-between px-4 py-2 border-b border-white/10">
+                        <span class="text-xs font-medium text-slate-400 code-font">107-2.c</span>
+                        <button onclick="copyCode('code-107-2')"
+                                class="inline-flex items-center gap-1.5 text-[11px] text-slate-300 hover:text-white transition-colors">
+                            <i data-lucide="copy" class="w-3 h-3"></i>
+                            복사
+                        </button>
+                    </div>
+                    <div class="p-4 h-[calc(100%-2.5rem)] overflow-auto">
+<pre><code id="code-107-2" class="language-c">#include &lt;stdio.h&gt;
+int main()
+{
+    int i = 0;
+    while (i++ < 10) {
+        if (i == 7) continue;
+        printf("%d ", i);
+    }
+    return 0;
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<!-- Copy Toast Notification -->
+<div id="toast"
+     class="copy-toast fixed bottom-8 left-1/2 -translate-x-1/2 bg-slate-900 text-white px-6 py-3 rounded-2xl shadow-2xl flex items-center gap-3 border border-slate-700/80">
+    <div class="bg-emerald-500 p-1.5 rounded-full">
+        <i data-lucide="check" class="w-3 h-3 text-white"></i>
+    </div>
+    <span class="text-xs md:text-sm font-semibold">코드가 클립보드에 복사되었습니다.</span>
+</div>
+
+<!-- Scripts -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
+<script>
+    window.onload = function() {
+        lucide.createIcons();
+        Prism.highlightAll();
+    };
+
+    function copyCode(elementId) {
+        const codeElement = document.getElementById(elementId);
+        if (!codeElement) return;
+
+        const text = codeElement.textContent || codeElement.innerText;
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.style.position = 'fixed';
+        textarea.style.top = '-9999px';
+        document.body.appendChild(textarea);
+        textarea.select();
+
+        try {
+            document.execCommand('copy');
+            showToast();
+        } catch (err) {
+            console.error('Failed to copy text: ', err);
+            alert('복사에 실패했습니다.');
+        } finally {
+            document.body.removeChild(textarea);
+        }
+    }
+
+    function showToast() {
+        const toast = document.getElementById('toast');
+        toast.classList.add('show');
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 2200);
+    }
+</script>
+</body>
+</html>
