@@ -11,69 +11,86 @@
         @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;700;900&display=swap');
 
         body {
-            font-family: 'Pretendard', sans-serif;
-            scroll-behavior: smooth;
-            background-color: #f8fafc;
+          font-family: 'Pretendard', sans-serif;
+          scroll-behavior: smooth;
+          background-color: #f8fafc;
         }
 
         /* Hero 배경 그라데이션 - 에이전트 느낌의 청록/파랑 */
         .hero-gradient {
-            background: linear-gradient(135deg, #0ea5e9 0%, #10b981 100%);
+          background: linear-gradient(135deg, #0ea5e9 0%, #10b981 100%);
         }
 
         /* 스크롤 시 상단 고정 네비게이션 */
         .sticky-nav {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            backdrop-filter: blur(12px);
-            background-color: rgba(255, 255, 255, 0.9);
-            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+          position: sticky;
+          top: 0;
+          z-index: 100;
+          backdrop-filter: blur(12px);
+          background-color: rgba(255, 255, 255, 0.9);
+          border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
         }
 
         .section-card {
-            background: white;
-            padding: 2.5rem;
-            border-radius: 2rem;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05);
-            border: 1px solid #f1f5f9;
-            transition: all 0.3s ease;
+          background: white;
+          padding: 2.5rem;
+          border-radius: 2rem;
+          box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05);
+          border: 1px solid #f1f5f9;
+          transition: all 0.3s ease;
         }
 
         .section-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+          transform: translateY(-4px);
+          box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
         }
 
         .quiz-btn {
-            @apply w-full p-5 text-left transition-all duration-200 rounded-2xl border-2 border-transparent bg-slate-50 hover:bg-sky-50 hover:border-sky-200 font-medium;
+          width: 100%;
+          padding: 1.25rem;
+          text-align: center;
+          border-radius: 1rem;
+          border: 2px solid #e2e8f0;
+          background: #f8fafc;
+          color: #334155;
+          font-weight: 600;
+          transition: all .2s ease;
         }
 
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #f1f5f9; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .quiz-btn:hover {
+          background: #eef2ff;
+          border-color: #6366f1;
+        }
+
+        ::-webkit-scrollbar {
+          width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+          background: #f1f5f9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+          background: #cbd5e1;
+          border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+          background: #94a3b8;
+        }
     </style>
 </head>
 <body class="text-slate-900">
-
 <!-- 1. 히어로 섹션 -->
 <header id="intro" class="hero-gradient text-white py-32 px-6">
     <div class="max-w-4xl mx-auto text-center">
-            <span class="inline-block px-4 py-1.5 bg-white/20 rounded-full text-sm font-bold mb-6 backdrop-blur-md">
-                Chapter 01.
-            </span>
-        <h1 class="text-4xl md:text-6xl font-black mb-6 leading-tight">
-            스스로 생각하고 행동하는 <br>지능 에이전트
-        </h1>
-        <p class="text-lg md:text-xl opacity-90 font-medium max-w-2xl mx-auto leading-relaxed">
-            인공지능은 컴퓨터 화면 안에만 있을까요?<br>
-            우리 삶 속에서 직접 움직이며 도움을 주는 '지능 에이전트'에 대해 알아봅시다.
-        </p>
+        <span class="inline-block px-4 py-1.5 bg-white/20 rounded-full text-sm font-bold mb-6 backdrop-blur-md"> Chapter 01. </span>
+        <h1 class="text-4xl md:text-6xl font-black mb-6 leading-tight"> 스스로 생각하고 행동하는 <br>지능 에이전트 </h1>
+        <p class="text-lg md:text-xl opacity-90 font-medium max-w-2xl mx-auto leading-relaxed"> 인공지능은 컴퓨터 화면 안에만 있을까요?
+            <br> 우리 삶 속에서 직접 움직이며 도움을 주는 '지능 에이전트'에 대해 알아봅시다. </p>
     </div>
 </header>
-
 <!-- 2. 상단 고정 네비게이션 -->
 <nav class="sticky-nav px-6 py-4">
     <div class="max-w-6xl mx-auto flex justify-between items-center">
@@ -91,52 +108,66 @@
         </div>
     </div>
 </nav>
-
 <main class="max-w-5xl mx-auto px-6 py-20 space-y-24">
-
     <!-- 섹션 1: 개념 설명 -->
-    <section id="concept" class="scroll-mt-24 space-y-8">
-        <div class="flex items-center gap-4 mb-8 border-b-2 border-slate-100 pb-4">
-            <div class="w-14 h-14 rounded-2xl bg-sky-100 flex items-center justify-center text-sky-600 text-3xl">
-                <i class="fa-solid fa-brain"></i>
-            </div>
-            <h2 class="text-3xl font-black text-slate-900">1. 인공지능과 에이전트는 무슨 관계일까?</h2>
+    <!-- 섹션 1: 개념 설명 -->
+    <section id="concept" class="scroll-mt-24 space-y-12">
+        <!-- 섹션 헤더 -->
+        <div class="text-center space-y-4">
+            <h2 class="text-3xl font-black text-slate-900">인공지능과 에이전트의 관계</h2>
+            <div class="w-20 h-1.5 bg-sky-500 mx-auto rounded-full"></div>
+            <p class="text-slate-500"> 인공지능과 지능 에이전트는 서로 다른 개념이지만 함께 작동할 때 실제 시스템이 됩니다. </p>
         </div>
-
-        <div class="bg-white p-8 md:p-10 rounded-3xl shadow-sm border border-slate-200 text-lg leading-relaxed text-slate-700">
-            <p class="mb-6">
-                <strong>'인공지능'</strong>이 사람의 <span class="text-sky-600 font-bold">머리(두뇌)</span>와 같다면,
-                <strong>'에이전트'</strong>는 환경을 느끼고 직접 움직이는 <span class="text-emerald-600 font-bold">몸(신체나 프로그램)</span>과
+        <!-- 개념 카드 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- 인공지능 -->
+            <div class="section-card flex flex-col items-center text-center">
+                <div class="w-16 h-16 bg-sky-100 text-sky-600 rounded-full flex items-center justify-center mb-6 text-2xl">
+                    <i class="fa-solid fa-brain"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-3">인공지능 (AI)</h3>
+                <p class="text-slate-600 text-sm leading-relaxed"> 사람의 학습, 판단, 추론 능력을 컴퓨터가 수행하도록 만든 기술입니다. 즉 <strong
+                        class="text-sky-600">생각하고 판단하는 두뇌 역할</strong>을 합니다. </p>
+            </div>
+            <!-- 에이전트 -->
+            <div class="section-card flex flex-col items-center text-center">
+                <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mb-6 text-2xl">
+                    <i class="fa-solid fa-robot"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-3">지능 에이전트</h3>
+                <p class="text-slate-600 text-sm leading-relaxed"> 센서로 환경을 인식하고 행동을 수행하는 시스템입니다. 즉 <strong
+                        class="text-emerald-600">환경과 상호작용하는 몸 역할</strong>을 합니다. </p>
+            </div>
+        </div>
+        <!-- 설명 카드 -->
+        <div class="section-card">
+            <p class="text-slate-700 leading-relaxed text-lg">
+                <strong>'인공지능'</strong>이 사람의 <span class="text-sky-600 font-bold">두뇌</span>와 같다면,
+                <strong>'에이전트'</strong>는 환경을 느끼고 움직이는 <span class="text-emerald-600 font-bold">몸(프로그램 또는 기계)</span>과
                 같습니다.
             </p>
-            <p>
-                인공지능이 아무리 똑똑해도 생각만 하고 있다면 우리에게 도움을 줄 수 없겠죠?
-                인공지능이 우리 생활에 실제로 적용되려면 센서로 상황을 파악하고, 결과를 행동으로 보여주는 <strong>'지능 에이전트(Intelligent Agent)'</strong>의 형태가
-                되어야 합니다.
-            </p>
+            <p class="text-slate-600 leading-relaxed mt-4"> 인공지능이 아무리 똑똑해도 생각만 하고 있다면 우리 생활에 도움을 줄 수 없습니다. 그래서 인공지능은 센서를
+                통해 환경을 인식하고 행동으로 결과를 만들어 내는 <strong>'지능 에이전트(Intelligent Agent)'</strong> 형태로 실제 시스템에 적용됩니다. </p>
         </div>
-
-        <!-- 오개념 방지 박스 -->
-        <div class="bg-amber-50 border-l-4 border-amber-400 p-6 rounded-r-xl mt-8">
+        <!-- 오개념 방지 -->
+        <div class="bg-amber-50 border-l-4 border-amber-400 p-6 rounded-r-xl">
             <h4 class="flex items-center text-amber-800 font-bold mb-2">
                 <i class="fa-solid fa-circle-exclamation mr-2"></i> 헷갈리지 마세요! (오개념 방지)
             </h4>
             <p class="text-amber-900 text-base leading-relaxed">
-                <strong>"지능 에이전트가 알아서 다 해주면, 사람은 아무것도 안 해도 되나요?"</strong><br>
-                아닙니다! 교과서에 따르면 <strong class="bg-amber-200">"지능 에이전트는 인간을 위한 것이지, 인간의 개입을 전혀 없게 하려는 것은 아니다."</strong>라고
-                말합니다. 에이전트는 인간의 목표 달성을 돕는 '든든한 파트너' 역할을 하는 것입니다.
+                <strong>"지능 에이전트가 알아서 다 해주면 사람은 아무것도 안 해도 되나요?"</strong>
+                <br> 그렇지 않습니다. 지능 에이전트는 인간을 대신하는 존재가 아니라 <strong class="bg-amber-200">인간의 목표 달성을 돕는 협력 도구</strong>입니다. 즉
+                사람과 함께 문제를 해결하는 <strong class="bg-amber-200">파트너 역할</strong>을 합니다.
             </p>
         </div>
     </section>
-
     <!-- 섹션 2: 지능 에이전트의 3가지 특징 -->
     <section id="features" class="scroll-mt-24 space-y-12">
         <div class="text-center space-y-4">
-            <h2 class="text-3xl font-black text-slate-900">2. 로봇 청소기로 보는 에이전트의 3가지 특징</h2>
+            <h2 class="text-3xl font-black text-slate-900">로봇 청소기로 보는 에이전트의 3가지 특징</h2>
             <div class="w-20 h-1.5 bg-sky-500 mx-auto rounded-full"></div>
             <p class="text-slate-500">지능 에이전트는 일반 프로그램과 다르게 3가지 특별한 능력이 있습니다.</p>
         </div>
-
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <!-- 자율성 -->
             <div class="section-card flex flex-col items-center text-center">
@@ -144,43 +175,34 @@
                     <i class="fa-solid fa-person-running"></i>
                 </div>
                 <h3 class="text-xl font-bold mb-3">① 자율성</h3>
-                <p class="text-slate-600 text-sm leading-relaxed mb-4">
-                    사람이 매번 리모컨으로 조종하지 않아도 됩니다.
-                </p>
+                <p class="text-slate-600 text-sm leading-relaxed mb-4"> 사람이 매번 리모컨으로 조종하지 않아도 됩니다. </p>
                 <div class="bg-slate-50 p-4 rounded-xl w-full text-sm text-slate-700">
                     <strong>로봇 청소기:</strong> "바닥의 먼지를 스스로 인식하고 알아서 청소하러 이동합니다."
                 </div>
             </div>
-
             <!-- 협력성 -->
             <div class="section-card flex flex-col items-center text-center">
                 <div class="w-16 h-16 bg-teal-100 text-teal-600 rounded-full flex items-center justify-center mb-6 text-2xl">
                     <i class="fa-solid fa-people-arrows"></i>
                 </div>
                 <h3 class="text-xl font-bold mb-3">② 협력성</h3>
-                <p class="text-slate-600 text-sm leading-relaxed mb-4">
-                    다른 에이전트나 기계들과 통신하며 정보를 나눕니다.
-                </p>
+                <p class="text-slate-600 text-sm leading-relaxed mb-4"> 다른 에이전트나 기계들과 통신하며 정보를 나눕니다. </p>
                 <div class="bg-slate-50 p-4 rounded-xl w-full text-sm text-slate-700">
                     <strong>로봇 청소기:</strong> "거실 청소기 1호와 방 청소기 2호가 서로 어디를 청소했는지 정보를 공유합니다."
                 </div>
             </div>
-
             <!-- 목표 지향성 -->
             <div class="section-card flex flex-col items-center text-center">
                 <div class="w-16 h-16 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mb-6 text-2xl">
                     <i class="fa-solid fa-bullseye"></i>
                 </div>
                 <h3 class="text-xl font-bold mb-3">③ 목표 지향성</h3>
-                <p class="text-slate-600 text-sm leading-relaxed mb-4">
-                    주어진 '목표'를 달성하기 위해 최선의 방법을 찾습니다.
-                </p>
+                <p class="text-slate-600 text-sm leading-relaxed mb-4"> 주어진 '목표'를 달성하기 위해 최선의 방법을 찾습니다. </p>
                 <div class="bg-slate-50 p-4 rounded-xl w-full text-sm text-slate-700">
                     <strong>로봇 청소기:</strong> "'방 전체를 깨끗하게 만든다'는 목표 달성 여부가 에이전트를 평가하는 기준이 됩니다."
                 </div>
             </div>
         </div>
-
         <!-- 핵심 정리 -->
         <div class="bg-slate-800 text-white p-6 rounded-2xl flex items-center gap-4 mt-8">
             <i class="fa-solid fa-lightbulb text-yellow-400 text-3xl"></i>
@@ -190,77 +212,89 @@
             </p>
         </div>
     </section>
-
     <!-- 섹션 3: 예제 코드 -->
-    <section id="example" class="scroll-mt-24 section-card !p-0 overflow-hidden">
-        <div class="grid grid-cols-1 lg:grid-cols-2">
-            <div class="p-10 md:p-12 space-y-6 flex flex-col justify-center">
-                <span class="text-sky-600 font-bold tracking-widest text-sm uppercase">How it works</span>
-                <h2 class="text-3xl font-black text-slate-900">3. 로봇 청소기 에이전트의 머릿속</h2>
-                <p class="text-slate-600 leading-relaxed">
-                    로봇 청소기가 어떻게 '자율성'과 '목표 지향성'을 가지고 움직이는지 아주 간단한 코드로 표현해 보았습니다.
-                </p>
-                <p class="text-slate-600 text-sm bg-slate-50 p-4 rounded-lg border border-slate-100">
-                    단순히 버튼을 누르면 켜지는 것이 아니라, <strong>'방이 깨끗해질 때까지' (목표)</strong> 스스로 상태를 확인하고 행동하는 것을 볼 수 있습니다.
-                </p>
+    <section id="example" class="scroll-mt-24 space-y-12">
+        <!-- 섹션 헤더 (섹션2와 동일 스타일) -->
+        <div class="text-center space-y-4">
+            <h2 class="text-3xl font-black text-slate-900">로봇 청소기 에이전트의 머릿속</h2>
+            <div class="w-20 h-1.5 bg-sky-500 mx-auto rounded-full"></div>
+            <p class="text-slate-500"> 로봇 청소기가 어떻게 자율적으로 판단하며 목표를 달성하는지 간단한 코드로 살펴봅니다. </p>
+        </div>
+        <!-- 설명 카드 -->
+        <div class="section-card space-y-6">
+            <p class="text-slate-600 leading-relaxed"> 로봇 청소기는 단순히 버튼을 누르면 동작하는 기계가 아니라, <strong>목표가 달성될 때까지 스스로 상황을
+                판단하며 행동하는 지능 에이전트</strong>입니다. </p>
+            <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 text-sm text-slate-700">
+                <strong>핵심 아이디어</strong>
+                <br> "방이 깨끗해질 때까지" 상태를 확인하면서 행동을 반복합니다.
             </div>
+        </div>
+        <!-- 코드 카드 -->
+        <div class="section-card !p-0 overflow-hidden">
+            <!-- 코드 헤더 -->
+            <div class="bg-slate-900 px-6 py-4 flex items-center gap-3">
+                <div class="w-3 h-3 rounded-full bg-rose-500"></div>
+                <div class="w-3 h-3 rounded-full bg-amber-500"></div>
+                <div class="w-3 h-3 rounded-full bg-emerald-500"></div>
+                <span class="text-slate-400 text-xs ml-2 font-mono">robot_agent.c</span>
+            </div>
+            <!-- 코드 영역 -->
+            <div class="bg-[#1e1e2e] p-6 overflow-x-auto text-sm">
+            <pre>
+														<code class="language-c font-mono leading-relaxed text-slate-300">
+															<span class="text-slate-500">// 지능 에이전트(로봇 청소기)의 행동 논리</span>
+															<span class="text-purple-400">void</span>
+															<span class="text-blue-400">startCleaningAgent</span>() {
 
-            <!-- 코드 예제 영역 -->
-            <div class="bg-[#1e1e2e] p-8 flex flex-col justify-center text-white">
-                <div class="flex items-center gap-2 mb-4 px-2">
-                    <div class="w-3 h-3 rounded-full bg-rose-500"></div>
-                    <div class="w-3 h-3 rounded-full bg-amber-500"></div>
-                    <div class="w-3 h-3 rounded-full bg-emerald-500"></div>
-                    <span class="text-slate-400 text-xs ml-2 font-mono">robot_agent.c</span>
-                </div>
-                <div class="bg-black/30 p-4 rounded-xl overflow-x-auto text-sm">
-<pre><code class="language-c font-mono leading-relaxed text-slate-300">
-<span class="text-slate-500">// 지능 에이전트(로봇 청소기)의 행동 논리</span>
 
-<span class="text-purple-400">void</span> <span class="text-blue-400">startCleaningAgent</span>() {
-    <span class="text-slate-500">// 목표 지향성: '방이 깨끗해질 때'까지 반복합니다.</span>
-    <span class="text-orange-400">while</span> (checkRoomStatus() != <span class="text-emerald-400">CLEAN</span>) {
+															<span class="text-slate-500">// 목표 지향성: 방이 깨끗해질 때까지 반복</span>
+															<span class="text-orange-400">while</span> (checkRoomStatus() !=
+															<span class="text-emerald-400">CLEAN</span>) {
 
-        <span class="text-slate-500">// 자율성 1: 스스로 배터리를 확인합니다.</span>
-        <span class="text-orange-400">if</span> (getBatteryLevel() < <span class="text-yellow-400">10</span>) {
-            moveToCharger(); <span class="text-slate-500">// 충전소로 이동</span>
-            <span class="text-orange-400">continue</span>;
+
+															<span class="text-slate-500">// 자율성: 스스로 배터리를 확인</span>
+															<span class="text-orange-400">if</span> (getBatteryLevel() <
+															<span class="text-yellow-400">10</span>) {
+            moveToCharger();
+
+															<span class="text-orange-400">continue</span>;
         }
 
-        <span class="text-slate-500">// 자율성 2: 카메라/센서로 먼지 위치를 스스로 파악합니다.</span>
+
+															<span class="text-slate-500">// 센서로 먼지 위치 탐색</span>
         Location dirtLoc = findDirt();
 
-        <span class="text-slate-500">// 파악한 위치로 이동하여 청소합니다.</span>
         moveTo(dirtLoc);
         cleanArea();
 
-        <span class="text-slate-500">// 협력성: 다른 로봇에게 "여긴 내가 청소했어"라고 알립니다.</span>
-        sendMessageToOtherRobot(<span class="text-green-400">"구역 A 청소 완료"</span>);
+
+															<span class="text-slate-500">// 협력성: 다른 로봇에게 정보 전달</span>
+        sendMessageToOtherRobot(
+															<span class="text-green-400">"구역 A 청소 완료"</span>);
     }
 
-    print(<span class="text-green-400">"목표 달성! 청소를 종료합니다."</span>);
+    print(
+															<span class="text-green-400">"목표 달성! 청소 종료"</span>);
 }
-</code></pre>
-                </div>
+
+														</code>
+													</pre>
             </div>
         </div>
     </section>
-
     <!-- 섹션 4: 퀴즈 -->
     <section id="quiz" class="scroll-mt-24 space-y-12">
         <div class="text-center">
-                <span class="inline-block bg-sky-100 text-sky-600 px-4 py-1.5 rounded-full text-sm font-bold tracking-wider mb-4">
-                    CHECK-UP
-                </span>
+            <span class="inline-block bg-sky-100 text-sky-600 px-4 py-1.5 rounded-full text-sm font-bold tracking-wider mb-4"> CHECK-UP </span>
             <h2 class="text-3xl font-black">스스로 점검하기</h2>
             <p class="text-slate-500 mt-2">오늘 배운 지능 에이전트의 개념을 확인해 볼까요?</p>
         </div>
-
         <div class="max-w-3xl mx-auto space-y-8">
             <!-- Q1 -->
             <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200 hover:shadow-md transition">
-                <p class="text-xl font-bold mb-6"><span class="text-sky-600 mr-2">Q1.</span> 다음 중 '지능 에이전트'에 대한 설명으로 올바른
-                    것을 고르세요.</p>
+                <p class="text-xl font-bold mb-6">
+                    <span class="text-sky-600 mr-2">Q1.</span> 다음 중 '지능 에이전트'에 대한 설명으로 올바른 것을 고르세요.
+                </p>
                 <div class="grid grid-cols-1 gap-3">
                     <button onclick="checkAnswer(this, false, '오답입니다. 인간의 개입을 완전히 없애는 것이 아니라, 인간을 돕기 위한 파트너입니다.')"
                             class="quiz-btn">A. 지능 에이전트의 최종 목적은 인간의 개입을 100% 없애는 것이다.
@@ -273,11 +307,12 @@
                     </button>
                 </div>
             </div>
-
             <!-- Q2 -->
             <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200 hover:shadow-md transition">
-                <p class="text-xl font-bold mb-4"><span class="text-sky-600 mr-2">Q2.</span> 여러 대의 드론이 밤하늘에서 서로 부딪히지 않도록
-                    통신하며 멋진 글자 모양을 만들어내는 에어쇼를 하고 있습니다.</p>
+                <p class="text-xl font-bold mb-4">
+                    <span class="text-sky-600 mr-2">Q2.</span> 여러 대의 드론이 밤하늘에서 서로 부딪히지 않도록 통신하며 멋진 글자 모양을 만들어내는 에어쇼를 하고
+                    있습니다.
+                </p>
                 <p class="text-slate-600 mb-6 bg-slate-50 p-4 rounded-lg">이 상황에서 가장 돋보이는 지능 에이전트의 특징은 무엇일까요?</p>
                 <div class="grid grid-cols-1 gap-3">
                     <button onclick="checkAnswer(this, false, '자율성도 있지만, 여러 대가 서로 부딪히지 않고 통신하며 대형을 맞추는 것이 핵심입니다.')"
@@ -293,14 +328,11 @@
             </div>
         </div>
     </section>
-
 </main>
-
 <footer class="bg-slate-900 py-12 px-6 text-center mt-20">
     <p class="text-white font-black text-2xl mb-2">인공지능 기초</p>
     <p class="text-slate-400 text-sm">지능 에이전트의 개념과 이해</p>
 </footer>
-
 <script>
     function checkAnswer(btn, isCorrect, message) {
         const container = btn.parentElement;
@@ -368,7 +400,7 @@
                     toast.remove();
                 }
             }, 500);
-        }, 2500);
+        }, 4000);
     }
 </script>
 </body>
