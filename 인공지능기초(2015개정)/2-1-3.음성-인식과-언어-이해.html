@@ -268,7 +268,7 @@
                             class="bg-purple-500/30 text-purple-300 px-2 py-1 rounded">유정</span>이는 <span
                             class="bg-amber-500/30 text-amber-300 px-2 py-1 rounded">2021년</span>에 <span
                             class="bg-sky-500/30 text-sky-300 px-2 py-1 rounded">수도 전자</span>에 입사했다."
-                        <div class="mt-4 flex gap-4 text-sm font-mono">
+                        <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 text-sm font-mono">
                             <span class="text-purple-300">#유정 ➔ [사람/Person]</span>
                             <span class="text-amber-300">#2021년 ➔ [시간/Time]</span>
                             <span class="text-sky-300">#수도전자 ➔ [조직/Organization]</span>
@@ -281,14 +281,22 @@
                         <i class="fa-solid fa-lightbulb mr-2"></i> 3. 의도 분석 (Intent Analysis)
                     </h3>
                     <p class="text-slate-400 text-sm mb-4">최종적으로 사용자가 이 말을 왜 했는지 진짜 목적을 찾아냅니다.</p>
-                    <div class="flex items-center gap-4 bg-slate-950 p-4 rounded-xl">
+                    <div class="flex flex-wrap items-center gap-3 sm:gap-4 bg-slate-950 p-4 rounded-xl">
+
                         <div class="text-2xl">👤</div>
-                        <div class="bg-slate-700 px-4 py-2 rounded-lg text-slate-200 text-sm">"방이 너무 덥네"</div>
+
+                        <div class="bg-slate-700 px-4 py-2 rounded-lg text-slate-200 text-sm">
+                            "방이 너무 덥네"
+                        </div>
+
                         <i class="fa-solid fa-arrow-right text-slate-500"></i>
+
                         <div class="text-2xl text-emerald-400">🤖</div>
+
                         <div class="bg-emerald-900/50 border border-emerald-700 px-4 py-2 rounded-lg text-emerald-200 text-sm font-bold">
                             에어컨을 켜달라는 의도로 파악! ➔ (동작 수행)
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -376,30 +384,42 @@
                 </div>
             </div>
             <!-- Q2 -->
-            <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200 hover:shadow-md transition">
+            <div class="bg-white p-5 sm:p-6 lg:p-8 rounded-3xl shadow-sm border border-slate-200 hover:shadow-md transition">
                 <div class="flex items-start gap-4">
-                    <div class="w-10 h-10 bg-sky-100 text-sky-600 rounded-xl flex items-center justify-center font-bold text-lg shrink-0">
+
+                    <div class="w-9 h-9 sm:w-10 sm:h-10 bg-sky-100 text-sky-600 rounded-xl flex items-center justify-center font-bold text-base sm:text-lg shrink-0">
                         Q2
                     </div>
+
                     <div class="w-full">
-                        <p class="text-lg font-bold mb-4">문장 안에서 특정한 이름을 가진 단어(예: 사람 이름, 기관 이름, 시간 등)를 찾아내어 어떤 유형인지 분류하는
-                            분석 과정은 무엇인가요?</p>
-                        <pre><code class="language-c text-sm mb-4 block p-3 bg-slate-50 rounded-lg">예: "유정이(사람)는 2021년(시간)에 입사했다."</code></pre>
-                        <div class="grid grid-cols-1 gap-3">
+
+                        <p class="text-base sm:text-lg font-bold mb-4">
+                            문장 안에서 특정한 이름을 가진 단어(예: 사람 이름, 기관 이름, 시간 등)를 찾아내어 어떤 유형인지 분류하는 분석 과정은 무엇인가요?
+                        </p>
+
+                        <pre class="whitespace-pre-wrap"><code class="language-c text-sm mb-4 block p-3 bg-slate-50 rounded-lg">
+예: "유정이(사람)는 2021년(시간)에 입사했다."</code></pre>
+
+                        <div class="grid gap-3">
                             <button onclick="checkAnswer(this, true, '정답입니다! 고유명사나 중요한 단어의 종류(사람, 장소, 시간 등)를 태그하는 것을 개체명 분석이라고 합니다.')"
-                                    class="quiz-btn">A. 개체명 분석 (Entities Analysis)
+                                    class="quiz-btn">
+                                A. 개체명 분석 (Entities Analysis)
                             </button>
+
                             <button onclick="checkAnswer(this, false, '구문 분석은 문장의 구조(주어, 동사 등 문법적 관계)를 파악하는 것입니다.')"
-                                    class="quiz-btn">B. 구문 분석 (Syntax Analysis)
+                                    class="quiz-btn">
+                                B. 구문 분석 (Syntax Analysis)
                             </button>
+
                             <button onclick="checkAnswer(this, false, '음성 합성은 글자를 다시 사람의 목소리로 만들어 읽어주는 기술입니다.')"
-                                    class="quiz-btn">C. 음성 합성 (TTS)
+                                    class="quiz-btn">
+                                C. 음성 합성 (TTS)
                             </button>
                         </div>
+
                     </div>
                 </div>
-            </div>
-            <!-- Q3 -->
+            </div><!-- Q3 -->
             <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200 hover:shadow-md transition">
                 <div class="flex items-start gap-4">
                     <div class="w-10 h-10 bg-sky-100 text-sky-600 rounded-xl flex items-center justify-center font-bold text-lg shrink-0">
