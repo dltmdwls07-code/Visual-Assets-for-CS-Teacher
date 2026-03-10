@@ -58,7 +58,43 @@
 
 <main class="max-w-4xl mx-auto px-6 mt-12 space-y-12">
 
-    <section class="concept-card bg-white rounded-3xl p-8 shadow-sm border border-slate-200">
+    <section id="step-0"
+             class="concept-card bg-slate-800 rounded-3xl p-8 shadow-sm border border-slate-700 mb-12 text-white relative overflow-hidden">
+        <div class="absolute -right-10 -top-10 opacity-10">
+            <i data-lucide="megaphone" class="w-48 h-48"></i>
+        </div>
+
+        <div class="relative z-10">
+            <div class="flex items-center gap-4 mb-4">
+                <div class="bg-yellow-400/20 p-3 rounded-2xl">
+                    <i data-lucide="mic" class="w-8 h-8 text-yellow-400"></i>
+                </div>
+                <h2 class="text-2xl font-bold">0. 시작하기 전에: 컴퓨터에게 말 걸기</h2>
+            </div>
+
+            <div class="space-y-4 text-slate-300 leading-relaxed">
+                <p>
+                    앞으로 나올 예제 코드들을 보면 항상 <code
+                        class="text-pink-400 font-bold bg-black/50 px-2 py-0.5 rounded text-base">print()</code>라는 녀석이
+                    등장할 거예요.
+                </p>
+                <p>
+                    파이썬에서 <code class="text-pink-400 font-bold bg-black/50 px-2 py-0.5 rounded text-base">print()</code>는
+                    <strong>"괄호 안의 내용을 화면에 보여줘!"</strong>라는 뜻을 가진 마법의 명령어(함수)입니다. 컴퓨터에게 명령을 내리고, 그 결과를 우리 눈으로 확인하기 위해 쓰는
+                    가장 기본적인 확성기랍니다.
+                </p>
+                <div class="bg-blue-500/10 p-4 rounded-xl border border-blue-500/20 mt-4 flex items-start gap-3">
+                    <i data-lucide="smile" class="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5"></i>
+                    <p class="text-blue-100">
+                        지금은 <strong>"아, 화면에 결과를 띄워주는 거구나!"</strong> 정도로만 생각하고 부담 없이 다음으로 넘어가세요. 자세한 사용법은 아래에서 완벽하게 다룰
+                        거예요!
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="data-type" class="concept-card bg-white rounded-3xl p-8 shadow-sm border border-slate-200">
         <div class="flex items-center gap-4 mb-6">
             <div class="bg-orange-100 p-3 rounded-2xl">
                 <i data-lucide="layers" class="w-8 h-8 text-orange-600"></i>
@@ -74,32 +110,56 @@
                 <div class="p-5 rounded-2xl bg-slate-50 border border-slate-100">
                     <h4 class="font-bold text-slate-800 flex items-center gap-2 mb-2"><span
                             class="w-2 h-2 rounded-full bg-orange-400"></span>정수 (Integer)</h4>
-                    <p class="text-sm text-slate-600">소수점이 없는 딱 떨어지는 숫자입니다. (예: -1, 0, 100)</p>
-                    <p class="text-xs text-orange-600 mt-2 italic font-medium">"컴퓨터 내부에는 2진수 형태로 저장됩니다."</p>
+                    <p class="text-slate-600">소수점이 없는 딱 떨어지는 숫자입니다. (예: -1, 0, 100)</p>
+                    <p class="text-orange-600 mt-2 italic font-medium">"컴퓨터 내부에는 2진수 형태로 저장됩니다."</p>
                 </div>
                 <div class="p-5 rounded-2xl bg-slate-50 border border-slate-100">
                     <h4 class="font-bold text-slate-800 flex items-center gap-2 mb-2"><span
                             class="w-2 h-2 rounded-full bg-blue-400"></span>실수 (Floating-point)</h4>
-                    <p class="text-sm text-slate-600">소수점을 포함한 숫자입니다. (예: 3.14, 0.5, -2.0)</p>
-                    <p class="text-xs text-blue-600 mt-2 italic font-medium">"정수와는 다른 특별한 방식으로 저장됩니다."</p>
+                    <p class="text-slate-600">소수점을 포함한 숫자입니다. (예: 3.14, 0.5, -2.0)</p>
+                    <p class="text-blue-600 mt-2 italic font-medium">"정수와는 다른 특별한 방식으로 저장됩니다."</p>
                 </div>
                 <div class="p-5 rounded-2xl bg-slate-50 border border-slate-100">
                     <h4 class="font-bold text-slate-800 flex items-center gap-2 mb-2"><span
                             class="w-2 h-2 rounded-full bg-pink-400"></span>문자열 (String)</h4>
-                    <p class="text-sm text-slate-600">큰따옴표(" ")나 작은따옴표(' ')로 감싼 데이터입니다. (예: "안녕", '123')</p>
+                    <p class="text-slate-600">큰따옴표(" ")나 작은따옴표(' ')로 감싼 데이터입니다. (예: "안녕", '123')</p>
                 </div>
                 <div class="p-5 rounded-2xl bg-slate-50 border border-slate-100">
                     <h4 class="font-bold text-slate-800 flex items-center gap-2 mb-2"><span
                             class="w-2 h-2 rounded-full bg-emerald-400"></span>논릿값 (Boolean)</h4>
-                    <p class="text-sm text-slate-600">참(True) 또는 거짓(False) 중 하나의 값을 가집니다.</p>
+                    <p class="text-slate-600">참(True) 또는 거짓(False) 중 하나의 값을 가집니다.</p>
                 </div>
+            </div>
+
+            <div class="mt-8 bg-amber-50 p-6 rounded-2xl border border-amber-200">
+                <h4 class="font-bold text-amber-800 flex items-center gap-2 mb-3">
+                    <i data-lucide="eye" class="w-5 h-5"></i> 왕초보의 흔한 착각: 100과 "100"은 같은 걸까요?
+                </h4>
+                <p class="text-slate-700 leading-relaxed mb-3">
+                    우리 눈에는 둘 다 똑같은 숫자 백(100)으로 보이지만, 컴퓨터에게는 완전히 다른 데이터입니다!
+                </p>
+                <ul class="space-y-3 ">
+                    <li class="flex items-start gap-3 bg-white p-3 rounded-xl border border-amber-100 shadow-sm">
+                        <code class="font-bold text-orange-600 bg-orange-50 px-2 py-1 rounded text-base">100</code>
+                        <div class="text-slate-600">
+                            <strong>(따옴표 없음)</strong> 정수 자료형입니다. 덧셈, 뺄셈 등 <strong>수학 계산이 가능한 진짜 숫자</strong>입니다.
+                        </div>
+                    </li>
+                    <li class="flex items-start gap-3 bg-white p-3 rounded-xl border border-amber-100 shadow-sm">
+                        <code class="font-bold text-pink-600 bg-pink-50 px-2 py-1 rounded text-base">"100"</code>
+                        <div class="text-slate-600">
+                            <strong>(따옴표 있음)</strong> 문자열 자료형입니다. 겉모습만 숫자일 뿐, 그림처럼 <strong>그려진 글자</strong>라서 수학 계산을 할 수
+                            없습니다.
+                        </div>
+                    </li>
+                </ul>
             </div>
 
             <div class="grammar-box bg-indigo-50/50 p-4 rounded-r-lg mt-8">
                 <h3 class="font-bold text-indigo-700 flex items-center gap-2 mb-2">
                     <i data-lucide="zap" class="w-4 h-4"></i> 파이썬의 연산 규칙 (교과서 핵심)
                 </h3>
-                <ul class="list-disc list-inside text-sm text-slate-700 space-y-2">
+                <ul class="list-disc list-inside text-slate-700 space-y-2">
                     <li><span class="font-bold text-red-600">정수 + 문자열:</span> 자료형이 달라 연산이 불가능하며 오류가 발생합니다.</li>
                     <li><span class="font-bold text-indigo-600">문자열 * 정수:</span> 해당 문자열을 정수 횟수만큼 반복하여 출력합니다.</li>
                 </ul>
@@ -115,15 +175,15 @@
                 <div class="bg-slate-50 rounded-2xl border border-slate-200 overflow-hidden flex flex-col">
                     <div class="p-4 bg-slate-100/50 border-b border-slate-200">
                         <h5 class="font-bold text-slate-800 flex items-center gap-2">
-                            <span class="bg-emerald-500 text-white text-xs px-2 py-1 rounded-full">예제</span>
+                            <span class="bg-emerald-500 text-white px-2 py-1 rounded-full">예제</span>
                             숫자와 문자열의 덧셈
                         </h5>
                     </div>
                     <div class="relative group bg-[#1d1f21]">
                         <div class="flex items-center justify-between px-4 py-2 border-b border-white/10">
-                            <span class="text-xs font-medium text-slate-400 code-font">45-1.py</span>
+                            <span class="font-medium text-slate-400 code-font">45-1.py</span>
                             <button onclick="copyCode('code-45-1')"
-                                    class="text-slate-400 hover:text-white transition-colors flex items-center gap-1 text-xs">
+                                    class="text-slate-400 hover:text-white transition-colors flex items-center gap-1 ">
                                 <i data-lucide="copy" class="w-3 h-3"></i> 복사
                             </button>
                         </div>
@@ -134,9 +194,9 @@
                             <span class="text-[11px] font-bold text-red-500 flex items-center gap-1.5 uppercase tracking-wide mb-1">
                                 <i data-lucide="alert-circle" class="w-3.5 h-3.5"></i> Error
                             </span>
-                            <p class="code-font text-sm text-red-600 font-medium">TypeError: unsupported operand
+                            <p class="code-font text-red-600 font-medium">TypeError: unsupported operand
                                 type(s)</p>
-                            <p class="text-xs text-slate-600 mt-1">숫자와 문자는 서로 더할 수 없어요!</p>
+                            <p class="text-slate-600 mt-1">숫자와 문자는 서로 더할 수 없어요!</p>
                         </div>
                     </div>
                 </div>
@@ -145,15 +205,15 @@
                 <div class="bg-slate-50 rounded-2xl border border-slate-200 overflow-hidden flex flex-col">
                     <div class="p-4 bg-slate-100/50 border-b border-slate-200">
                         <h5 class="font-bold text-slate-800 flex items-center gap-2">
-                            <span class="bg-emerald-500 text-white text-xs px-2 py-1 rounded-full">예제</span>
+                            <span class="bg-emerald-500 text-white px-2 py-1 rounded-full">예제</span>
                             문자열의 곱셈 반복
                         </h5>
                     </div>
                     <div class="relative group bg-[#1d1f21]">
                         <div class="flex items-center justify-between px-4 py-2 border-b border-white/10">
-                            <span class="text-xs font-medium text-slate-400 code-font">45-2.py</span>
+                            <span class="font-medium text-slate-400 code-font">45-2.py</span>
                             <button onclick="copyCode('code-45-2')"
-                                    class="text-slate-400 hover:text-white transition-colors flex items-center gap-1 text-xs">
+                                    class="text-slate-400 hover:text-white transition-colors flex items-center gap-1 ">
                                 <i data-lucide="copy" class="w-3 h-3"></i> 복사
                             </button>
                         </div>
@@ -167,13 +227,13 @@
                                 <span class="text-[11px] font-bold text-blue-500 flex items-center gap-1.5 uppercase tracking-wide mb-1">
                                     <i data-lucide="terminal-square" class="w-3.5 h-3.5"></i> Result
                                 </span>
-                                <p class="code-font text-sm text-slate-700 font-medium">hellohellohello</p>
+                                <p class="code-font text-slate-700 font-medium">hellohellohello</p>
                             </div>
                             <div class="pt-2 border-t border-dashed border-slate-200">
                                 <span class="text-[11px] font-bold text-emerald-500 flex items-center gap-1.5 uppercase tracking-wide">
                                     <i data-lucide="lightbulb" class="w-3.5 h-3.5"></i> Tip
                                 </span>
-                                <p class="text-xs text-slate-600 leading-relaxed mt-1">문자를 곱하면 횟수만큼 반복됩니다!</p>
+                                <p class="text-slate-600 leading-relaxed mt-1">문자를 곱하면 횟수만큼 반복됩니다!</p>
                             </div>
                         </div>
 
@@ -207,25 +267,179 @@
                 <tr>
                     <td class="code-font font-bold text-indigo-600">int(x)</td>
                     <td>x를 <span class="font-bold text-slate-800">정수</span> 자료형으로 변환</td>
-                    <td class="code-font text-xs">int("10") → 10</td>
+                    <td class="code-font ">int("10") → 10</td>
                 </tr>
                 <tr>
                     <td class="code-font font-bold text-indigo-600">float(x)</td>
                     <td>x를 <span class="font-bold text-slate-800">실수</span> 자료형으로 변환</td>
-                    <td class="code-font text-xs">float("3.14") → 3.14</td>
+                    <td class="code-font ">float("3.14") → 3.14</td>
                 </tr>
                 <tr>
                     <td class="code-font font-bold text-indigo-600">str(x)</td>
                     <td>x를 <span class="font-bold text-slate-800">문자열</span> 자료형으로 변환</td>
-                    <td class="code-font text-xs">str(100) → "100"</td>
+                    <td class="code-font ">str(100) → "100"</td>
                 </tr>
                 <tr>
                     <td class="code-font font-bold text-indigo-600">chr(x) / ord(x)</td>
                     <td>유니코드 정수와 문자 간 변환</td>
-                    <td class="code-font text-xs">chr(65) → 'A'</td>
+                    <td class="code-font ">chr(65) → 'A'</td>
                 </tr>
                 </tbody>
             </table>
+        </div>
+
+        <div class="mt-6 bg-blue-50/50 p-6 rounded-2xl border border-blue-100 relative overflow-hidden">
+            <i data-lucide="book-open"
+               class="absolute -right-4 -bottom-4 w-24 h-24 text-blue-100/50 -z-10 transform -rotate-12"></i>
+
+            <h4 class="font-bold text-blue-800 flex items-center gap-2 mb-3 z-10 relative">
+                <i data-lucide="info" class="w-5 h-5"></i>
+                잠깐! '유니코드(Unicode)'가 대체 뭔가요?
+            </h4>
+            <div class="space-y-3 text-slate-700 leading-relaxed z-10 relative">
+                <p>
+                    표 마지막에 있는 <code class="code-font text-indigo-600 font-bold bg-white px-1 rounded">chr()</code>과
+                    <code class="code-font text-indigo-600 font-bold bg-white px-1 rounded">ord()</code>를 보고 당황하셨나요?
+                </p>
+                <p>
+                    사실 컴퓨터는 'A', 'B', '가', '나' 같은 글자를 있는 그대로 이해하지 못하고 <strong>모든 것을 숫자로만 기억</strong>합니다.
+                    그래서 "<span class="font-bold bg-amber-200 px-1 rounded">문자 'A'는 숫자 65</span>로 기억하자!"라고 전 세계 사람들이 미리
+                    약속해 둔 규칙표가 있는데,
+                    이 거대한 규칙표를 바로 <span class="font-bold bg-amber-200 px-1 rounded">'유니코드'</span>라고
+                    부릅니다.
+                </p>
+                <ul class="list-disc list-inside space-y-2 mt-2 ml-2 bg-white/60 p-4 rounded-xl border border-blue-100/50">
+                    <li><code class="code-font font-bold">ord("A")</code> : "문자 'A'는 컴퓨터 안에서 무슨 숫자야?" → <span
+                            class="font-bold text-blue-600">65</span>를 알려줌
+                    </li>
+                    <li><code class="code-font font-bold">chr(65)</code> : "숫자 65번은 규칙표에서 무슨 글자야?" → <span
+                            class="font-bold text-blue-600">'A'</span>를 알려줌
+                    </li>
+                </ul>
+                <p class="text-slate-500 mt-3 flex items-center gap-1.5">
+                    <i data-lucide="smile" class="w-4 h-4"></i>
+                    지금 당장 이 함수들을 외울 필요는 없어요! "아~ 컴퓨터는 글자도 비밀번호 같은 숫자로 바꿔서 기억하는구나!" 정도로만 이해하고 넘어가도 아주 훌륭합니다.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="concept-card bg-white rounded-3xl p-8 shadow-sm border border-slate-200 mt-12 mb-12">
+        <div class="flex items-center gap-4 mb-6">
+            <div class="bg-purple-100 p-3 rounded-2xl">
+                <i data-lucide="wrench" class="w-8 h-8 text-purple-600"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-slate-800">자료형 변환의 실제 활용 (에러 해결하기)</h2>
+        </div>
+
+        <div class="space-y-4 text-slate-600 leading-relaxed mb-8">
+            <p>
+                앞선 <span class="font-bold bg-amber-200 px-1 rounded"><a href="#data-type">자료형(Data Type)의 개념과 특징 섹션</a></span>에서
+                <code
+                        class="code-font text-red-500 font-bold bg-red-50 px-1 rounded">1 + "1"</code>처럼 정수와
+                문자열을 바로 더하려고 하면
+                <span class="font-bold text-slate-800">TypeError(자료형 오류)</span>가 발생한다는 것을 확인했습니다.
+                컴퓨터는 서로 다른 종류의 데이터를 어떻게 섞어야 할지 모르기 때문입니다.
+            </p>
+            <p>
+                이럴 때 바로 방금 배운 <span class="font-bold text-indigo-600">자료형 변환 함수</span>를 사용합니다!
+                데이터의 종류를 하나로 통일해주면 에러 없이 안전하게 연산과 출력을 수행할 수 있습니다. 독학할 때 가장 많이 겪는 에러 중 하나이니 아래 예제를 통해 확실히 원리를 이해해 봅시다.
+            </p>
+
+            <div class="grammar-box bg-purple-50/50 p-4 rounded-r-lg mt-6 border-l-4"
+                 style="border-left-color: #9333ea;">
+                <h3 class="font-bold text-purple-700 flex items-center gap-2 mb-2">
+                    <i data-lucide="check-circle" class="w-4 h-4"></i> 해결 공식
+                </h3>
+                <ul class="list-disc list-inside text-slate-700 space-y-2">
+                    <li><span class="font-bold text-slate-800">숫자로 계산하고 싶을 때:</span> 문자열을 정수나 실수로 변환 → <code
+                            class="code-font">1 + int("1")</code></li>
+                    <li><span class="font-bold text-slate-800">문자로 이어 붙이고 싶을 때:</span> 숫자를 문자열로 변환 → <code
+                            class="code-font">str(1) + "1"</code></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="mt-8 pt-6 border-t border-slate-100">
+            <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                <i data-lucide="code-2" class="w-5 h-5 text-purple-500"></i>
+                형변환을 통한 에러 해결 실습
+            </h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                <div class="bg-slate-50 rounded-2xl border border-slate-200 overflow-hidden flex flex-col">
+                    <div class="p-4 bg-slate-100/50 border-b border-slate-200">
+                        <h5 class="font-bold text-slate-800 flex items-center gap-2">
+                            <span class="bg-emerald-500 text-white px-2 py-1 rounded-full">예제</span>
+                            문자를 숫자로 바꿔서 덧셈하기
+                        </h5>
+                    </div>
+                    <div class="relative group bg-[#1d1f21]">
+                        <div class="flex items-center justify-between px-4 py-2 border-b border-white/10">
+                            <span class="font-medium text-slate-400 code-font">convert-1.py</span>
+                            <button onclick="copyCode('code-convert-1')"
+                                    class="text-slate-400 hover:text-white transition-colors flex items-center gap-1 ">
+                                <i data-lucide="copy" class="w-3 h-3"></i> 복사
+                            </button>
+                        </div>
+                        <div class="p-4">
+                            <pre><code id="code-convert-1" class="language-python">print(int("100") + 50)</code></pre>
+                        </div>
+                        <div class="px-5 py-4 bg-white flex-grow flex flex-col gap-3">
+                            <div>
+                                <span class="text-[11px] font-bold text-blue-500 flex items-center gap-1.5 uppercase tracking-wide mb-1">
+                                    <i data-lucide="terminal-square" class="w-3.5 h-3.5"></i> Result
+                                </span>
+                                <p class="code-font text-slate-700 font-medium">150</p>
+                            </div>
+                            <div class="pt-2 border-t border-dashed border-slate-200">
+                                <span class="text-[11px] font-bold text-emerald-500 flex items-center gap-1.5 uppercase tracking-wide">
+                                    <i data-lucide="lightbulb" class="w-3.5 h-3.5"></i> Tip
+                                </span>
+                                <p class="text-slate-600 leading-relaxed mt-1">"100"이 진짜 숫자 100이 되었기 때문에 정상적으로
+                                    덧셈(수학 연산)이 수행됩니다.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 rounded-2xl border border-slate-200 overflow-hidden flex flex-col">
+                    <div class="p-4 bg-slate-100/50 border-b border-slate-200">
+                        <h5 class="font-bold text-slate-800 flex items-center gap-2">
+                            <span class="bg-emerald-500 text-white px-2 py-1 rounded-full">예제</span>
+                            숫자를 문자로 바꿔서 이어 붙이기
+                        </h5>
+                    </div>
+                    <div class="relative group bg-[#1d1f21]">
+                        <div class="flex items-center justify-between px-4 py-2 border-b border-white/10">
+                            <span class="font-medium text-slate-400 code-font">convert-2.py</span>
+                            <button onclick="copyCode('code-convert-2')"
+                                    class="text-slate-400 hover:text-white transition-colors flex items-center gap-1 ">
+                                <i data-lucide="copy" class="w-3 h-3"></i> 복사
+                            </button>
+                        </div>
+                        <div class="p-4">
+                            <pre><code id="code-convert-2" class="language-python">print(str(100) + "점")</code></pre>
+                        </div>
+                        <div class="px-5 py-4 bg-white flex-grow flex flex-col gap-3">
+                            <div>
+                                <span class="text-[11px] font-bold text-blue-500 flex items-center gap-1.5 uppercase tracking-wide mb-1">
+                                    <i data-lucide="terminal-square" class="w-3.5 h-3.5"></i> Result
+                                </span>
+                                <p class="code-font text-slate-700 font-medium">100점</p>
+                            </div>
+                            <div class="pt-2 border-t border-dashed border-slate-200">
+                                <span class="text-[11px] font-bold text-emerald-500 flex items-center gap-1.5 uppercase tracking-wide">
+                                    <i data-lucide="lightbulb" class="w-3.5 h-3.5"></i> Tip
+                                </span>
+                                <p class="text-slate-600 leading-relaxed mt-1">숫자 100이 문자 "100"으로 변해서 뒤의 "점"이라는
+                                    글자와 자연스럽게 합쳐집니다.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         </div>
     </section>
 
@@ -240,7 +454,7 @@
         <div class="space-y-12">
             <div>
                 <div class="flex items-center gap-3 mb-4">
-                    <span class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-600 text-white font-bold text-sm">01</span>
+                    <span class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-600 text-white font-bold ">01</span>
                     <h3 class="text-xl font-bold text-slate-800">기본 출력과 쉼표(,) 활용</h3>
                 </div>
                 <p class="text-slate-600 mb-6 ml-11 leading-relaxed">
@@ -252,15 +466,15 @@
                     <div class="bg-slate-50 rounded-2xl border border-slate-200 overflow-hidden flex flex-col">
                         <div class="p-4 bg-slate-100/50 border-b border-slate-200">
                             <h5 class="font-bold text-slate-800 flex items-center gap-2">
-                                <span class="bg-emerald-500 text-white text-xs px-2 py-1 rounded-full">예제</span>
+                                <span class="bg-emerald-500 text-white px-2 py-1 rounded-full">예제</span>
                                 기본 데이터 출력
                             </h5>
                         </div>
                         <div class="relative group bg-[#1d1f21]">
                             <div class="flex items-center justify-between px-4 py-2 border-b border-white/10">
-                                <span class="text-xs font-medium text-slate-400 code-font">47.py</span>
+                                <span class="font-medium text-slate-400 code-font">47.py</span>
                                 <button onclick="copyCode('code-47')"
-                                        class="text-slate-400 hover:text-white transition-colors flex items-center gap-1 text-xs">
+                                        class="text-slate-400 hover:text-white transition-colors flex items-center gap-1 ">
                                     <i data-lucide="copy" class="w-3 h-3"></i> 복사
                                 </button>
                             </div>
@@ -271,7 +485,7 @@
                                     <span class="text-[11px] font-bold text-blue-500 flex items-center gap-1.5 uppercase tracking-wide mb-1">
                                         <i data-lucide="terminal-square" class="w-3.5 h-3.5"></i> Result
                                     </span>
-                                <p class="code-font text-sm text-slate-700 font-medium">Hello</p>
+                                <p class="code-font text-slate-700 font-medium">Hello</p>
                             </div>
                         </div>
                     </div>
@@ -279,15 +493,15 @@
                     <div class="bg-slate-50 rounded-2xl border border-slate-200 overflow-hidden flex flex-col">
                         <div class="p-4 bg-slate-100/50 border-b border-slate-200">
                             <h5 class="font-bold text-slate-800 flex items-center gap-2">
-                                <span class="bg-emerald-500 text-white text-xs px-2 py-1 rounded-full">예제</span>
+                                <span class="bg-emerald-500 text-white px-2 py-1 rounded-full">예제</span>
                                 쉼표를 이용한 나열
                             </h5>
                         </div>
                         <div class="relative group bg-[#1d1f21]">
                             <div class="flex items-center justify-between px-4 py-2 border-b border-white/10">
-                                <span class="text-xs font-medium text-slate-400 code-font">48.py</span>
+                                <span class="font-medium text-slate-400 code-font">48.py</span>
                                 <button onclick="copyCode('code-48')"
-                                        class="text-slate-400 hover:text-white transition-colors flex items-center gap-1 text-xs">
+                                        class="text-slate-400 hover:text-white transition-colors flex items-center gap-1 ">
                                     <i data-lucide="copy" class="w-3 h-3"></i> 복사
                                 </button>
                             </div>
@@ -298,7 +512,7 @@
                                     <span class="text-[11px] font-bold text-blue-500 flex items-center gap-1.5 uppercase tracking-wide mb-1">
                                         <i data-lucide="terminal-square" class="w-3.5 h-3.5"></i> Result
                                     </span>
-                                <p class="code-font text-sm text-slate-700 font-medium">Hello Python World</p>
+                                <p class="code-font text-slate-700 font-medium">Hello Python World</p>
                             </div>
                         </div>
                     </div>
@@ -307,27 +521,27 @@
 
             <div>
                 <div class="flex items-center gap-3 mb-4">
-                    <span class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-600 text-white font-bold text-sm">02</span>
+                    <span class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-600 text-white font-bold ">02</span>
                     <h3 class="text-xl font-bold text-slate-800">구분자 설정 (sep 옵션)</h3>
                 </div>
                 <p class="text-slate-600 mb-6 ml-11 leading-relaxed">
                     데이터 사이에 공백 대신 특정 문자를 넣고 싶을 때 <code
-                        class="code-font bg-slate-100 px-1.5 py-0.5 rounded text-indigo-600 text-sm">sep</code> 옵션을
+                        class="code-font bg-slate-100 px-1.5 py-0.5 rounded text-indigo-600 ">sep</code> 옵션을
                     사용합니다.
                 </p>
                 <div class="ml-11">
                     <div class="bg-slate-50 rounded-2xl border border-slate-200 overflow-hidden flex flex-col">
                         <div class="p-4 bg-slate-100/50 border-b border-slate-200">
                             <h5 class="font-bold text-slate-800 flex items-center gap-2">
-                                <span class="bg-emerald-500 text-white text-xs px-2 py-1 rounded-full">예제</span>
+                                <span class="bg-emerald-500 text-white px-2 py-1 rounded-full">예제</span>
                                 구분자 지정 출력
                             </h5>
                         </div>
                         <div class="relative group bg-[#1d1f21]">
                             <div class="flex items-center justify-between px-4 py-2 border-b border-white/10">
-                                <span class="text-xs font-medium text-slate-400 code-font">49.py</span>
+                                <span class="font-medium text-slate-400 code-font">49.py</span>
                                 <button onclick="copyCode('code-49')"
-                                        class="text-slate-400 hover:text-white transition-colors flex items-center gap-1 text-xs">
+                                        class="text-slate-400 hover:text-white transition-colors flex items-center gap-1 ">
                                     <i data-lucide="copy" class="w-3 h-3"></i> 복사
                                 </button>
                             </div>
@@ -338,7 +552,7 @@
                                     <span class="text-[11px] font-bold text-blue-500 flex items-center gap-1.5 uppercase tracking-wide mb-1">
                                         <i data-lucide="terminal-square" class="w-3.5 h-3.5"></i> Result
                                     </span>
-                                <p class="code-font text-sm text-slate-700 font-medium">3.01.004</p>
+                                <p class="code-font text-slate-700 font-medium">3.01.004</p>
                             </div>
                         </div>
                     </div>
@@ -347,27 +561,27 @@
 
             <div>
                 <div class="flex items-center gap-3 mb-4">
-                    <span class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-600 text-white font-bold text-sm">03</span>
+                    <span class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-600 text-white font-bold ">03</span>
                     <h3 class="text-xl font-bold text-slate-800">줄 바꿈 제어 (end 옵션)</h3>
                 </div>
                 <p class="text-slate-600 mb-6 ml-11 leading-relaxed">
                     기본적으로 print()는 자동 줄바꿈을 수행합니다. 줄을 바꾸지 않고 이어 붙이려면 <code
-                        class="code-font bg-slate-100 px-1.5 py-0.5 rounded text-indigo-600 text-sm">end</code> 옵션을
+                        class="code-font bg-slate-100 px-1.5 py-0.5 rounded text-indigo-600 ">end</code> 옵션을
                     사용합니다.
                 </p>
                 <div class="ml-11 grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="bg-slate-50 rounded-2xl border border-slate-200 overflow-hidden flex flex-col">
                         <div class="p-4 bg-slate-100/50 border-b border-slate-200">
                             <h5 class="font-bold text-slate-800 flex items-center gap-2">
-                                <span class="bg-emerald-500 text-white text-xs px-2 py-1 rounded-full">예제</span>
+                                <span class="bg-emerald-500 text-white px-2 py-1 rounded-full">예제</span>
                                 기본 줄 바꿈 동작
                             </h5>
                         </div>
                         <div class="relative group bg-[#1d1f21]">
                             <div class="flex items-center justify-between px-4 py-2 border-b border-white/10">
-                                <span class="text-xs font-medium text-slate-400 code-font">50.py</span>
+                                <span class="font-medium text-slate-400 code-font">50.py</span>
                                 <button onclick="copyCode('code-50')"
-                                        class="text-slate-400 hover:text-white transition-colors flex items-center gap-1 text-xs">
+                                        class="text-slate-400 hover:text-white transition-colors flex items-center gap-1 ">
                                     <i data-lucide="copy" class="w-3 h-3"></i> 복사
                                 </button>
                             </div>
@@ -379,7 +593,7 @@ print("World")</code></pre>
                                     <span class="text-[11px] font-bold text-blue-500 flex items-center gap-1.5 uppercase tracking-wide mb-1">
                                         <i data-lucide="terminal-square" class="w-3.5 h-3.5"></i> Result
                                     </span>
-                                <p class="code-font text-sm text-slate-700 font-medium leading-tight">Hello<br>World</p>
+                                <p class="code-font text-slate-700 font-medium leading-tight">Hello<br>World</p>
                             </div>
                         </div>
                     </div>
@@ -387,15 +601,15 @@ print("World")</code></pre>
                     <div class="bg-slate-50 rounded-2xl border border-slate-200 overflow-hidden flex flex-col">
                         <div class="p-4 bg-slate-100/50 border-b border-slate-200">
                             <h5 class="font-bold text-slate-800 flex items-center gap-2">
-                                <span class="bg-emerald-500 text-white text-xs px-2 py-1 rounded-full">예제</span>
+                                <span class="bg-emerald-500 text-white px-2 py-1 rounded-full">예제</span>
                                 줄 바꿈 없이 출력
                             </h5>
                         </div>
                         <div class="relative group bg-[#1d1f21]">
                             <div class="flex items-center justify-between px-4 py-2 border-b border-white/10">
-                                <span class="text-xs font-medium text-slate-400 code-font">51.py</span>
+                                <span class="font-medium text-slate-400 code-font">51.py</span>
                                 <button onclick="copyCode('code-51')"
-                                        class="text-slate-400 hover:text-white transition-colors flex items-center gap-1 text-xs">
+                                        class="text-slate-400 hover:text-white transition-colors flex items-center gap-1 ">
                                     <i data-lucide="copy" class="w-3 h-3"></i> 복사
                                 </button>
                             </div>
@@ -407,7 +621,7 @@ print("Python")</code></pre>
                                     <span class="text-[11px] font-bold text-blue-500 flex items-center gap-1.5 uppercase tracking-wide mb-1">
                                         <i data-lucide="terminal-square" class="w-3.5 h-3.5"></i> Result
                                     </span>
-                                <p class="code-font text-sm text-slate-700 font-medium">Hello, Python</p>
+                                <p class="code-font text-slate-700 font-medium">Hello, Python</p>
                             </div>
                         </div>
                     </div>
@@ -416,42 +630,72 @@ print("Python")</code></pre>
         </div>
     </section>
 
-    <section class="concept-card bg-slate-900 rounded-3xl p-8 shadow-xl border border-slate-800 text-white">
+    <section class="concept-card bg-slate-900 rounded-3xl p-8 shadow-xl border border-slate-800 text-white mt-12 mb-12">
         <div class="flex items-center gap-4 mb-8">
             <div class="bg-indigo-500 p-3 rounded-2xl">
                 <i data-lucide="help-circle" class="w-8 h-8 text-white"></i>
             </div>
-            <h2 class="text-2xl font-bold">4. 학습 확인 (형성 평가)</h2>
+            <h2 class="text-2xl font-bold">학습 확인 (형성 평가)</h2>
         </div>
 
         <div class="space-y-6">
             <div class="bg-white/5 p-6 rounded-2xl border border-white/10">
                 <p class="text-lg font-medium mb-4 flex items-start gap-3">
                     <span class="text-indigo-400 font-bold">Q1.</span>
-                    다음 중 정수 자료형인 것을 모두 고르시오.
+                    다음 중 정수(int) 자료형인 것을 모두 고르시오.
                 </p>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
-                    <div class="p-3 border border-white/10 rounded-xl text-center">① "123"</div>
-                    <div class="p-3 border border-indigo-500/50 bg-indigo-500/20 rounded-xl text-center font-bold text-indigo-300">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 ">
+                    <div class="p-3 border border-white/10 bg-black/20 rounded-xl text-center text-slate-300 hover:bg-white/10 transition-colors cursor-pointer">
+                        ① "123"
+                    </div>
+                    <div class="p-3 border border-white/10 bg-black/20 rounded-xl text-center text-slate-300 hover:bg-white/10 transition-colors cursor-pointer">
                         ② -5
                     </div>
-                    <div class="p-3 border border-white/10 rounded-xl text-center">③ 3.14</div>
-                    <div class="p-3 border border-indigo-500/50 bg-indigo-500/20 rounded-xl text-center font-bold text-indigo-300">
+                    <div class="p-3 border border-white/10 bg-black/20 rounded-xl text-center text-slate-300 hover:bg-white/10 transition-colors cursor-pointer">
+                        ③ 3.14
+                    </div>
+                    <div class="p-3 border border-white/10 bg-black/20 rounded-xl text-center text-slate-300 hover:bg-white/10 transition-colors cursor-pointer">
                         ④ 0
                     </div>
                 </div>
+
+                <details class="mt-6 group">
+                    <summary
+                            class="cursor-pointer inline-flex items-center gap-2 font-bold text-emerald-400 bg-emerald-400/10 px-3 py-1.5 rounded-lg hover:bg-emerald-400/20 transition-colors list-none">
+                        <i data-lucide="lightbulb" class="w-4 h-4"></i> 정답 및 해설 보기
+                    </summary>
+                    <div class="mt-3 p-4 bg-black/30 rounded-xl border border-emerald-500/20 text-slate-300 leading-relaxed">
+                        <div class="mb-3">
+                            <span class="text-emerald-400 font-bold bg-emerald-400/10 px-2 py-1 rounded">정답: ②, ④</span>
+                        </div>
+                        ① <code class="text-indigo-300 bg-white/10 px-1 rounded">"123"</code>은 큰따옴표로 묶여 있으므로 <strong>문자열(str)</strong>입니다.
+                        겉보기엔 숫자 같지만 컴퓨터는 글자로 인식합니다.<br>
+                        ③ <code class="text-indigo-300 bg-white/10 px-1 rounded">3.14</code>는 소수점이 있으므로 <strong>실수(float)</strong>입니다.<br>
+                        따라서 소수점이 없는 순수한 숫자인 ② -5와 ④ 0이 정수입니다.
+                    </div>
+                </details>
             </div>
 
             <div class="bg-white/5 p-6 rounded-2xl border border-white/10">
                 <p class="text-lg font-medium mb-4 flex items-start gap-3">
                     <span class="text-indigo-400 font-bold">Q2.</span>
-                    print(10, 20, sep=":")의 실행 결과는?
+                    <code class="code-font text-pink-400 bg-black/50 px-2 py-0.5 rounded text-base">print(10, 20,
+                        sep=":")</code> 의 실행 결과는?
                 </p>
-                <div class="mt-2 pl-9">
-                    <div class="code-font bg-black/40 p-4 rounded-xl text-emerald-400 border border-white/5 inline-block min-w-[100px] text-center">
-                        10:20
+                <details class="mt-2 pl-9 group">
+                    <summary
+                            class="cursor-pointer inline-flex items-center gap-2 font-bold text-emerald-400 bg-emerald-400/10 px-3 py-1.5 rounded-lg hover:bg-emerald-400/20 transition-colors list-none">
+                        <i data-lucide="lightbulb" class="w-4 h-4"></i> 정답 및 해설 보기
+                    </summary>
+                    <div class="mt-3 p-4 bg-black/30 rounded-xl border border-emerald-500/20 text-slate-300 leading-relaxed">
+                        <div class="mb-3">
+                            <span class="text-slate-400 uppercase font-bold tracking-wider">정답 (실행 결과)</span><br>
+                            <div class="code-font text-emerald-400 text-lg font-bold mt-1">10:20</div>
+                        </div>
+                        <code class="text-indigo-300 font-bold bg-white/10 px-1 rounded">sep=":"</code> 옵션은 쉼표로 나열된
+                        데이터들(10과 20) 사이에 공백 대신 <strong>콜론(:)</strong>을 집어넣으라는 명령어입니다. 따라서 10과 20이 콜론으로 연결되어 출력됩니다.
                     </div>
-                </div>
+                </details>
             </div>
         </div>
     </section>
