@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>단원 번호. 단원명 - 학습 자료 템플릿</title>
+    <!-- Tailwind CSS & Font Awesome -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Vis.js for Tree Visualization -->
+    <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;700;900&display=swap');
+
+        body {
+            font-family: 'Pretendard', sans-serif;
+            scroll-behavior: smooth;
+            background-color: #f8fafc;
+        }
+
+        /* Hero 배경 그라데이션 */
+        .hero-gradient {
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+        }
+
+        /* 스크롤 시 상단 고정 네비게이션 */
+        .sticky-nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+            background-color: rgba(255, 255, 255, 0.85);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        /* 2D Grid 스타일 */
+        #grid-container {
+            display: grid;
+            gap: 2px;
+            background-color: #e2e8f0;
+            border: 2px solid #cbd5e1;
+            border-radius: 0.5rem;
+            padding: 2px;
+            user-select: none; /* 드래그 방지 */
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .grid-cell {
+            width: 100%;
+            aspect-ratio: 1;
+            background-color: white;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            color: rgba(0,0,0,0.3);
+        }
+
+        .grid-cell:hover { transform: scale(1.05); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); z-index: 10;}
+
+        /* 셀 상태 색상 */
+        .cell-wall { background-color: #475569 !important; border-color: #334155; transform: scale(0.95); }
+        .cell-start { background-color: #10b981 !important; color: white !important; font-weight: bold; }
+        .cell-end { background-color: #ef4444 !important; color: white !important; font-weight: bold; }
+
+        /* 애니메이션 효과 */
+        .cell-discovered {
+            background-color: #bae6fd !important;
+            animation: pop 0.3s ease-out forwards;
+        }
+        .cell-visited {
+            background-color: #3b82f6 !important;
+            animation: pop 0.3s ease-out forwards;
+        }
+        .cell-path {
+            background-color: #f59e0b !important;
+            animation: pathPop 0.4s ease-out forwards;
+            box-shadow: 0 0 10px #fbbf24;
+            z-index: 5;
+        }
+
+        @keyframes pop {
+            0% { transform: scale(0.5); border-radius: 50%; }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); border-radius: 0.25rem; }
+        }
+
+        @keyframes pathPop {
+            0% { transform: scale(0.5); background-color: #fcd34d; }
+            50% { transform: scale(1.2); background-color: #f59e0b; }
+            100% { transform: scale(1); background-color: #f59e0b; }
+        }
+
+        /* Tree Network 컨테이너 */
+        #tree-network {
+            width: 100%;
+            height: 100%;
+            min-height: 500px;
+            background-color: #ffffff;
+            border-radius: 0.5rem;
+        }
+
+        /* 툴바 활성화 상태 */
+        .tool-active {
+            background-color: #4f46e5 !important;
+            color: white !important;
+            border-color: #4f46e5 !important;
+            box-shadow: inset 0 2px 4px 0 rgb(0 0 0 / 0.1);
+        }
+
+        /* 커스텀 스크롤바 (트리 영역용) */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="text-slate-800 flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="sticky-nav py-4 px-6 shadow-sm flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white shadow-lg">
+                <i class="fa-solid fa-robot text-xl"></i>
+            </div>
+            <div>
+                <h2 class="font-bold text-slate-800 leading-tight">II. 인공지능의 원리와 활용</h2>
+                <p class="text-xs text-slate-500 font-medium">탐색 알고리즘 시각화 실습</p>
+            </div>
+        </div>
+        <button onclick="window.scrollTo(0,0)" class="text-slate-400 hover:text-indigo-600 transition-colors">
+            <i class="fa-solid fa-arrow-up"></i>
+        </button>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero-gradient text-white pt-12 pb-10 px-4 shadow-lg text-center">
+        <div class="max-w-5xl mx-auto">
+            <span class="bg-white/20 px-4 py-1.5 rounded-full text-sm font-bold tracking-wider uppercase mb-4 inline-block backdrop-blur-sm shadow-sm">
+                AI Search Algorithms
+            </span>
+            <h1 class="text-3xl md:text-5xl font-black mb-4 tracking-tight drop-shadow-md">
+                무정보 탐색 (BFS / DFS)
+            </h1>
+            <p class="text-lg text-indigo-100 font-medium max-w-2xl mx-auto">
+                2차원 평면에서의 탐색 과정과, 그것이 어떻게 트리(Tree) 구조로 확장되는지 직관적으로 확인해보세요.
+            </p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow max-w-7xl mx-auto px-4 py-8 w-full flex flex-col gap-6">
+
+        <!-- Control Panel -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 flex flex-col lg:flex-row gap-6 justify-between items-stretch">
+
+            <!-- 1. 맵 편집 도구 -->
+            <div class="flex-1 flex flex-col gap-3 border-b lg:border-b-0 lg:border-r border-slate-100 pb-5 lg:pb-0 lg:pr-6">
+                <div class="flex items-center gap-2 text-slate-700 font-bold">
+                    <i class="fa-solid fa-pen-ruler text-indigo-500"></i> 맵 편집 도구
+                </div>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 h-full">
+                    <button id="tool-start" class="tool-btn bg-slate-50 border-2 border-slate-200 text-slate-600 rounded-xl font-bold hover:bg-slate-100 transition-all flex flex-col items-center justify-center py-2" data-tool="start">
+                        <i class="fa-solid fa-location-dot text-emerald-500 text-lg mb-1"></i> 시작점
+                    </button>
+                    <button id="tool-end" class="tool-btn bg-slate-50 border-2 border-slate-200 text-slate-600 rounded-xl font-bold hover:bg-slate-100 transition-all flex flex-col items-center justify-center py-2" data-tool="end">
+                        <i class="fa-solid fa-flag text-rose-500 text-lg mb-1"></i> 도착점
+                    </button>
+                    <button id="tool-wall" class="tool-btn tool-active bg-slate-50 border-2 border-slate-200 text-slate-600 rounded-xl font-bold hover:bg-slate-100 transition-all flex flex-col items-center justify-center py-2" data-tool="wall">
+                        <i class="fa-solid fa-cubes text-slate-500 text-lg mb-1"></i> 벽(장애물)
+                    </button>
+                    <button id="tool-eraser" class="tool-btn bg-slate-50 border-2 border-slate-200 text-slate-600 rounded-xl font-bold hover:bg-slate-100 transition-all flex flex-col items-center justify-center py-2" data-tool="eraser">
+                        <i class="fa-solid fa-eraser text-slate-400 text-lg mb-1"></i> 지우개
+                    </button>
+                </div>
+            </div>
+
+            <!-- 2. 알고리즘 & 속도 설정 -->
+            <div class="flex-1 flex flex-col gap-3 border-b lg:border-b-0 lg:border-r border-slate-100 pb-5 lg:pb-0 lg:pr-6">
+                <div class="flex items-center gap-2 text-slate-700 font-bold">
+                    <i class="fa-solid fa-sliders text-indigo-500"></i> 탐색 설정
+                </div>
+                <div class="flex flex-col gap-4 h-full justify-center">
+                    <select id="algo-select" class="bg-indigo-50/50 border border-indigo-100 text-indigo-900 rounded-xl focus:ring-indigo-500 focus:border-indigo-500 block w-full p-3 font-bold transition-all shadow-sm outline-none cursor-pointer">
+                        <option value="bfs">너비 우선 탐색 (BFS)</option>
+                        <option value="dfs">깊이 우선 탐색 (DFS)</option>
+                    </select>
+                    <div class="flex items-center gap-3 bg-slate-50 p-3 rounded-xl border border-slate-100">
+                        <i class="fa-solid fa-turtle text-slate-400"></i>
+                        <input type="range" id="speed-slider" min="10" max="1000" value="300" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600">
+                        <i class="fa-solid fa-rabbit text-slate-400"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. 실행 컨트롤 -->
+            <div class="flex-1 flex flex-col gap-3">
+                <div class="flex items-center justify-between text-slate-700 font-bold">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-gamepad text-indigo-500"></i> 실행 제어
+                    </div>
+                    <span id="status-text" class="px-3 py-1 bg-slate-100 text-slate-600 rounded-full text-xs font-bold transition-colors">
+                        대기 중
+                    </span>
+                </div>
+                <div class="flex gap-2 h-full items-end">
+                    <button id="btn-step" class="flex-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 font-bold rounded-xl py-3 px-2 shadow-sm transition-all transform hover:-translate-y-0.5 active:translate-y-0 flex flex-col items-center justify-center gap-1">
+                        <i class="fa-solid fa-forward-step text-lg"></i>
+                        <span class="text-xs">단계 진행</span>
+                    </button>
+                    <button id="btn-play" class="flex-[1.5] bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl py-3 px-2 shadow-md transition-all transform hover:-translate-y-0.5 active:translate-y-0 flex flex-col items-center justify-center gap-1">
+                        <i class="fa-solid fa-play text-lg"></i>
+                        <span class="text-xs">자동 실행</span>
+                    </button>
+                    <button id="btn-reset" class="w-16 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-xl py-3 shadow-sm transition-all flex flex-col items-center justify-center gap-1" title="초기화">
+                        <i class="fa-solid fa-arrow-rotate-right text-lg"></i>
+                        <span class="text-xs">리셋</span>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Visualizers -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 flex-grow">
+            <!-- Left: 2D Grid -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 flex flex-col">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-lg font-black text-slate-800 flex items-center gap-2">
+                        <span class="bg-indigo-100 text-indigo-600 w-8 h-8 rounded-lg flex items-center justify-center"><i class="fa-solid fa-chess-board"></i></span>
+                        2D 평면 공간
+                    </h2>
+                    <div class="flex gap-3 text-xs font-bold text-slate-500">
+                        <span class="flex items-center gap-1"><span class="w-3 h-3 rounded bg-emerald-500"></span>시작</span>
+                        <span class="flex items-center gap-1"><span class="w-3 h-3 rounded bg-rose-500"></span>도착</span>
+                        <span class="flex items-center gap-1"><span class="w-3 h-3 rounded bg-slate-600"></span>벽</span>
+                        <span class="flex items-center gap-1"><span class="w-3 h-3 rounded bg-blue-500"></span>방문</span>
+                    </div>
+                </div>
+                <div id="grid-container" class="flex-grow w-full aspect-square">
+                    <!-- Grid cells will be generated here -->
+                </div>
+            </div>
+
+            <!-- Right: Tree -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 flex flex-col">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-lg font-black text-slate-800 flex items-center gap-2">
+                        <span class="bg-purple-100 text-purple-600 w-8 h-8 rounded-lg flex items-center justify-center"><i class="fa-solid fa-network-wired"></i></span>
+                        탐색 트리 구조
+                    </h2>
+                    <button onclick="network.fit()" class="text-xs font-bold text-slate-400 hover:text-indigo-600 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-200 transition-colors">
+                        <i class="fa-solid fa-compress mr-1"></i>화면 맞춤
+                    </button>
+                </div>
+                <div class="flex-grow border-2 border-slate-100 rounded-xl overflow-hidden relative min-h-[350px] md:min-h-[500px]">
+                    <div id="tree-network" class="absolute inset-0">
+                        <!-- Vis.js Network will be rendered here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-800 text-slate-400 py-6 text-center mt-auto">
+        <p class="text-sm">II. 인공지능의 원리와 활용 - 무정보 탐색(BFS/DFS) 시각화 도구</p>
+    </footer>
+
+    <script>
+        // --- 1. 전역 설정 및 상태 변수 ---
+        const ROWS = 10;
+        const COLS = 10;
+        const gridContainer = document.getElementById('grid-container');
+
+        let grid = []; // 2D DOM 배열
+        let gridState = []; // 2D 상태 배열 (0:빈칸, 1:벽)
+
+        let startNode = { r: 1, c: 1 };
+        let endNode = { r: 8, c: 8 };
+
+        let currentTool = 'wall'; // 'start', 'end', 'wall', 'eraser'
+        let isDrawing = false;
+
+        // 탐색 상태
+        let isRunning = false;
+        let isAutoPlaying = false;
+        let searchGenerator = null;
+        let playInterval = null;
+
+        // Vis.js Tree 데이터
+        let nodes = new vis.DataSet();
+        let edges = new vis.DataSet();
+        let network = null;
+
+        // UI 요소
+        const btnPlay = document.getElementById('btn-play');
+        const btnStep = document.getElementById('btn-step');
+        const statusText = document.getElementById('status-text');
+        const speedSlider = document.getElementById('speed-slider');
+
+        // 아이콘 HTML
+        const iconStart = '<i class="fa-solid fa-location-dot text-white text-xl drop-shadow-md"></i>';
+        const iconEnd = '<i class="fa-solid fa-flag text-white text-xl drop-shadow-md"></i>';
+        const iconPath = '<i class="fa-solid fa-star text-white text-sm opacity-80"></i>';
+
+        // --- 2. 초기화 및 이벤트 바인딩 ---
+        function init() {
+            createGrid();
+            initTreeNetwork();
+            bindEvents();
+            updateGridVisuals();
+        }
+
+        function createGrid() {
+            gridContainer.style.gridTemplateColumns = `repeat(${COLS}, minmax(0, 1fr))`;
+            gridContainer.innerHTML = '';
+            grid = [];
+            gridState = [];
+
+            for (let r = 0; r < ROWS; r++) {
+                let rowDom = [];
+                let rowState = [];
+                for (let c = 0; c < COLS; c++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'grid-cell';
+                    cell.dataset.r = r;
+                    cell.dataset.c = c;
+
+                    // 마우스 이벤트 (드래그 그리기 지원)
+                    cell.addEventListener('mousedown', handleCellMouseDown);
+                    cell.addEventListener('mouseenter', handleCellMouseEnter);
+
+                    gridContainer.appendChild(cell);
+                    rowDom.push(cell);
+                    rowState.push(0); // 0: empty
+                }
+                grid.push(rowDom);
+                gridState.push(rowState);
+            }
+
+            // 전역 마우스 업 (드래그 종료)
+            document.addEventListener('mouseup', () => { isDrawing = false; });
+        }
+
+        function initTreeNetwork() {
+            const container = document.getElementById('tree-network');
+            const data = { nodes: nodes, edges: edges };
+            const options = {
+                layout: {
+                    hierarchical: {
+                        direction: "UD", // Up-Down
+                        sortMethod: "directed",
+                        nodeSpacing: 50,
+                        levelSeparation: 70
+                    }
+                },
+                physics: false, // 노드 튀는 현상 방지
+                nodes: {
+                    shape: 'box',
+                    margin: 8,
+                    // bold: true 를 제거하여 오류 수정
+                    font: { size: 14, color: '#334155', face: 'Pretendard' },
+                    borderWidth: 2,
+                    shadow: { enabled: true, color: 'rgba(0,0,0,0.1)', size: 5, x: 2, y: 2 }
+                },
+                edges: {
+                    width: 2,
+                    color: { color: '#cbd5e1', highlight: '#3b82f6' },
+                    smooth: { type: 'cubicBezier', forceDirection: 'vertical', roundness: 0.4 }
+                },
+                interaction: { dragNodes: true, zoomView: true, dragView: true }
+            };
+            network = new vis.Network(container, data, options);
+        }
+
+        // --- 3. 사용자 상호작용 (맵 편집) ---
+        function bindEvents() {
+            // 툴바 선택
+            document.querySelectorAll('.tool-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    document.querySelectorAll('.tool-btn').forEach(b => {
+                        b.classList.remove('tool-active');
+                    });
+                    e.currentTarget.classList.add('tool-active');
+                    currentTool = e.currentTarget.dataset.tool;
+                });
+            });
+
+            // 컨트롤 버튼
+            document.getElementById('btn-reset').addEventListener('click', () => {
+                resetSearch();
+                // 전체 맵 초기화 원할 경우 아래 주석 해제
+                // createGrid(); updateGridVisuals();
+            });
+            btnPlay.addEventListener('click', toggleAutoPlay);
+            btnStep.addEventListener('click', stepForward);
+            document.getElementById('algo-select').addEventListener('change', resetSearch);
+        }
+
+        function handleCellMouseDown(e) {
+            isDrawing = true;
+            applyTool(e.currentTarget);
+        }
+
+        function handleCellMouseEnter(e) {
+            if (!isDrawing) return;
+            // 시작점/도착점은 드래그로 그리지 않음
+            if (currentTool === 'start' || currentTool === 'end') return;
+            applyTool(e.currentTarget);
+        }
+
+        // 탐색 시각화 흔적만 지우기 (벽/시작/도착은 유지)
+        function clearSearchVisuals() {
+            stopAutoPlay();
+            isRunning = false;
+            searchGenerator = null;
+            for(let r=0; r<ROWS; r++) {
+                for(let c=0; c<COLS; c++) {
+                    grid[r][c].classList.remove('cell-discovered', 'cell-visited', 'cell-path');
+                    // 아이콘 복구
+                    if(r !== startNode.r || c !== startNode.c) {
+                        if(r !== endNode.r || c !== endNode.c) {
+                            grid[r][c].innerHTML = '';
+                        }
+                    }
+                }
+            }
+            nodes.clear();
+            edges.clear();
+            setStatus("대기 중", "bg-slate-100 text-slate-600");
+        }
+
+        function applyTool(cell) {
+            clearSearchVisuals(); // 편집 시 탐색 결과 초기화
+
+            const r = parseInt(cell.dataset.r);
+            const c = parseInt(cell.dataset.c);
+
+            // 겹침 방지
+            const isStart = (r === startNode.r && c === startNode.c);
+            const isEnd = (r === endNode.r && c === endNode.c);
+
+            if (currentTool === 'start') {
+                if (isEnd) return;
+                startNode = { r, c };
+                gridState[r][c] = 0;
+            } else if (currentTool === 'end') {
+                if (isStart) return;
+                endNode = { r, c };
+                gridState[r][c] = 0;
+            } else if (currentTool === 'wall') {
+                if (isStart || isEnd) return;
+                gridState[r][c] = 1;
+            } else if (currentTool === 'eraser') {
+                if (isStart || isEnd) return;
+                gridState[r][c] = 0;
+            }
+            updateGridVisuals();
+        }
+
+        function updateGridVisuals() {
+            for (let r = 0; r < ROWS; r++) {
+                for (let c = 0; c < COLS; c++) {
+                    const cell = grid[r][c];
+                    // 기본 상태로 리셋
+                    cell.className = 'grid-cell';
+
+                    if (r === startNode.r && c === startNode.c) {
+                        cell.classList.add('cell-start');
+                        cell.innerHTML = iconStart;
+                    } else if (r === endNode.r && c === endNode.c) {
+                        cell.classList.add('cell-end');
+                        cell.innerHTML = iconEnd;
+                    } else if (gridState[r][c] === 1) {
+                        cell.classList.add('cell-wall');
+                        cell.innerHTML = '';
+                    } else {
+                        cell.innerHTML = '';
+                    }
+                }
+            }
+        }
+
+        // --- 4. 알고리즘 코어 (Generator) ---
+        // 트리 노드의 고유 ID 부여 (Vis.js 에러 방지용)
+        function* createSearchGenerator(algoType) {
+            let treeIdCounter = 0;
+            const queueStack = [];
+            const visited = Array(ROWS).fill(0).map(() => Array(COLS).fill(false));
+            const parent = Array(ROWS).fill(0).map(() => Array(COLS).fill(null));
+
+            const isBFS = (algoType === 'bfs');
+
+            // 탐색 방향 (상, 우, 하, 좌)
+            const dr = [-1, 0, 1, 0];
+            const dc = [0, 1, 0, -1];
+
+            // 시작 노드 설정
+            const startTreeId = treeIdCounter++;
+            queueStack.push({ r: startNode.r, c: startNode.c, treeId: startTreeId, parentCoords: null });
+
+            if (isBFS) {
+                visited[startNode.r][startNode.c] = true; // BFS는 Queue 삽입 시 방문처리
+            }
+
+            yield { type: 'add_node', node: { r: startNode.r, c: startNode.c, treeId: startTreeId, parentTreeId: null, label: 'S', color: '#10b981' } };
+
+            let isPathFound = false;
+
+            while (queueStack.length > 0) {
+                // BFS는 큐(앞에서 뽑음), DFS는 스택(뒤에서 뽑음)
+                const current = isBFS ? queueStack.shift() : queueStack.pop();
+
+                // DFS는 Stack Pop 시점에 방문 확인 및 처리 (올바른 경로 추적을 위함)
+                if (!isBFS) {
+                    if (visited[current.r][current.c]) continue;
+                    visited[current.r][current.c] = true;
+                    if (current.parentCoords) {
+                        parent[current.r][current.c] = current.parentCoords;
+                    }
+                }
+
+                yield { type: 'visit', node: current };
+
+                // 목적지 도착
+                if (current.r === endNode.r && current.c === endNode.c) {
+                    isPathFound = true;
+                    break;
+                }
+
+                // 인접 노드 탐색
+                // DFS의 경우 화면에서 상->우->하->좌 순으로 직관적으로 파고들게 하려면 Stack에 역순으로 넣어야 함
+                const pushOrder = isBFS ? [0, 1, 2, 3] : [3, 2, 1, 0];
+
+                for (let i of pushOrder) {
+                    const nr = current.r + dr[i];
+                    const nc = current.c + dc[i];
+
+                    if (nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS) {
+                        if (!visited[nr][nc] && gridState[nr][nc] !== 1) {
+
+                            const neighborTreeId = treeIdCounter++;
+                            const neighbor = { r: nr, c: nc, treeId: neighborTreeId, parentTreeId: current.treeId, parentCoords: { r: current.r, c: current.c } };
+
+                            queueStack.push(neighbor);
+
+                            // BFS는 Queue 삽입 시 방문 처리하여 중복 삽입 방지
+                            if (isBFS) {
+                                visited[nr][nc] = true;
+                                parent[nr][nc] = { r: current.r, c: current.c };
+                            }
+
+                            let labelStr = (nr === endNode.r && nc === endNode.c) ? 'E' : `${nr},${nc}`;
+                            yield { type: 'add_node', node: { ...neighbor, label: labelStr, color: '#bae6fd' } };
+                        }
+                    }
+                }
+            }
+
+            // 경로 역추적
+            if (isPathFound) {
+                let path = [];
+                let curr = { r: endNode.r, c: endNode.c };
+                while (curr !== null) {
+                    path.push(curr);
+                    const p = parent[curr.r][curr.c];
+                    if (p) curr = { r: p.r, c: p.c };
+                    else curr = null;
+                }
+                path.reverse();
+
+                for (let i = 0; i < path.length; i++) {
+                    yield { type: 'path', node: path[i] };
+                }
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        // --- 5. 실행 제어 엔진 ---
+
+        function setStatus(text, classes) {
+            statusText.innerText = text;
+            statusText.className = `px-3 py-1 rounded-full text-xs font-bold transition-colors ${classes}`;
+        }
+
+        function prepareSearch() {
+            clearSearchVisuals();
+            const algo = document.getElementById('algo-select').value;
+            searchGenerator = createSearchGenerator(algo);
+            isRunning = true;
+            setStatus("탐색 중...", "bg-indigo-100 text-indigo-700");
+        }
+
+        function processStep() {
+            if (!searchGenerator) prepareSearch();
+
+            const result = searchGenerator.next();
+
+            if (result.done) {
+                stopAutoPlay();
+                isRunning = false;
+                if (result.value) {
+                    setStatus("목표 도달! 경로 완성", "bg-emerald-100 text-emerald-700");
+                } else {
+                    setStatus("경로 없음", "bg-rose-100 text-rose-700");
+                }
+                return false;
+            }
+
+            handleAction(result.value);
+            return true;
+        }
+
+        function handleAction(action) {
+            const { type, node } = action;
+            const cell = grid[node.r][node.c];
+            const isStartEnd = (node.r === startNode.r && node.c === startNode.c) || (node.r === endNode.r && node.c === endNode.c);
+
+            if (type === 'add_node') {
+                if (!isStartEnd) cell.classList.add('cell-discovered');
+
+                nodes.add({
+                    id: node.treeId,
+                    label: node.label,
+                    color: { background: node.color, border: '#0284c7' }
+                });
+                if (node.parentTreeId !== null) {
+                    edges.add({ from: node.parentTreeId, to: node.treeId });
+                }
+
+                // 트리가 커지면 자동으로 맞춰주기 (너무 자주하면 끊기므로 스텝에서만)
+                if(!isAutoPlaying && nodes.getIds().length % 5 === 0) network.fit({animation: true});
+
+            } else if (type === 'visit') {
+                if (!isStartEnd) cell.classList.add('cell-visited');
+                nodes.update({ id: node.treeId, color: { background: '#3b82f6', border: '#1e40af' }, font: {color: 'white'} });
+
+            } else if (type === 'path') {
+                if (!isStartEnd) {
+                    cell.classList.add('cell-path');
+                    cell.innerHTML = iconPath;
+                }
+
+                // 해당 좌표를 가진 방문 노드 찾아서 황금색으로 변경 (DFS는 여러개일 수 있으나 마지막 방문한 것이 경로임)
+                // 간단히 시각적 효과만 부여
+                const targetNodes = nodes.get({
+                    filter: function (item) { return item.label === `${node.r},${node.c}` || item.label === 'S' || item.label === 'E'; }
+                });
+                targetNodes.forEach(n => {
+                    nodes.update({ id: n.id, color: { background: '#f59e0b', border: '#b45309' }, font: {color: 'white'} });
+                });
+            }
+        }
+
+        // --- 6. 버튼 리스너 동작 ---
+
+        function stepForward() {
+            if (isAutoPlaying) stopAutoPlay();
+            processStep();
+        }
+
+        function toggleAutoPlay() {
+            if (isAutoPlaying) stopAutoPlay();
+            else startAutoPlay();
+        }
+
+        function startAutoPlay() {
+            if (!searchGenerator) prepareSearch();
+            if (!isRunning) return;
+
+            isAutoPlaying = true;
+            btnPlay.innerHTML = `<i class="fa-solid fa-pause text-lg"></i><span class="text-xs">일시 정지</span>`;
+            btnPlay.classList.replace('bg-indigo-600', 'bg-rose-500');
+            btnPlay.classList.replace('hover:bg-indigo-700', 'hover:bg-rose-600');
+
+            function loop() {
+                if (isAutoPlaying && isRunning) {
+                    const hasNext = processStep();
+                    if (hasNext) {
+                        // 실시간으로 슬라이더 값을 읽어와 속도 반영
+                        const currentSpeed = 1010 - parseInt(speedSlider.value);
+                        playInterval = setTimeout(loop, currentSpeed);
+                    }
+                    else if(nodes.getIds().length > 0) network.fit({animation: true}); // 완료 후 화면 맞춤
+                }
+            }
+            loop();
+        }
+
+        function stopAutoPlay() {
+            isAutoPlaying = false;
+            clearTimeout(playInterval);
+            btnPlay.innerHTML = `<i class="fa-solid fa-play text-lg"></i><span class="text-xs">자동 실행</span>`;
+            btnPlay.classList.replace('bg-rose-500', 'bg-indigo-600');
+            btnPlay.classList.replace('hover:bg-rose-600', 'hover:bg-indigo-700');
+        }
+
+        function resetSearch() {
+            clearSearchVisuals();
+            network.fit();
+        }
+
+        // 시작
+        window.onload = init;
+
+    </script>
+</body>
+</html>
