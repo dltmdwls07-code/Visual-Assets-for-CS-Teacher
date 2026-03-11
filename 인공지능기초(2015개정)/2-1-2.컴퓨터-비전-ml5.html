@@ -140,8 +140,10 @@
             </div>
             <div class="bg-slate-900 flex flex-col items-center justify-center p-10 relative">
                 <div class="pixel-grid" id="pixelGrid"></div>
-                <p class="text-slate-400 mt-6 text-sm font-mono bg-slate-800 px-4 py-2 rounded-lg">Array: [255, 0, 128,
-                    ... ]</p>
+                <p id="pixelArrayDisplay"
+                   class="text-slate-400 mt-6 text-sm font-mono bg-slate-800 px-4 py-2 rounded-lg whitespace-pre overflow-x-auto">
+                    Array: [255, 0, 128, ... ]
+                </p>
             </div>
         </div>
     </section>
@@ -168,7 +170,7 @@
                                     <span class="text-sm font-bold text-slate-500">거울 모드</span>
                                     <div class="relative">
                                         <input type="checkbox" id="mirrorToggle" class="sr-only peer" checked>
-                                        <div class="w-10 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600"></div>
+                                        <div class="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600"></div>
                                     </div>
                                 </label>
                             </div>
@@ -331,20 +333,23 @@
     }
 
     const pixelGrid = document.getElementById('pixelGrid');
+    const pixelArrayDisplay = document.getElementById('pixelArrayDisplay'); // 👈 출력할 p 태그 가져오기
+
     // 색상 배열: 인덱스가 커질수록 밝은 색상입니다.
     const colors = ['#0f172a', '#334155', '#64748b', '#94a3b8', '#cbd5e1', '#f1f5f9', '#ffffff'];
+
+    let pixelValues = []; // 👈 실제 픽셀 숫자들을 담을 빈 배열 생성
 
     for(let i=0; i<25; i++) {
         const cell = document.createElement('div');
 
-        // 1. 기본 className에서 무조건 하얀 글씨로 만드는 'hover:text-white'를 제거합니다.
         cell.className = 'pixel-cell flex items-center justify-center text-[10px] font-mono font-bold text-transparent cursor-crosshair';
 
         const randomColorIdx = Math.floor(Math.random() * colors.length);
         const value = Math.round((randomColorIdx / (colors.length-1)) * 255);
 
-        // 2. 밝기에 따라 호버 시 글자색을 다르게 적용합니다.
-        // 인덱스 4('#cbd5e1') 이상부터는 밝은 색상이므로 어두운 글씨(text-slate-900)를 적용합니다.
+        pixelValues.push(value); // 👈 생성된 숫자를 배열에 추가
+
         if (randomColorIdx >= 4) {
             cell.classList.add('hover:text-slate-900');
         } else {
@@ -363,6 +368,31 @@
             this.style.zIndex = '1';
         });
         pixelGrid.appendChild(cell);
+    }
+
+    // 👈 반복문이 끝나고 25개의 데이터가 모이면 화면에 진짜 배열 값을 출력!
+    // 👈 25개의 데이터를 5x5 형태의 예쁜 문자열로 조립합니다.
+    if (pixelArrayDisplay) {
+        let formattedText = 'Array: [\n';
+
+        for (let r = 0; r < 5; r++) {
+            let rowText = '  '; // 들여쓰기
+            for (let c = 0; c < 5; c++) {
+                // 1차원 배열(0~24)에서 현재 행/열에 맞는 값을 가져옵니다.
+                let val = pixelValues[r * 5 + c];
+                // 숫자가 1자리든 3자리든 똑같은 너비를 차지하도록 빈칸을 채웁니다. (예: "  0", " 45", "255")
+                let paddedVal = val.toString().padStart(3, ' ');
+                rowText += paddedVal;
+
+                // 마지막 열이 아니면 쉼표를 붙입니다.
+                if (c < 4) rowText += ', ';
+            }
+            // 마지막 행이 아니면 줄바꿈과 쉼표를 붙입니다.
+            formattedText += rowText + (r < 4 ? ',\n' : '\n');
+        }
+        formattedText += ']';
+
+        pixelArrayDisplay.innerText = formattedText;
     }
 </script>
 
