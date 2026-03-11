@@ -376,6 +376,10 @@
     let faceMesh = null;
     let faces = [];
 
+    // 👇 Segmentation용 추가 👇
+    let bodySegmentation = null;
+    let segmentationResult = null;
+
     let video;
     let isRunning = false;
     let mirrorMode = true;
@@ -427,66 +431,104 @@
     }
 
     function draw() {
-        if (isRunning && video && video.loadedmetadata) {
-            push();
-            if (mirrorMode) {
-                translate(width, 0);
-                scale(-1, 1);
-            }
-            image(video, 0, 0, width, height);
-            pop();
-
-            if (currentMode === 'detection' && detections.length > 0) {
-                for (let i = 0; i < detections.length; i++) {
-                    let d = detections[i];
-                    let x = d.x;
-                    let y = d.y;
-                    let w = d.width;
-                    let h = d.height;
-
-                    if (mirrorMode) x = width - x - w;
-
-                    // 박스 그리기
-                    stroke(59, 130, 246);
-                    strokeWeight(3);
-                    noFill();
-                    rect(x, y, w, h, 6);
-
-                    // 라벨 배경
-                    noStroke();
-                    fill(59, 130, 246);
-                    let labelHeight = 26;
-                    rect(x, y - labelHeight, w, labelHeight, 6, 6, 0, 0);
-
-                    // 텍스트
-                    fill(255);
-                    textSize(14);
-                    textAlign(LEFT, CENTER);
-                    text(`${d.label} (${(d.confidence * 100).toFixed(1)}%)`, x + 5, y - (labelHeight / 2));
-                }
-            }
-
-            if (currentMode === 'facemesh' && faces.length > 0) {
-                for (let i = 0; i < faces.length; i++) {
-                    let face = faces[i];
-                    // 얼굴의 주요 특징점(Keypoints) 그리기
-                    for (let j = 0; j < face.keypoints.length; j++) {
-                        let keypoint = face.keypoints[j];
-                        let kx = keypoint.x;
-                        let ky = keypoint.y;
-
-                        // 거울 모드일 경우 점의 x 좌표를 좌우 반전
-                        if (mirrorMode) kx = width - kx;
-
-                        fill(0, 255, 0); // 초록색 점
-                        noStroke();
-                        circle(kx, ky, 4); // 크기가 4인 원
-                    }
-                }
-            }
-
-        } else if (!isRunning) {
+        // 카메라가 꺼져있을 때
+        if (!isRunning || !video || !video.loadedmetadata) {
             background(15, 23, 42);
+            return;
+        }
+
+        push();
+        // 거울 모드 적용
+        if (mirrorMode) {
+            translate(width, 0);
+            scale(-1, 1);
+        }
+
+        // 1. 모드에 따라 배경 및 비디오(또는 크로마키) 그리기
+        if (currentMode === 'segmentation') {
+            drawSegmentation();
+        } else {
+            image(video, 0, 0, width, height); // 기본 원본 비디오 출력
+        }
+        pop();
+
+        // 2. 모드에 따라 부가적인 그래픽(박스, 얼굴 점 등) 그리기
+        if (currentMode === 'detection') {
+            drawDetections();
+        } else if (currentMode === 'facemesh') {
+            drawFaceMesh();
+        }
+    }
+
+    // 🎨 [기능 1] 이미지 분할(크로마키) 전담 함수
+    function drawSegmentation() {
+        background(0, 255, 0); // 크로마키용 녹색 배경
+        try {
+            if (segmentationResult) {
+                let maskImg = Array.isArray(segmentationResult) ? segmentationResult[0].mask : segmentationResult.mask;
+                if (maskImg) {
+                    let personImg = video.get();
+                    personImg.mask(maskImg);
+                    image(personImg, 0, 0, width, height);
+                } else {
+                    image(video, 0, 0, width, height);
+                }
+            } else {
+                image(video, 0, 0, width, height);
+            }
+        } catch(e) {
+            console.error("마스크 렌더링 에러:", e);
+            image(video, 0, 0, width, height);
+        }
+    }
+
+    // 🎨 [기능 2] 객체 탐지(박스 그리기) 전담 함수
+    function drawDetections() {
+        if (!detections || detections.length === 0) return;
+
+        for (let i = 0; i < detections.length; i++) {
+            let d = detections[i];
+            let x = d.x;
+            let y = d.y;
+            let w = d.width;
+            let h = d.height;
+
+            if (mirrorMode) x = width - x - w; // 거울 모드 좌표 반전
+
+            stroke(59, 130, 246);
+            strokeWeight(3);
+            noFill();
+            rect(x, y, w, h, 6);
+
+            noStroke();
+            fill(59, 130, 246);
+            let labelHeight = 26;
+            rect(x, y - labelHeight, w, labelHeight, 6, 6, 0, 0);
+
+            fill(255);
+            textSize(14);
+            textAlign(LEFT, CENTER);
+            text(`${d.label} (${(d.confidence * 100).toFixed(1)}%)`, x + 5, y - (labelHeight / 2));
+        }
+    }
+
+    // 🎨 [기능 3] 안면 인식(초록색 점 그리기) 전담 함수
+    function drawFaceMesh() {
+        if (!faces || faces.length === 0) return;
+
+        for (let i = 0; i < faces.length; i++) {
+            let face = faces[i];
+            for (let j = 0; j < face.keypoints.length; j++) {
+                let keypoint = face.keypoints[j];
+                let kx = keypoint.x;
+                let ky = keypoint.y;
+
+                if (mirrorMode) kx = width - kx; // 거울 모드 좌표 반전
+
+                fill(0, 255, 0);
+                noStroke();
+                circle(kx, ky, 4);
+            }
         }
     }
 
@@ -589,11 +631,13 @@
             if (classifier && typeof classifier.classifyStop === 'function') classifier.classifyStop();
             if (detector && typeof detector.detectStop === 'function') detector.detectStop();
             if (faceMesh && typeof faceMesh.detectStop === 'function') faceMesh.detectStop();
+            if (bodySegmentation && typeof bodySegmentation.detectStop === 'function') bodySegmentation.detectStop();
         } catch (e) {
             console.log("모델 중지 중 에러 무시:", e);
         }
         detections = []; // 화면에 남은 박스 지우기
         faces = [];      // 👇 추가: 화면에 남은 얼굴 점 지우기
+        segmentationResult = null; // 👇 마스크 초기화 추가
     }
 
     function startSystem() {
@@ -700,8 +744,18 @@
                 } else {
                     modelReady();
                 }
+            } else if (currentMode === 'segmentation') {
+                if(classificationResult) classificationResult.classList.add('hidden');
+
+                if (!bodySegmentation) {
+                    setStatus('Segmentation 모델 로딩 중 (최초 1회)...', true);
+                    // 옵션을 주지 않으면 기본값으로 SelfieSegmentation이 로드됩니다.
+                    bodySegmentation = ml5.bodySegmentation("SelfieSegmentation", modelReady);
+                } else {
+                    modelReady();
+                }
             } else {
-                setStatus(`${currentMode} 모델은 다음 단계에서 구현됩니다.`);
+                setStatus(`${currentMode} 모델은 현재 구현중입니다.`);
                 if(classificationResult) classificationResult.classList.add('hidden');
 
                 // 구현 안 된 탭일 경우 다시 원래대로 복구
@@ -731,6 +785,8 @@
                 detector.detectStart(video, gotDetections);
             } else if (currentMode === 'facemesh') {
                 faceMesh.detectStart(video, gotFaces);
+            } else if (currentMode === 'segmentation') {
+                bodySegmentation.detectStart(video, gotSegmentation);
             }
         }, 300);
         // 🌟 주의: 여기서 로딩창(loadingOverlay) 숨기는 코드는 지워졌습니다!
@@ -782,6 +838,13 @@
         if (!isRunning || currentMode !== 'facemesh') return;
         hideLoadingOverlay();
         faces = results;
+    }
+
+    // 👇 Segmentation 결과 처리 함수 추가 👇
+    function gotSegmentation(result) {
+        if (!isRunning || currentMode !== 'segmentation') return;
+        hideLoadingOverlay();
+        segmentationResult = result; // 결과물(mask) 저장
     }
 
 </script>
