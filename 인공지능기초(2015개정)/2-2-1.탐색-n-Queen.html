@@ -135,7 +135,8 @@
             깊이 우선 탐색(DFS)과<br class="hidden md:block"> N-Queen 실습
         </h1>
         <p class="text-lg md:text-xl opacity-90 font-medium max-w-2xl mx-auto leading-relaxed">
-            N-Queen 퍼즐 해결 과정을 통해 <strong>깊이 우선 탐색</strong>과 <strong>백트래킹(Backtracking)</strong> 알고리즘이 트리를 탐색하는 전체 구조를 한눈에 확인해 보세요.
+            N-Queen 퍼즐 해결 과정을 통해 <strong>깊이 우선 탐색</strong>과 <strong>백트래킹(Backtracking)</strong> 알고리즘이 트리를 탐색하는 전체 구조를
+            한눈에 확인해 보세요.
         </p>
     </div>
 </header>
@@ -373,7 +374,8 @@
                     </div>
 
                     <!-- 트리 시각화 영역 (D3 SVG 렌더링 타겟) -->
-                    <div id="dfsTreeContainer" class="flex-1 w-full h-full relative overflow-hidden bg-[#0f172a]">
+                    <div id="dfsTreeContainer"
+                         class="flex-1 min-h-[350px] w-full h-full relative overflow-hidden bg-[#0f172a]">
                         <div id="treePlaceholder"
                              class="absolute inset-0 flex flex-col items-center justify-center text-slate-500 text-center space-y-4 pointer-events-none z-10">
                             <i class="fa-solid fa-seedling text-5xl opacity-30"></i>
@@ -505,6 +507,10 @@ def solve_n_queens(row, n, state):
         d3Svg = d3.select("#dfsTreeContainer").append("svg")
             .attr("width", "100%")
             .attr("height", "100%")
+            .style("position", "absolute") // 모바일 잘림 방지: 부모 크기에 강제로 맞춤
+            .style("top", "0")
+            .style("left", "0")
+            .style("display", "block")
             .style("cursor", "grab");
 
         d3G = d3Svg.append("g");
@@ -559,9 +565,9 @@ def solve_n_queens(row, n, state):
         const treeWidth = maxX - minX || 1;
         const treeHeight = maxY || 1;
 
-        // 상하좌우 여백
-        const paddingX = 60;
-        const paddingY = 80;
+        // 상하좌우 여백 (모바일 화면일 경우 여백을 줄임)
+        const paddingX = window.innerWidth < 640 ? 20 : 60;
+        const paddingY = window.innerWidth < 640 ? 30 : 80;
 
         // X축, Y축 각각 화면에 맞게 들어갈 배율 계산
         const scaleX = (width - paddingX * 2) / treeWidth;
