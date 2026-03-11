@@ -661,7 +661,7 @@
         setTimeout(() => {
             if (currentMode === 'classification') {
                 if (!classifier) {
-                    setStatus('MobileNet 모델 로딩 중 (최초 1회만)...', true);
+                    setStatus('MobileNet 모델 로딩 중 (최초 1회)...', true);
                     classifier = ml5.imageClassifier('MobileNet', modelReady);
                 } else {
                     modelReady(); // 이미 모델이 있으면 바로 실행
@@ -670,7 +670,7 @@
                 if(classificationResult) classificationResult.classList.add('hidden');
 
                 if (!detector) {
-                    setStatus('COCO-SSD 모델 로딩 중 (최초 1회만)...', true);
+                    setStatus('COCO-SSD 모델 로딩 중 (최초 1회)...', true);
                     detector = ml5.objectDetection('cocossd', modelReady);
                 } else {
                     modelReady();
@@ -679,7 +679,7 @@
                 if(classificationResult) classificationResult.classList.add('hidden');
 
                 if (!faceMesh) {
-                    setStatus('FaceMesh 모델 로딩 중 (최초 1회만)...', true);
+                    setStatus('FaceMesh 모델 로딩 중 (최초 1회)...', true);
                     let options = { maxFaces: 1, refineLandmarks: false, flipHorizontal: false };
                     faceMesh = ml5.faceMesh(options, modelReady);
                 } else {
@@ -699,25 +699,40 @@
     function modelReady() {
         if (!isRunning) return;
 
-        // 👇 로딩 완료: 로딩 화면 숨기기 및 비디오 다시 재생
-        if (loadingOverlay) loadingOverlay.classList.add('hidden');
+        // 1) 상태 메시지 변경 (여전히 로딩 오버레이는 떠있는 상태)
+        setStatus('<i class="fa-solid fa-spinner fa-spin mr-2"></i> AI 초기 설정 중... (화면 멈춤 정상)');
+
+        // 2) 비디오를 다시 재생시켜야 첫 프레임이 AI로 들어갈 수 있음
         if (video && video.elt) video.elt.play();
 
-        setStatus('<i class="fa-solid fa-check-circle mr-2"></i> 분석 시작!');
+        // 3) 100ms 후 분석 시작
+        setTimeout(() => {
+            if (!isRunning) return;
 
-        // 모델에 영상(비디오)을 넣고 분석 루프 시작
-        if (currentMode === 'classification') {
-            if(classificationResult) classificationResult.classList.remove('hidden');
-            classifier.classifyStart(video, gotClassificationResults);
-        } else if (currentMode === 'detection') {
-            detector.detectStart(video, gotDetections);
-        } else if (currentMode === 'facemesh') {
-            faceMesh.detectStart(video, gotFaces);
+            if (currentMode === 'classification') {
+                if(classificationResult) classificationResult.classList.remove('hidden');
+                classifier.classifyStart(video, gotClassificationResults);
+            } else if (currentMode === 'detection') {
+                detector.detectStart(video, gotDetections);
+            } else if (currentMode === 'facemesh') {
+                faceMesh.detectStart(video, gotFaces);
+            }
+        }, 300);
+        // 🌟 주의: 여기서 로딩창(loadingOverlay) 숨기는 코드는 지워졌습니다!
+    }
+
+    // 🌟 첫 번째 분석 결과가 나왔을 때 로딩창을 닫아주는 함수
+    function hideLoadingOverlay() {
+        if (loadingOverlay && !loadingOverlay.classList.contains('hidden')) {
+            loadingOverlay.classList.add('hidden');
+            setStatus('<i class="fa-solid fa-play mr-2"></i> 실시간 분석 중');
         }
     }
 
     function gotClassificationResults(results) {
         if (!isRunning || currentMode !== 'classification') return;
+
+        hideLoadingOverlay();
 
         let html = `<div class="mb-4 flex justify-between items-center"><span class="text-sm font-bold text-slate-400 uppercase tracking-widest">AI의 예측 결과 (Top 3)</span></div>`;
         let top3 = results.slice(0, 3);
@@ -743,12 +758,14 @@
 
     function gotDetections(results) {
         if (!isRunning || currentMode !== 'detection') return;
+        hideLoadingOverlay();
         detections = results;
     }
 
     // 👇 FaceMesh에서 새로 추가하는 함수 👇
     function gotFaces(results) {
         if (!isRunning || currentMode !== 'facemesh') return;
+        hideLoadingOverlay();
         faces = results;
     }
 
