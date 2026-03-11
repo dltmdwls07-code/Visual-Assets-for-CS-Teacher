@@ -14,121 +14,67 @@
     <script src="https://unpkg.com/ml5@1.3.1/dist/ml5.min.js"></script>
 
     <style>
-        /* 🌟 수정됨: 폰트 이름 변경 (Pretendard Variable) */
         body {
             font-family: 'Pretendard Variable', Pretendard, sans-serif;
             scroll-behavior: smooth;
             background-color: #f8fafc;
         }
 
-        /* Hero 배경 그라데이션 */
-        .hero-gradient {
-            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
-        }
+        .hero-gradient { background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%); }
 
-        /* 스크롤 시 상단 고정 네비게이션 */
         .sticky-nav {
-            position: sticky;
-            top: 0;
-            z-index: 50;
-            backdrop-filter: blur(12px);
-            background-color: rgba(255, 255, 255, 0.9);
-            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+            position: sticky; top: 0; z-index: 50; backdrop-filter: blur(12px);
+            background-color: rgba(255, 255, 255, 0.9); border-bottom: 1px solid rgba(226, 232, 240, 0.8);
         }
 
         .section-card {
-            background: white;
-            padding: 2.5rem;
-            border-radius: 2rem;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05);
-            border: 1px solid #f1f5f9;
-            transition: all 0.3s ease;
+            background: white; padding: 2.5rem; border-radius: 2rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05); border: 1px solid #f1f5f9; transition: all 0.3s ease;
         }
 
-        /* 비디오 컨테이너 */
         .video-container {
-            position: relative;
-            width: 100%;
-            border-radius: 1rem;
-            overflow: hidden;
-            background-color: #0f172a;
-            aspect-ratio: 16/9;
-            max-height: 75vh;
+            position: relative; width: 100%; border-radius: 1rem; overflow: hidden;
+            background-color: #0f172a; aspect-ratio: 16/9; max-height: 75vh;
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
         }
 
         .video-container video, .video-container canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;
         }
 
         .quiz-btn {
-            width: 100%;
-            padding: 1.25rem;
-            text-align: left;
-            border-radius: 1rem;
-            border: 2px solid #e2e8f0;
-            background-color: #f8fafc;
-            font-weight: 500;
-            color: #374151;
-            transition: all 0.2s ease;
+            width: 100%; padding: 1.25rem; text-align: left; border-radius: 1rem;
+            border: 2px solid #e2e8f0; background-color: #f8fafc; font-weight: 500;
+            color: #374151; transition: all 0.2s ease;
         }
-
-        .quiz-btn:hover {
-            background: #eff6ff;
-            border-color: #bfdbfe;
-        }
-
+        .quiz-btn:hover { background: #eff6ff; border-color: #bfdbfe; }
         .quiz-btn.correct { background: #3b82f6; color: white; border-color: #3b82f6; }
         .quiz-btn.wrong { background: #ef4444; color: white; border-color: #ef4444; }
         .quiz-btn.disabled { opacity: 0.6; pointer-events: none; }
 
-        /* 커스텀 스크롤바 */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #f1f5f9; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
-        .pixel-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 2px;
-            width: 150px;
-            height: 150px;
-        }
-        .pixel-cell {
-            background-color: #e2e8f0;
-            border-radius: 2px;
-            transition: background-color 0.3s;
-        }
+        .pixel-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; width: 150px; height: 150px; }
+        .pixel-cell { background-color: #e2e8f0; border-radius: 2px; transition: background-color 0.3s; }
     </style>
 </head>
 <body class="text-slate-900 leading-relaxed">
 
 <header id="intro" class="hero-gradient text-white py-24 px-6 md:py-32">
     <div class="max-w-4xl mx-auto text-center">
-        <span class="inline-block px-4 py-1.5 bg-white/20 rounded-full font-bold mb-6 backdrop-blur-md text-sm">
-            Chapter 05. 인공지능과 데이터
-        </span>
-        <h1 class="text-4xl md:text-6xl font-black mb-6 leading-tight tracking-tight">
-            컴퓨터 비전 (Computer Vision) <br>세상을 보는 인공지능
-        </h1>
-        <p class="text-lg md:text-xl opacity-90 font-medium max-w-2xl mx-auto leading-relaxed">
-            인간이 눈으로 세상을 인지하듯, 컴퓨터가 이미지와 영상 데이터를 이해하고 해석하는 놀라운 기술의 원리를 배우고 직접 체험해봅니다.
-        </p>
+        <span class="inline-block px-4 py-1.5 bg-white/20 rounded-full font-bold mb-6 backdrop-blur-md text-sm">Chapter 05. 인공지능과 데이터</span>
+        <h1 class="text-4xl md:text-6xl font-black mb-6 leading-tight tracking-tight">컴퓨터 비전 (Computer Vision) <br>세상을 보는 인공지능</h1>
+        <p class="text-lg md:text-xl opacity-90 font-medium max-w-2xl mx-auto leading-relaxed">인간이 눈으로 세상을 인지하듯, 컴퓨터가 이미지와 영상 데이터를 이해하고 해석하는 놀라운 기술의 원리를 배우고 직접 체험해봅니다.</p>
     </div>
 </header>
 
 <nav class="sticky-nav px-6 py-4">
     <div class="max-w-6xl mx-auto flex justify-between items-center">
         <div class="flex items-center space-x-3">
-            <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-md">
-                <i class="fa-solid fa-eye text-lg"></i>
-            </div>
+            <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-md"><i class="fa-solid fa-eye text-lg"></i></div>
             <span class="font-black text-xl tracking-tight text-slate-800">AI 클래스룸</span>
         </div>
         <div class="hidden md:flex space-x-8 font-bold text-slate-500 text-sm">
@@ -152,33 +98,19 @@
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div class="section-card hover:shadow-lg transition-shadow">
-                <div class="w-14 h-14 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center mb-6 shadow-inner">
-                    <i class="fa-solid fa-images text-2xl"></i>
-                </div>
+                <div class="w-14 h-14 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center mb-6 shadow-inner"><i class="fa-solid fa-images text-2xl"></i></div>
                 <h3 class="text-xl font-bold mb-3">이미지 분류 (Classification)</h3>
-                <p class="text-slate-600 text-sm leading-relaxed">
-                    사진 전체를 보고 "이 사진은 고양이인가, 강아지인가?"를 판단합니다. 입력된 이미지가 어떤 클래스(범주)에 속할 확률이 높은지 수치로 계산해냅니다.
-                </p>
+                <p class="text-slate-600 text-sm leading-relaxed">사진 전체를 보고 "이 사진은 고양이인가, 강아지인가?"를 판단합니다. 입력된 이미지가 어떤 클래스(범주)에 속할 확률이 높은지 수치로 계산해냅니다.</p>
             </div>
-
             <div class="section-card hover:shadow-lg transition-shadow">
-                <div class="w-14 h-14 bg-green-100 text-green-600 rounded-2xl flex items-center justify-center mb-6 shadow-inner">
-                    <i class="fa-solid fa-crop-simple text-2xl"></i>
-                </div>
+                <div class="w-14 h-14 bg-green-100 text-green-600 rounded-2xl flex items-center justify-center mb-6 shadow-inner"><i class="fa-solid fa-crop-simple text-2xl"></i></div>
                 <h3 class="text-xl font-bold mb-3">객체 탐지 (Object Detection)</h3>
-                <p class="text-slate-600 text-sm leading-relaxed">
-                    사진 속에 있는 여러 물체들의 **위치(Bounding Box)**를 찾고, 각각이 **무엇인지(Label)** 동시에 알아냅니다. 자율주행 자동차가 보행자와 다른 차를 인식할 때 사용됩니다.
-                </p>
+                <p class="text-slate-600 text-sm leading-relaxed">사진 속에 있는 여러 물체들의 위치(Bounding Box)를 찾고, 각각이 무엇인지(Label) 동시에 알아냅니다.</p>
             </div>
-
             <div class="section-card hover:shadow-lg transition-shadow">
-                <div class="w-14 h-14 bg-rose-100 text-rose-600 rounded-2xl flex items-center justify-center mb-6 shadow-inner">
-                    <i class="fa-solid fa-layer-group text-2xl"></i>
-                </div>
+                <div class="w-14 h-14 bg-rose-100 text-rose-600 rounded-2xl flex items-center justify-center mb-6 shadow-inner"><i class="fa-solid fa-layer-group text-2xl"></i></div>
                 <h3 class="text-xl font-bold mb-3">이미지 분할 (Segmentation)</h3>
-                <p class="text-slate-600 text-sm leading-relaxed">
-                    화면의 모든 픽셀을 분석하여, 인물과 배경을 아주 정밀하게 픽셀 단위로 잘라냅니다. 화상 회의에서 배경을 흐리게 하거나 바꾸는 기능의 원리입니다.
-                </p>
+                <p class="text-slate-600 text-sm leading-relaxed">화면의 모든 픽셀을 분석하여, 인물과 배경을 아주 정밀하게 픽셀 단위로 잘라냅니다.</p>
             </div>
         </div>
     </section>
@@ -188,17 +120,13 @@
             <div class="p-10 md:p-14 flex flex-col justify-center border-b md:border-b-0 md:border-r border-slate-100">
                 <span class="text-blue-600 font-bold tracking-widest text-xs uppercase mb-2">How it works</span>
                 <h2 class="text-2xl font-black mb-4">컴퓨터에게 이미지는<br>'숫자의 배열'입니다</h2>
-                <p class="text-slate-600 text-sm leading-relaxed mb-6">
-                    우리 눈에는 사진으로 보이지만, 컴퓨터는 이미지를 수많은 작은 네모(픽셀)로 쪼개어 각각의 밝기와 색상을 나타내는 0~255 사이의 <strong>숫자(데이터)</strong>로 읽어 들입니다. 인공지능은 이 숫자들의 패턴을 학습하는 것입니다.
-                </p>
+                <p class="text-slate-600 text-sm leading-relaxed mb-6">우리 눈에는 사진으로 보이지만, 컴퓨터는 이미지를 수많은 작은 네모(픽셀)로 쪼개어 각각의 밝기와 색상을 나타내는 0~255 사이의 <strong>숫자(데이터)</strong>로 읽어 들입니다.</p>
                 <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
                     <p class="text-xs text-slate-500 font-medium"><i class="fa-solid fa-circle-info mr-1 text-blue-500"></i> 옆의 격자에 마우스를 올려보세요! 픽셀이 숫자로 변환되는 과정을 시각화했습니다.</p>
                 </div>
             </div>
-
             <div class="bg-slate-900 flex flex-col items-center justify-center p-10 relative">
-                <div class="pixel-grid" id="pixelGrid">
-                    </div>
+                <div class="pixel-grid" id="pixelGrid"></div>
                 <p class="text-slate-400 mt-6 text-sm font-mono bg-slate-800 px-4 py-2 rounded-lg">Array: [255, 0, 128, ... ]</p>
             </div>
         </div>
@@ -206,7 +134,6 @@
 
     <section id="demo" class="scroll-mt-24">
         <div class="bg-white rounded-3xl shadow-xl shadow-blue-900/5 border border-slate-100 overflow-hidden">
-
             <div class="bg-slate-50 border-b border-slate-200 p-8 text-center">
                 <span class="inline-block bg-blue-100 text-blue-700 font-bold px-3 py-1 rounded-full text-xs mb-3">Interactive Demo</span>
                 <h2 class="text-3xl font-black text-slate-900 mb-2">AI 비전 스튜디오</h2>
@@ -215,17 +142,13 @@
 
             <div class="p-6 md:p-8 flex flex-col space-y-8">
                 <div class="bg-slate-50 rounded-2xl p-6 border border-slate-200 flex flex-col space-y-6">
-
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div class="space-y-3">
                             <div class="flex items-center justify-between mb-2">
                                 <div class="flex items-center gap-3">
-                                    <div class="w-8 h-8 rounded-full bg-white shadow-sm flex items-center justify-center text-slate-600">
-                                        <i class="fa-solid fa-video"></i>
-                                    </div>
+                                    <div class="w-8 h-8 rounded-full bg-white shadow-sm flex items-center justify-center text-slate-600"><i class="fa-solid fa-video"></i></div>
                                     <h3 class="font-bold text-lg">카메라 설정</h3>
                                 </div>
-
                                 <label class="flex items-center cursor-pointer gap-2" title="화면 좌우 반전">
                                     <span class="text-sm font-bold text-slate-500">거울 모드</span>
                                     <div class="relative">
@@ -238,33 +161,26 @@
                                 <select id="cameraSelect" class="w-full appearance-none p-3.5 pl-4 pr-10 rounded-xl border-2 border-slate-200 bg-white text-slate-700 font-medium focus:border-blue-500 focus:outline-none transition-all cursor-pointer">
                                     <option value="">카메라를 찾는 중...</option>
                                 </select>
-                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500">
-                                    <i class="fa-solid fa-chevron-down text-sm"></i>
-                                </div>
+                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500"><i class="fa-solid fa-chevron-down text-sm"></i></div>
                             </div>
                         </div>
 
                         <div class="space-y-3">
                             <div class="flex items-center gap-3 mb-2">
-                                <div class="w-8 h-8 rounded-full bg-white shadow-sm flex items-center justify-center text-slate-600">
-                                    <i class="fa-solid fa-sliders"></i>
-                                </div>
+                                <div class="w-8 h-8 rounded-full bg-white shadow-sm flex items-center justify-center text-slate-600"><i class="fa-solid fa-sliders"></i></div>
                                 <h3 class="font-bold text-lg">AI 모델 선택</h3>
                             </div>
-
                             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3" id="modelSelectionGroup">
                                 <label class="flex flex-col items-center justify-center p-3 border-2 border-blue-500 bg-blue-50 rounded-xl cursor-pointer transition-all model-label text-center">
                                     <input type="radio" name="model" value="classification" class="hidden" checked>
                                     <span class="block text-sm font-bold text-slate-900 mb-0.5">이미지 분류</span>
                                     <span class="block text-[11px] text-slate-500">사물 인식</span>
                                 </label>
-
                                 <label class="flex flex-col items-center justify-center p-3 border-2 border-transparent bg-white hover:bg-slate-100 rounded-xl cursor-pointer transition-all model-label text-center">
                                     <input type="radio" name="model" value="detection" class="hidden">
                                     <span class="block text-sm font-bold text-slate-900 mb-0.5">객체 탐지</span>
                                     <span class="block text-[11px] text-slate-500">여러 사물 찾기</span>
                                 </label>
-
                                 <label class="flex flex-col items-center justify-center p-3 border-2 border-transparent bg-white hover:bg-slate-100 rounded-xl cursor-pointer transition-all model-label text-center">
                                     <input type="radio" name="model" value="segmentation" class="hidden">
                                     <span class="block text-sm font-bold text-slate-900 mb-0.5">이미지 분할</span>
@@ -280,12 +196,10 @@
                                 <span id="statusText">AI 모델을 로드하는 중...</span>
                             </div>
                         </div>
-
                         <div class="w-full md:w-auto flex-shrink-0 h-[56px] flex gap-2">
                             <button id="startBtn" class="w-full md:w-auto h-full bg-blue-600 hover:bg-blue-700 text-white font-bold px-8 rounded-xl transition shadow-lg shadow-blue-600/30 flex justify-center items-center gap-2">
                                 <i class="fa-solid fa-camera"></i> 웹캠 켜기 및 AI 시작
                             </button>
-
                             <button id="stopBtn" class="w-full md:w-auto h-full bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold px-8 rounded-xl transition hidden justify-center items-center gap-2 border border-rose-200">
                                 <i class="fa-solid fa-stop"></i> 중지하기
                             </button>
@@ -297,16 +211,13 @@
                     <div class="video-container bg-slate-900 relative rounded-xl mx-auto w-full">
                         <video id="webcam" autoplay playsinline muted></video>
                         <canvas id="canvas"></canvas>
-
                         <div id="videoOverlayMsg" class="absolute inset-0 flex flex-col items-center justify-center text-slate-300 bg-slate-900/80 z-10 backdrop-blur-sm">
                             <i class="fa-solid fa-video-slash text-6xl mb-6 opacity-50"></i>
                             <p class="font-bold text-xl mb-2 text-white">카메라가 꺼져있습니다</p>
                             <p class="text-sm opacity-80">상단의 [웹캠 켜기] 버튼을 눌러 실습을 시작하세요.</p>
                         </div>
                     </div>
-
-                    <div id="classificationResult" class="hidden mt-4 bg-white p-5 rounded-xl border border-slate-200 shadow-sm max-w-2xl mx-auto w-full">
-                        </div>
+                    <div id="classificationResult" class="hidden mt-4 bg-white p-5 rounded-xl border border-slate-200 shadow-sm max-w-2xl mx-auto w-full"></div>
                 </div>
             </div>
         </div>
@@ -317,7 +228,6 @@
             <h2 class="text-3xl font-black">학습 내용 확인하기</h2>
             <div class="w-16 h-1.5 bg-blue-500 mx-auto rounded-full mt-4"></div>
         </div>
-
         <div class="max-w-2xl mx-auto space-y-6">
             <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200">
                 <span class="inline-block bg-purple-100 text-purple-700 font-bold px-3 py-1 rounded-md text-xs mb-4">Quiz 1</span>
@@ -401,7 +311,11 @@
 </script>
 
 <script>
-    let classifier;
+    // 🌟 전역 변수에 탐지용 모델 추가 (한 번 로드되면 재활용됨)
+    let classifier = null;
+    let detector = null;
+    let detections = [];
+
     let video;
     let isRunning = false;
     let mirrorMode = true;
@@ -411,13 +325,18 @@
     let cameraSelect, startBtn, stopBtn, statusMessage, statusText, videoOverlayMsg, classificationResult;
 
     function setup() {
-        noCanvas(); // 기존 캔버스 제거 방어코드
+        noCanvas();
+
+        // 🌟 성능 최적화 1: ml5 엔진을 가장 안정적인 WebGL로 강제 고정 (로그의 WebGPU 에러 해결)
+        ml5.setBackend("webgl");
+
+        // 🌟 성능 최적화 2: 캔버스 프레임레이트를 20fps로 제한하여 CPU/GPU 과부하 방지
+        frameRate(20);
 
         let canvas = createCanvas(640, 480);
         let container = select('.video-container');
         if(container) canvas.parent(container);
 
-        // p5 캔버스 스타일 지정
         canvas.style('position', 'absolute');
         canvas.style('top', '0');
         canvas.style('left', '0');
@@ -426,13 +345,11 @@
         canvas.style('object-fit', 'cover');
         canvas.style('z-index', '5');
 
-        // 기존 바닐라 <video> 및 <canvas> 숨기기
         let oldVideo = select('#webcam');
         if(oldVideo) oldVideo.style('display', 'none');
         let oldCanvas = select('#canvas');
         if(oldCanvas) oldCanvas.style('display', 'none');
 
-        // DOM 요소 가져오기
         cameraSelect = document.getElementById('cameraSelect');
         startBtn = document.getElementById('startBtn');
         stopBtn = document.getElementById('stopBtn');
@@ -455,6 +372,37 @@
             }
             image(video, 0, 0, width, height);
             pop();
+
+            if (currentMode === 'detection' && detections.length > 0) {
+                for (let i = 0; i < detections.length; i++) {
+                    let d = detections[i];
+                    let x = d.x;
+                    let y = d.y;
+                    let w = d.width;
+                    let h = d.height;
+
+                    if (mirrorMode) x = width - x - w;
+
+                    // 박스 그리기
+                    stroke(59, 130, 246);
+                    strokeWeight(3);
+                    noFill();
+                    rect(x, y, w, h, 6);
+
+                    // 라벨 배경
+                    noStroke();
+                    fill(59, 130, 246);
+                    let labelHeight = 26;
+                    rect(x, y - labelHeight, w, labelHeight, 6, 6, 0, 0);
+
+                    // 텍스트
+                    fill(255);
+                    textSize(14);
+                    textAlign(LEFT, CENTER);
+                    text(`${d.label} (${(d.confidence * 100).toFixed(1)}%)`, x + 5, y - (labelHeight / 2));
+                }
+            }
+
         } else if (!isRunning) {
             background(15, 23, 42);
         }
@@ -463,28 +411,24 @@
     async function updateCameraList() {
         try {
             if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
-                if(cameraSelect) cameraSelect.innerHTML = '<option value="">지원하지 않는 브라우저</option>';
+                if(cameraSelect) cameraSelect.innerHTML = '<option value="">브라우저가 카메라를 지원하지 않습니다</option>';
                 return;
             }
-
             const devices = await navigator.mediaDevices.enumerateDevices();
             const videoDevices = devices.filter(d => d.kind === 'videoinput');
             const currentSelected = cameraSelect ? cameraSelect.value : null;
 
             if(cameraSelect) cameraSelect.innerHTML = '';
-
             if (videoDevices.length === 0) {
-                if(cameraSelect) cameraSelect.innerHTML = '<option value="">카메라 없음</option>';
+                if(cameraSelect) cameraSelect.innerHTML = '<option value="">연결된 카메라가 없습니다</option>';
                 return;
             }
-
             videoDevices.forEach((device, index) => {
                 let option = document.createElement('option');
                 option.value = device.deviceId;
                 option.text = device.label || `카메라 ${index + 1} (권한 허용 필요)`;
                 cameraSelect.appendChild(option);
             });
-
             if (currentSelected && [...cameraSelect.options].some(opt => opt.value === currentSelected)) {
                 cameraSelect.value = currentSelected;
             }
@@ -507,7 +451,7 @@
         if(cameraSelect) {
             cameraSelect.addEventListener('change', () => {
                 if (isRunning) {
-                    if (classifier && currentMode === 'classification') classifier.classifyStop();
+                    stopAllModels();
                     startVideo();
                 }
             });
@@ -515,6 +459,7 @@
 
         document.getElementsByName('model').forEach(radio => {
             radio.addEventListener('change', (e) => {
+                // UI 스타일 업데이트
                 document.querySelectorAll('.model-label').forEach(label => {
                     label.classList.remove('border-blue-500', 'bg-blue-50');
                     label.classList.add('border-transparent', 'bg-white', 'hover:bg-slate-100');
@@ -525,10 +470,17 @@
                     selectedLabel.classList.remove('border-transparent', 'bg-white', 'hover:bg-slate-100');
                 }
 
+                // 🌟 중요: 모드가 바뀌기 전에 모든 분석을 강제로 완전히 중단시킵니다.
+                stopAllModels();
+
                 currentMode = e.target.value;
+
                 if (isRunning) {
-                    if (classifier && currentMode === 'classification') classifier.classifyStop();
                     loadCurrentModel();
+                } else {
+                    if (currentMode !== 'classification' && classificationResult) {
+                        classificationResult.classList.add('hidden');
+                    }
                 }
             });
         });
@@ -547,6 +499,17 @@
                 statusMessage.classList.remove('flex');
             }, 3000);
         }
+    }
+
+    // 🌟 성능 최적화 3: 모든 모델 확실하게 끄기 (다중 실행 방지)
+    function stopAllModels() {
+        try {
+            if (classifier && typeof classifier.classifyStop === 'function') classifier.classifyStop();
+            if (detector && typeof detector.detectStop === 'function') detector.detectStop();
+        } catch (e) {
+            console.log("모델 중지 중 에러 무시:", e);
+        }
+        detections = []; // 화면에 남은 박스 지우기
     }
 
     function startSystem() {
@@ -575,9 +538,7 @@
             statusMessage.classList.remove('flex');
         }
 
-        if (classifier && currentMode === 'classification') {
-            classifier.classifyStop();
-        }
+        stopAllModels();
 
         if (video) {
             if (video.elt && video.elt.srcObject) {
@@ -597,8 +558,12 @@
         }
 
         let camId = cameraSelect ? cameraSelect.value : null;
+
+        // 🌟 성능 최적화 4: 카메라 해상도를 640x480으로 엄격하게 제한하여 AI 연산량 감소
         let constraints = {
-            video: camId ? { deviceId: { exact: camId } } : true,
+            video: camId
+                ? { deviceId: { exact: camId }, width: 640, height: 480 }
+                : { width: 640, height: 480, facingMode: "user" },
             audio: false
         };
 
@@ -611,12 +576,26 @@
         video.hide();
     }
 
+    // 🌟 성능 최적화 5: 모델을 이미 불러왔다면 다시 다운로드하지 않고 재사용(Caching)
     function loadCurrentModel() {
         if (!isRunning) return;
 
         if (currentMode === 'classification') {
-            setStatus('MobileNet 모델 로딩 중...', true);
-            classifier = ml5.imageClassifier('MobileNet', modelReady);
+            if (!classifier) {
+                setStatus('MobileNet 모델 로딩 중 (최초 1회만)...', true);
+                classifier = ml5.imageClassifier('MobileNet', modelReady);
+            } else {
+                modelReady(); // 이미 모델이 있으면 바로 실행
+            }
+        } else if (currentMode === 'detection') {
+            if(classificationResult) classificationResult.classList.add('hidden');
+
+            if (!detector) {
+                setStatus('COCO-SSD 모델 로딩 중 (최초 1회만)...', true);
+                detector = ml5.objectDetection('cocossd', modelReady);
+            } else {
+                modelReady(); // 이미 모델이 있으면 바로 실행
+            }
         } else {
             setStatus(`${currentMode} 모델은 다음 단계에서 구현됩니다.`);
             if(classificationResult) classificationResult.classList.add('hidden');
@@ -625,11 +604,14 @@
 
     function modelReady() {
         if (!isRunning) return;
-        setStatus('<i class="fa-solid fa-check-circle mr-2"></i> 모델 로드 완료!');
+        setStatus('<i class="fa-solid fa-check-circle mr-2"></i> 분석 시작!');
 
+        // 모델에 영상(비디오)을 넣고 분석 루프 시작
         if (currentMode === 'classification') {
             if(classificationResult) classificationResult.classList.remove('hidden');
             classifier.classifyStart(video, gotClassificationResults);
+        } else if (currentMode === 'detection') {
+            detector.detectStart(video, gotDetections);
         }
     }
 
@@ -655,9 +637,14 @@
                 </div>
             `;
         });
-
         if(classificationResult) classificationResult.innerHTML = html;
     }
+
+    function gotDetections(results) {
+        if (!isRunning || currentMode !== 'detection') return;
+        detections = results;
+    }
+
 </script>
 </body>
 </html>
