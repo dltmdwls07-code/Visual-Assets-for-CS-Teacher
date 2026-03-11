@@ -58,7 +58,7 @@
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
-        .pixel-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; width: 150px; height: 150px; }
+        .pixel-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; width: 300px; height: 300px; }
         .pixel-cell { background-color: #e2e8f0; border-radius: 2px; transition: background-color 0.3s; }
     </style>
 </head>
@@ -331,14 +331,29 @@
     }
 
     const pixelGrid = document.getElementById('pixelGrid');
+    // 색상 배열: 인덱스가 커질수록 밝은 색상입니다.
     const colors = ['#0f172a', '#334155', '#64748b', '#94a3b8', '#cbd5e1', '#f1f5f9', '#ffffff'];
+
     for(let i=0; i<25; i++) {
         const cell = document.createElement('div');
-        cell.className = 'pixel-cell flex items-center justify-center text-[10px] font-mono font-bold text-transparent hover:text-white cursor-crosshair';
+
+        // 1. 기본 className에서 무조건 하얀 글씨로 만드는 'hover:text-white'를 제거합니다.
+        cell.className = 'pixel-cell flex items-center justify-center text-[10px] font-mono font-bold text-transparent cursor-crosshair';
+
         const randomColorIdx = Math.floor(Math.random() * colors.length);
         const value = Math.round((randomColorIdx / (colors.length-1)) * 255);
+
+        // 2. 밝기에 따라 호버 시 글자색을 다르게 적용합니다.
+        // 인덱스 4('#cbd5e1') 이상부터는 밝은 색상이므로 어두운 글씨(text-slate-900)를 적용합니다.
+        if (randomColorIdx >= 4) {
+            cell.classList.add('hover:text-slate-900');
+        } else {
+            cell.classList.add('hover:text-white');
+        }
+
         cell.style.backgroundColor = colors[randomColorIdx];
         cell.innerText = value;
+
         cell.addEventListener('mouseenter', function() {
             this.style.transform = 'scale(1.1)';
             this.style.zIndex = '10';
