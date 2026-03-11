@@ -201,7 +201,11 @@
                 합니다. 마치 컴퓨터가 '받아쓰기'를 하는 것과 같아요. </p>
             <!-- 3단계 프로세스 -->
             <div class="grid md:grid-cols-3 gap-6 mt-8">
-                <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100 text-center">
+                <!-- 1단계: 소리 듣기 -->
+                <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100 text-center relative shadow-sm hover:shadow-md transition-shadow">
+                    <!-- 다음 단계로 넘어가는 화살표 (1단계 -> 2단계) -->
+                    <i class="fa-solid fa-chevron-right absolute -right-3 top-1/2 -translate-y-1/2 text-slate-300 hidden md:block text-3xl z-10"></i>
+
                     <div class="wave-container justify-center mb-4">
                         <div class="wave-bar"></div>
                         <div class="wave-bar"></div>
@@ -209,24 +213,29 @@
                         <div class="wave-bar"></div>
                         <div class="wave-bar"></div>
                     </div>
-                    <h4 class="font-bold text-slate-900 mb-2">1단계: 소리 듣기</h4>
-                    <p class="text-slate-500">마이크 센서를 통해 공기의 떨림인 소리를 전기 신호로 바꿉니다.</p>
+                    <h4 class="font-bold text-slate-900 mb-2 text-lg">1단계: 소리 듣기</h4>
+                    <p class="text-slate-500 text-sm leading-relaxed">마이크 센서를 통해 공기의 떨림인 소리를 전기 신호로 바꿉니다.</p>
                 </div>
-                <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100 text-center relative">
-                    <i class="fa-solid fa-chevron-right absolute -right-3 top-1/2 -translate-y-1/2 text-slate-300 hidden md:block text-2xl"></i>
-                    <div class="text-4xl text-sky-400 mb-4">
-                        <i class="fa-solid fa-binary"></i>
+                <!-- 2단계: 음소 쪼개기 -->
+                <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100 text-center relative shadow-sm hover:shadow-md transition-shadow">
+                    <!-- 다음 단계로 넘어가는 화살표 (2단계 -> 3단계) -->
+                    <i class="fa-solid fa-chevron-right absolute -right-3 top-1/2 -translate-y-1/2 text-slate-300 hidden md:block text-3xl z-10"></i>
+
+                    <div class="text-4xl text-sky-400 mb-4 h-10 flex items-center justify-center">
+                        <i class="fa-solid fa-scissors transform -rotate-90"></i> <!-- 쪼개기를 의미하는 가위 아이콘 -->
                     </div>
-                    <h4 class="font-bold text-slate-900 mb-2">2단계: 음소 쪼개기</h4>
-                    <p class="text-slate-500">소리를 가장 작은 단위인 '자음'과 '모음'(음소)으로 잘게 쪼개어 분석합니다.</p>
+                    <h4 class="font-bold text-slate-900 mb-2 text-lg">2단계: 음소 쪼개기</h4>
+                    <p class="text-slate-500 text-sm leading-relaxed">소리를 가장 작은 단위인 '자음'과 '모음'(음소)으로 잘게 쪼개어 분석합니다.</p>
                 </div>
-                <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100 text-center relative">
-                    <i class="fa-solid fa-chevron-right absolute -right-3 top-1/2 -translate-y-1/2 text-slate-300 hidden md:block text-2xl"></i>
-                    <div class="text-4xl text-blue-500 mb-4">
+                <!-- 3단계: 텍스트 변환 -->
+                <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100 text-center relative shadow-sm hover:shadow-md transition-shadow">
+                    <!-- 마지막 단계이므로 화살표 없음 -->
+
+                    <div class="text-4xl text-blue-500 mb-4 h-10 flex items-center justify-center">
                         <i class="fa-solid fa-file-lines"></i>
                     </div>
-                    <h4 class="font-bold text-slate-900 mb-2">3단계: 텍스트 변환</h4>
-                    <p class="text-slate-500">분석한 소리의 패턴을 사전에 등록된 단어들과 비교하여 글자로 출력합니다.</p>
+                    <h4 class="font-bold text-slate-900 mb-2 text-lg">3단계: 텍스트 변환</h4>
+                    <p class="text-slate-500 text-sm leading-relaxed">분석한 소리의 패턴을 사전에 등록된 단어들과 비교하여 글자로 출력합니다.</p>
                 </div>
             </div>
         </div>
