@@ -217,10 +217,9 @@
                             </button>
                         </div>
                         <div class="p-4">
-                            <pre><code id="code-45-2" class="language-python">print(3 * "hello")</code></pre>
+                            <pre><code id="code-45-2" class="language-python">print(3 * "hello")
+print(5 * "0")</code></pre>
                         </div>
-
-
                         <div class="px-5 py-4 bg-white flex-grow flex flex-col gap-3">
                             <div>
                                 <span class="text-[11px] font-bold text-blue-500 flex items-center gap-1.5 uppercase tracking-wide mb-1">
@@ -525,8 +524,17 @@
                 </div>
                 <p class="text-slate-600 mb-6 ml-11 leading-relaxed">
                     데이터 사이에 공백 대신 특정 문자를 넣고 싶을 때 <code
-                        class="code-font bg-slate-100 px-1.5 py-0.5 rounded text-indigo-600 ">sep</code> 옵션을
-                    사용합니다.
+                        class="code-font bg-slate-100 px-1.5 py-0.5 rounded text-indigo-600">sep</code> 옵션을 사용합니다.
+                    <br>여기서 <strong>sep</strong>은 <em>separator</em>(구분자)의 약자로, 출력할 각 값 사이에 넣고 싶은 문자를 지정할 수 있습니다.
+                    기본 구분자는 공백(<code class="code-font bg-slate-100 px-1.5 py-0.5 rounded text-indigo-600">" "</code>)입니다.
+                </p>
+                <p class="text-slate-600 mb-6 ml-11 leading-relaxed">
+                    예를 들어, <code class="code-font bg-slate-100 px-1.5 py-0.5 rounded text-indigo-600">print(5, 4, 6,
+                    "안녕")</code>을 실행하면 기본 구분자인 공백으로 값들이 나뉘어
+                    <code class="code-font bg-slate-100 px-1.5 py-0.5 rounded text-indigo-600">5 4 6 안녕</code>과 같이
+                    출력됩니다.
+                    점(.)으로 구분하고 싶으면 <code
+                        class="code-font bg-slate-100 px-1.5 py-0.5 rounded text-indigo-600">sep='.'</code>를 사용하면 됩니다.
                 </p>
                 <div class="ml-11">
                     <div class="bg-slate-50 rounded-2xl border border-slate-200 overflow-hidden flex flex-col">
@@ -558,17 +566,68 @@
                 </div>
             </div>
 
-            <div>
-                <div class="flex items-center gap-3 mb-4">
-                    <span class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-600 text-white font-bold ">03</span>
+            <div class="pl-6 md:pl-11">
+                <div class="flex items-center gap-3 mb-6">
+                    <span class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-600 text-white font-bold">03</span>
                     <h3 class="text-xl font-bold text-slate-800">줄 바꿈 제어 (end 옵션)</h3>
                 </div>
-                <p class="text-slate-600 mb-6 ml-11 leading-relaxed">
-                    기본적으로 print()는 자동 줄바꿈을 수행합니다. 줄을 바꾸지 않고 이어 붙이려면 <code
-                        class="code-font bg-slate-100 px-1.5 py-0.5 rounded text-indigo-600 ">end</code> 옵션을
+
+                <p class="text-slate-600 mb-4 leading-relaxed">
+                    <code class="code-font bg-slate-100 px-1.5 py-0.5 rounded text-indigo-600">print()</code> 함수는 기본적으로
+                    출력이 끝나면 자동으로 한 줄 내려갑니다.
+                    즉, 각 print 문 끝에는 줄바꿈 문자(<code class="code-font bg-slate-100 px-1.5 py-0.5 rounded text-indigo-600">"\n"</code>)가
+                    붙습니다.
+                </p>
+                <p class="text-slate-600 mb-6 leading-relaxed">
+                    줄을 바꾸지 않고 이어서 출력하려면 <code
+                        class="code-font bg-slate-100 px-1.5 py-0.5 rounded text-indigo-600">end</code> 옵션을 사용합니다.
+                    예: <code class="code-font bg-slate-100 px-1.5 py-0.5 rounded text-indigo-600">print("안녕하세요",
+                    end="")</code>.
+                    줄바꿈을 원하면 <code class="code-font bg-slate-100 px-1.5 py-0.5 rounded text-indigo-600">end="\n"</code>을
                     사용합니다.
                 </p>
-                <div class="ml-11 grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                <!-- 예제 카드 그리드 -->
+                <div class="grid gap-6">
+                    <!-- 기본 줄바꿈 예제 -->
+                    <div class="bg-slate-50 rounded-2xl border border-slate-200 p-4">
+                        <h5 class="font-bold text-slate-800 mb-3">기본 줄바꿈</h5>
+                        <div class="flex flex-col md:flex-row gap-4">
+                <pre class="flex-1 min-w-0 bg-slate-100 p-3 rounded"><code class="language-python">
+print("안녕하세요")
+print("여러분")
+                </code></pre>
+                            <pre class="flex-1 min-w-0 bg-white p-3 rounded border border-slate-200"><code
+                                    class="language-text">
+안녕하세요
+여러분
+                </code></pre>
+                        </div>
+                        <p class="text-slate-600 mt-2">print()를 여러 번 쓰면 각 출력이 새 줄에서 시작합니다. 즉, 자동 줄바꿈(\n)이
+                            추가됩니다.</p>
+                    </div>
+
+                    <!-- end 옵션 예제 -->
+                    <div class="bg-slate-50 rounded-2xl border border-slate-200 p-4">
+                        <h5 class="font-bold text-slate-800 mb-3">줄바꿈 없이 이어서 출력 (end 옵션)</h5>
+                        <div class="flex flex-col md:flex-row gap-4">
+                <pre class="flex-1 min-w-0 bg-slate-100 p-3 rounded"><code class="language-python">
+print("안녕하세요", end="")
+print("여러분")
+                </code></pre>
+                            <pre class="flex-1 min-w-0 bg-white p-3 rounded border border-slate-200"><code
+                                    class="language-text">
+안녕하세요여러분
+                </code></pre>
+                        </div>
+                        <p class="text-slate-600 mt-2">end=""를 사용하면 다음 print()가 같은 줄에서 이어집니다. 줄바꿈을 원하면 end="\n"을
+                            쓰면 됩니다.</p>
+                    </div>
+                </div>
+
+                <!-- 고급 예제 카드 2개 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                    <!-- 예제 50.py -->
                     <div class="bg-slate-50 rounded-2xl border border-slate-200 overflow-hidden flex flex-col">
                         <div class="p-4 bg-slate-100/50 border-b border-slate-200">
                             <h5 class="font-bold text-slate-800 flex items-center gap-2">
@@ -580,23 +639,24 @@
                             <div class="flex items-center justify-between px-4 py-2 border-b border-white/10">
                                 <span class="font-medium text-slate-400 code-font">50.py</span>
                                 <button onclick="copyCode('code-50')"
-                                        class="text-slate-400 hover:text-white transition-colors flex items-center gap-1 ">
+                                        class="text-slate-400 hover:text-white transition-colors flex items-center gap-1">
                                     <i data-lucide="copy" class="w-3 h-3"></i> 복사
                                 </button>
                             </div>
                             <div class="p-4">
-                                    <pre><code id="code-50" class="language-python">print("Hello")
+                    <pre><code id="code-50" class="language-python">print("Hello")
 print("World")</code></pre>
                             </div>
                             <div class="px-5 py-4 bg-white flex-grow">
-                                    <span class="text-[11px] font-bold text-blue-500 flex items-center gap-1.5 uppercase tracking-wide mb-1">
-                                        <i data-lucide="terminal-square" class="w-3.5 h-3.5"></i> Result
-                                    </span>
+                    <span class="text-[11px] font-bold text-blue-500 flex items-center gap-1.5 uppercase tracking-wide mb-1">
+                        <i data-lucide="terminal-square" class="w-3.5 h-3.5"></i> Result
+                    </span>
                                 <p class="code-font text-slate-700 font-medium leading-tight">Hello<br>World</p>
                             </div>
                         </div>
                     </div>
 
+                    <!-- 예제 51.py -->
                     <div class="bg-slate-50 rounded-2xl border border-slate-200 overflow-hidden flex flex-col">
                         <div class="p-4 bg-slate-100/50 border-b border-slate-200">
                             <h5 class="font-bold text-slate-800 flex items-center gap-2">
@@ -608,19 +668,19 @@ print("World")</code></pre>
                             <div class="flex items-center justify-between px-4 py-2 border-b border-white/10">
                                 <span class="font-medium text-slate-400 code-font">51.py</span>
                                 <button onclick="copyCode('code-51')"
-                                        class="text-slate-400 hover:text-white transition-colors flex items-center gap-1 ">
+                                        class="text-slate-400 hover:text-white transition-colors flex items-center gap-1">
                                     <i data-lucide="copy" class="w-3 h-3"></i> 복사
                                 </button>
                             </div>
                             <div class="p-4">
-                                    <pre><code id="code-51" class="language-python">print("Hello", end=", ")
+                    <pre><code id="code-51" class="language-python">print("Hello", end=", ")
 print("Python")</code></pre>
                             </div>
                             <div class="px-5 py-4 bg-white flex-grow">
-                                    <span class="text-[11px] font-bold text-blue-500 flex items-center gap-1.5 uppercase tracking-wide mb-1">
-                                        <i data-lucide="terminal-square" class="w-3.5 h-3.5"></i> Result
-                                    </span>
-                                <p class="code-font text-slate-700 font-medium">Hello, Python</p>
+                    <span class="text-[11px] font-bold text-blue-500 flex items-center gap-1.5 uppercase tracking-wide mb-1">
+                        <i data-lucide="terminal-square" class="w-3.5 h-3.5"></i> Result
+                    </span>
+                                <p class="code-font text-slate-700 font-medium leading-tight">Hello, Python</p>
                             </div>
                         </div>
                     </div>
