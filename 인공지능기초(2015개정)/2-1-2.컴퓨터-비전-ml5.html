@@ -188,7 +188,7 @@
                                     <i class="fa-solid fa-sliders"></i></div>
                                 <h3 class="font-bold text-lg">AI 모델 선택</h3>
                             </div>
-                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3" id="modelSelectionGroup">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="modelSelectionGroup">
                                 <label class="flex flex-col items-center justify-center p-3 border-2 border-blue-500 bg-blue-50 rounded-xl cursor-pointer transition-all model-label text-center">
                                     <input type="radio" name="model" value="classification" class="hidden" checked>
                                     <span class="block text-sm font-bold text-slate-900 mb-0.5">이미지 분류</span>
@@ -203,6 +203,11 @@
                                     <input type="radio" name="model" value="segmentation" class="hidden">
                                     <span class="block text-sm font-bold text-slate-900 mb-0.5">이미지 분할</span>
                                     <span class="block text-[11px] text-slate-500">인물 배경 분리</span>
+                                </label>
+                                <label class="flex flex-col items-center justify-center p-3 border-2 border-transparent bg-white hover:bg-slate-100 rounded-xl cursor-pointer transition-all model-label text-center">
+                                    <input type="radio" name="model" value="facemesh" class="hidden">
+                                    <span class="block text-sm font-bold text-slate-900 mb-0.5">안면 인식</span>
+                                    <span class="block text-[11px] text-slate-500">FaceMesh</span>
                                 </label>
                             </div>
                         </div>
@@ -352,6 +357,10 @@
     let detector = null;
     let detections = [];
 
+    // 👇 FaceMesh용 추가 👇
+    let faceMesh = null;
+    let faces = [];
+
     let video;
     let isRunning = false;
     let mirrorMode = true;
@@ -439,6 +448,25 @@
                     textSize(14);
                     textAlign(LEFT, CENTER);
                     text(`${d.label} (${(d.confidence * 100).toFixed(1)}%)`, x + 5, y - (labelHeight / 2));
+                }
+            }
+
+            if (currentMode === 'facemesh' && faces.length > 0) {
+                for (let i = 0; i < faces.length; i++) {
+                    let face = faces[i];
+                    // 얼굴의 주요 특징점(Keypoints) 그리기
+                    for (let j = 0; j < face.keypoints.length; j++) {
+                        let keypoint = face.keypoints[j];
+                        let kx = keypoint.x;
+                        let ky = keypoint.y;
+
+                        // 거울 모드일 경우 점의 x 좌표를 좌우 반전
+                        if (mirrorMode) kx = width - kx;
+
+                        fill(0, 255, 0); // 초록색 점
+                        noStroke();
+                        circle(kx, ky, 4); // 크기가 4인 원
+                    }
                 }
             }
 
@@ -545,10 +573,12 @@
         try {
             if (classifier && typeof classifier.classifyStop === 'function') classifier.classifyStop();
             if (detector && typeof detector.detectStop === 'function') detector.detectStop();
+            if (faceMesh && typeof faceMesh.detectStop === 'function') faceMesh.detectStop();
         } catch (e) {
             console.log("모델 중지 중 에러 무시:", e);
         }
         detections = []; // 화면에 남은 박스 지우기
+        faces = [];      // 👇 추가: 화면에 남은 얼굴 점 지우기
     }
 
     function startSystem() {
@@ -645,6 +675,16 @@
                 } else {
                     modelReady();
                 }
+            } else if (currentMode === 'facemesh') {   // 👇 여기서부터 FaceMesh 👇
+                if(classificationResult) classificationResult.classList.add('hidden');
+
+                if (!faceMesh) {
+                    setStatus('FaceMesh 모델 로딩 중 (최초 1회만)...', true);
+                    let options = { maxFaces: 1, refineLandmarks: false, flipHorizontal: false };
+                    faceMesh = ml5.faceMesh(options, modelReady);
+                } else {
+                    modelReady();
+                }
             } else {
                 setStatus(`${currentMode} 모델은 다음 단계에서 구현됩니다.`);
                 if(classificationResult) classificationResult.classList.add('hidden');
@@ -671,6 +711,8 @@
             classifier.classifyStart(video, gotClassificationResults);
         } else if (currentMode === 'detection') {
             detector.detectStart(video, gotDetections);
+        } else if (currentMode === 'facemesh') {
+            faceMesh.detectStart(video, gotFaces);
         }
     }
 
@@ -702,6 +744,12 @@
     function gotDetections(results) {
         if (!isRunning || currentMode !== 'detection') return;
         detections = results;
+    }
+
+    // 👇 FaceMesh에서 새로 추가하는 함수 👇
+    function gotFaces(results) {
+        if (!isRunning || currentMode !== 'facemesh') return;
+        faces = results;
     }
 
 </script>
