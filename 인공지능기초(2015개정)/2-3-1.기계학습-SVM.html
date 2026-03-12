@@ -707,7 +707,18 @@
                 this.ctx.strokeStyle = '#ffffff';
                 this.ctx.lineWidth = 1.5;
                 this.ctx.stroke();
+
+                // 각 점 위에 margin 값 표시하기
+                // let x1 = (p.x - this.canvas.width / 2) / (this.canvas.width / 2);
+                // let x2 = (this.canvas.height / 2 - p.y) / (this.canvas.height / 2);
+                //
+                // let margin = p.cls * (this.svm.w[0] * x1 + this.svm.w[1] * x2 + this.svm.b);
+                //
+                // this.ctx.fillStyle = "#111";
+                // this.ctx.font = "11px monospace";
+                // this.ctx.fillText(margin.toFixed(2), p.x + 10, p.y - 10);
             });
+
         }
     }
 
