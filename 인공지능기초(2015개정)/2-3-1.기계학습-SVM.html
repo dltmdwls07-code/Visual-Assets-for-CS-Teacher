@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SVM 모델 시뮬레이터</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;700;900&display=swap');
+
+        body {
+            font-family: 'Pretendard', sans-serif;
+            scroll-behavior: smooth;
+            background-color: #f8fafc;
+        }
+
+        /* Hero 배경 그라데이션 */
+        .hero-gradient {
+            background: linear-gradient(135deg, #f97316 0%, #f43f5e 100%);
+        }
+
+        /* 네비게이션바 고정 */
+        .sticky-nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+            background-color: rgba(255, 255, 255, 0.9);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .section-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 2rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05);
+            border: 1px solid #f1f5f9;
+            transition: all 0.3s ease;
+        }
+
+        .quiz-btn {
+            width: 100%;
+            padding: 1.25rem;
+            text-align: left;
+            border-radius: 1rem;
+            border: 2px solid #e2e8f0;
+            background-color: #f8fafc;
+            font-weight: 500;
+            color: #374151;
+            transition: all 0.25s ease;
+        }
+
+        .quiz-btn:hover {
+            background: #f0fdfa;
+            border-color: #5eead4;
+        }
+
+        .quiz-btn.correct {
+            background: #4f46e5;
+            color: white;
+            border-color: #4f46e5;
+        }
+
+        .quiz-btn.wrong {
+            background: #f43f5e;
+            color: white;
+            border-color: #f43f5e;
+        }
+
+        .quiz-btn.disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Tool active state */
+        .tool-btn.active {
+            border-color: #334155 !important;
+            transform: scale(1.05);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+        }
+    </style>
+</head>
+<body class="text-slate-900">
+
+<header id="intro" class="hero-gradient text-white py-32 px-6">
+    <div class="max-w-4xl mx-auto text-center">
+        <span class="inline-block px-4 py-1.5 bg-white/20 rounded-full font-bold mb-6 backdrop-blur-md text-sm md:text-base">인공지능 실습</span>
+        <h1 class="text-4xl md:text-6xl font-black mb-6 leading-tight">마진을 최대화하라,<br>Support Vector Machine</h1>
+        <p class="text-xl md:text-2xl opacity-90 font-medium max-w-2xl mx-auto leading-relaxed">
+            두 그룹을 가장 안전하게 나누는 '최적의 선'은 무엇일까요? 여백(Margin)을 가장 넓게 확보하는 선을 긋는 SVM의 원리를 시각적으로 체험해 봅니다.
+        </p>
+    </div>
+</header>
+
+<nav class="sticky-nav px-6 py-4">
+    <div class="max-w-6xl mx-auto flex justify-between items-center">
+        <div class="flex items-center space-x-2">
+            <div class="w-8 h-8 bg-rose-500 rounded-lg flex items-center justify-center text-white"><i
+                    class="fa-solid fa-bezier-curve"></i></div>
+            <span class="font-black text-2xl tracking-tight text-slate-800">머신러닝 기초</span>
+        </div>
+        <div class="hidden md:flex space-x-8 font-bold text-slate-500 text-lg">
+            <a href="#intro" class="hover:text-rose-600 transition">도입</a>
+            <a href="#concept" class="hover:text-rose-600 transition">핵심원리</a>
+            <a href="#activity" class="hover:text-rose-600 transition">시뮬레이터</a>
+            <a href="#quiz" class="hover:text-rose-600 transition">자가진단</a>
+        </div>
+    </div>
+</nav>
+
+<main class="max-w-7xl mx-auto px-4 sm:px-6 py-20 space-y-24">
+
+    <section id="concept" class="scroll-mt-24 space-y-12 max-w-6xl mx-auto">
+        <div class="text-center space-y-4">
+            <span class="text-rose-600 font-bold tracking-widest uppercase text-base">Core Mechanism</span>
+            <h2 class="text-3xl md:text-4xl font-black text-slate-900">SVM은 어떻게 최적의 선을 찾을까요?</h2>
+            <p class="text-slate-600 text-lg font-medium">SVM은 경계선과 데이터 사이의 '여백(Margin)'을 최대한 넓게 만드는 것을 목표로 합니다.</p>
+        </div>
+
+        <div class="relative grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+            <div class="bg-white rounded-3xl p-8 border border-slate-200 shadow-lg shadow-slate-200/50 flex flex-col items-center text-center transform transition-transform hover:-translate-y-2">
+                <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center mb-6 shadow-inner text-4xl">
+                    <i class="fa-solid fa-slash"></i></div>
+                <span class="px-4 py-1.5 bg-blue-50 text-blue-600 font-bold rounded-full text-base mb-4">Step 1</span>
+                <h3 class="text-2xl font-black mb-3 text-slate-800">결정 경계 (Decision Boundary)</h3>
+                <p class="text-slate-600 text-lg leading-relaxed break-keep">두 그룹(클래스)을 명확하게 나누기 위해 두 데이터 무리 한가운데를 가로지르는
+                    기준선(Hyperplane)을 찾습니다.</p>
+            </div>
+
+            <div class="bg-white rounded-3xl p-8 border border-slate-200 shadow-lg shadow-slate-200/50 flex flex-col items-center text-center transform transition-transform hover:-translate-y-2">
+                <div class="w-16 h-16 bg-rose-100 text-rose-600 rounded-2xl flex items-center justify-center mb-6 shadow-inner text-4xl">
+                    <i class="fa-solid fa-arrows-left-right-to-line"></i></div>
+                <span class="px-4 py-1.5 bg-rose-50 text-rose-600 font-bold rounded-full text-base mb-4">Step 2</span>
+                <h3 class="text-2xl font-black mb-3 text-slate-800">마진 최대화 (Maximize Margin)</h3>
+                <p class="text-slate-600 text-lg leading-relaxed break-keep">기준선 양쪽으로 선을 평행하게 확장하여 만들어지는 빈 공간인 <strong>'마진(Margin)'</strong>이
+                    가장 넓어지도록 선의 각도를 조정합니다.</p>
+            </div>
+
+            <div class="bg-white rounded-3xl p-8 border border-slate-200 shadow-lg shadow-slate-200/50 flex flex-col items-center text-center transform transition-transform hover:-translate-y-2">
+                <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center mb-6 shadow-inner text-4xl">
+                    <i class="fa-solid fa-bullseye"></i></div>
+                <span class="px-4 py-1.5 bg-emerald-50 text-emerald-600 font-bold rounded-full text-base mb-4">Step 3</span>
+                <h3 class="text-2xl font-black mb-3 text-slate-800">서포트 벡터 (Support Vectors)</h3>
+                <p class="text-slate-600 text-lg leading-relaxed break-keep">이때 마진의 끝(경계)에 닿아서 선의 위치를 떠받치고 결정하는 가장 중요한
+                    핵심 데이터 포인트들을 <strong>서포트 벡터</strong>라고 부릅니다.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="activity"
+             class="max-w-7xl scroll-mt-24 section-card !p-6 md:!p-8 overflow-hidden bg-white border border-slate-200 shadow-lg">
+        <div class="mb-8 space-y-2 text-center md:text-left">
+            <span class="text-rose-600 font-bold tracking-widest uppercase text-base">Interactive Simulator</span>
+            <h2 class="text-3xl md:text-4xl font-black text-slate-800">SVM 시각화 시뮬레이터</h2>
+            <p class="text-slate-600 text-lg">데이터를 배치하고 'Train(학습)' 버튼을 눌러보세요. SVM이 어떻게 마진을 최대화하는지 눈으로 확인할 수 있습니다.</p>
+        </div>
+
+        <div class="flex flex-col lg:flex-row gap-6 items-stretch">
+
+            <div class="w-full lg:w-[65%] flex flex-col gap-4">
+                <div id="statusMessageBar"
+                     class="w-full bg-slate-100 border-2 border-slate-200 text-slate-700 px-6 py-4 rounded-xl font-bold flex items-center shadow-sm transition-all duration-300">
+                    <i id="statusMessageIcon" class="fa-solid fa-pen-nib mr-3 text-2xl"></i>
+                    <span id="statusMessageText" class="text-xl">배치할 데이터의 클래스를 선택하고 캔버스를 클릭하세요.</span>
+                </div>
+
+                <div class="bg-white p-3 rounded-2xl border-2 border-slate-200 flex flex-wrap gap-2 justify-center shadow-sm">
+                    <button class="tool-btn active flex-1 px-4 py-3 text-lg bg-rose-50 text-rose-600 hover:bg-rose-100 rounded-lg font-bold transition-all border-2 border-rose-200"
+                            data-tool="1">
+                        <i class="fa-solid fa-circle mr-2"></i>Class A
+                    </button>
+                    <button class="tool-btn flex-1 px-4 py-3 text-lg bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-lg font-bold transition-all border-2 border-blue-200"
+                            data-tool="-1">
+                        <i class="fa-solid fa-square mr-2"></i>Class B
+                    </button>
+                </div>
+
+                <div class="relative w-full bg-slate-50 rounded-2xl overflow-hidden border-2 border-slate-300 shadow-inner"
+                     style="aspect-ratio: 4/3;">
+                    <canvas id="svmCanvas" class="absolute top-0 left-0 w-full h-full cursor-crosshair"></canvas>
+                </div>
+
+                <div class="flex gap-3 justify-center w-full">
+                    <button id="btnRandomData"
+                            class="flex-1 px-6 py-3 text-lg bg-white hover:bg-slate-50 text-slate-700 font-bold rounded-xl transition-all border-2 border-slate-200 shadow-sm whitespace-nowrap">
+                        <i class="fa-solid fa-braille mr-2 text-rose-500"></i>랜덤 데이터 생성
+                    </button>
+                    <button id="btnClearData"
+                            class="flex-1 px-6 py-3 text-lg bg-white hover:bg-rose-50 text-rose-600 font-bold rounded-xl transition-all border-2 border-slate-200 shadow-sm whitespace-nowrap">
+                        <i class="fa-solid fa-eraser mr-2"></i>모두 지우기
+                    </button>
+                </div>
+            </div>
+
+            <div class="w-full lg:w-[35%] flex flex-col gap-6">
+
+                <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 flex-1">
+                    <h3 class="font-black text-slate-800 mb-4 flex items-center text-xl">
+                        <i class="fa-solid fa-list-check text-rose-600 mr-2"></i>학습 진행 과정
+                    </h3>
+                    <div class="flex flex-col gap-3 relative">
+                        <div class="absolute left-6 top-8 bottom-8 w-1 bg-slate-200 z-0 rounded"></div>
+
+                        <div id="flow-IDLE"
+                             class="flow-box relative z-10 bg-white border-2 border-slate-300 rounded-xl p-4 shadow-sm transition-all duration-300 transform scale-[1.02]">
+                            <span class="step-badge inline-block px-2.5 py-1 rounded-md text-sm font-black mb-1 bg-slate-100 text-slate-600">Step 0</span>
+                            <div class="step-title font-bold text-slate-800 text-lg flex items-center"><i
+                                    class="fa-solid fa-pen-nib w-6"></i>데이터 입력 대기 중
+                            </div>
+                        </div>
+                        <div id="flow-TRAIN"
+                             class="flow-box relative z-10 opacity-50 grayscale-[30%] bg-slate-50 border-2 border-slate-200 rounded-xl p-4 transition-all duration-300">
+                            <span class="step-badge inline-block px-2.5 py-1 rounded-md text-sm font-bold mb-1 bg-slate-200 text-slate-500">Step 1 & 2</span>
+                            <div class="step-title font-bold text-slate-500 text-lg flex items-center"><i
+                                    class="fa-solid fa-arrows-left-right-to-line w-6"></i>마진 최대화 훈련 진행
+                            </div>
+                        </div>
+                        <div id="flow-DONE"
+                             class="flow-box relative z-10 opacity-50 grayscale-[30%] bg-slate-50 border-2 border-slate-200 rounded-xl p-4 transition-all duration-300">
+                            <span class="step-badge inline-block px-2.5 py-1 rounded-md text-sm font-bold mb-1 bg-slate-200 text-slate-500">Step 3</span>
+                            <div class="step-title font-bold text-slate-500 text-lg flex items-center"><i
+                                    class="fa-solid fa-bullseye w-6"></i>서포트 벡터 추출 완료
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-rose-50/80 p-5 rounded-2xl border-2 border-rose-100 shadow-sm flex flex-col gap-4">
+                    <div class="bg-white p-4 rounded-xl border border-rose-100 shadow-sm">
+                        <div class="flex justify-between items-center mb-2">
+                            <label class="font-bold text-slate-700 text-lg">C (규제 파라미터)</label>
+                            <span id="cValueDisplay" class="font-black text-rose-600 text-3xl">1.0</span>
+                        </div>
+                        <input type="range" id="cSlider" min="0" max="100" value="50"
+                               class="w-full accent-rose-600 mb-2 cursor-pointer">
+                        <p class="text-sm font-bold text-rose-500 text-center bg-rose-50 py-1.5 rounded break-keep">
+                            ※ C가 크면 하드 마진(오차 불허), 작으면 소프트 마진(오차 허용)이 됩니다.
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 gap-3">
+                        <button id="btnTrain" disabled
+                                class="py-4 bg-rose-600 hover:bg-rose-700 text-white font-black text-xl rounded-xl transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 flex items-center justify-center whitespace-nowrap">
+                            <i class="fa-solid fa-play mr-2"></i> SVM 학습 (Train)
+                        </button>
+                        <button id="btnResetAlg" disabled
+                                class="py-3 bg-white hover:bg-slate-100 text-slate-700 font-bold text-lg rounded-xl transition-all border-2 border-slate-300 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center whitespace-nowrap">
+                            <i class="fa-solid fa-rotate-left mr-2"></i> 학습 결과 초기화
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="quiz" class="scroll-mt-24 space-y-12 max-w-4xl mx-auto">
+        <div class="text-center">
+            <h2 class="text-3xl md:text-4xl font-black text-slate-900">학습 내용 확인하기</h2>
+            <div class="w-20 h-1.5 bg-rose-500 mx-auto rounded-full mt-4"></div>
+        </div>
+        <div class="space-y-8">
+            <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
+                <p class="text-xl md:text-2xl font-bold mb-6 text-slate-800 leading-snug">Q1. 서포트 벡터 머신(SVM)에서 '서포트 벡터'가
+                    의미하는 것은 무엇인가요?</p>
+                <div class="grid grid-cols-1 gap-4">
+                    <button onclick="checkAnswer(this, false, '중앙이 아니라 경계선(마진) 쪽에 있는 데이터입니다.')"
+                            class="quiz-btn text-lg">A. 각 데이터 무리의 가장 중앙에 위치한 평균 데이터
+                    </button>
+                    <button onclick="checkAnswer(this, true, '정답입니다! 마진 끝에 걸쳐서 결정 경계를 직접적으로 떠받치는 핵심 데이터입니다.')"
+                            class="quiz-btn text-lg">B. 결정 경계를 정의하고 마진의 폭을 결정하는 가장 가까운 핵심 데이터
+                    </button>
+                    <button onclick="checkAnswer(this, false, '멀리 떨어진 데이터는 결정 경계에 영향을 주지 못합니다.')"
+                            class="quiz-btn text-lg">C. 결정 경계선에서 가장 멀리 떨어져서 이상치로 판별된 데이터
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<script>
+    // --- 설정 및 유틸리티 ---
+    const CLASS_A = 1;   // Rose (Circle)
+    const CLASS_B = -1;  // Blue (Square)
+
+    // 1. DataManager
+    class DataManager {
+        constructor() {
+            this.points = [];
+        }
+
+        addPoint(x, y, cls) {
+            this.points.push({x, y, cls});
+        }
+
+        clear() {
+            this.points = [];
+        }
+
+        generateRandom(width, height) {
+            this.clear();
+            const cx1 = width * 0.3, cy1 = height * 0.3;
+            const cx2 = width * 0.7, cy2 = height * 0.7;
+            for (let i = 0; i < 20; i++) {
+                // Class A
+                let px1 = Math.max(20, Math.min(width - 20, cx1 + (Math.random() - 0.5) * 150));
+                let py1 = Math.max(20, Math.min(height - 20, cy1 + (Math.random() - 0.5) * 150));
+                this.addPoint(px1, py1, CLASS_A);
+                // Class B
+                let px2 = Math.max(20, Math.min(width - 20, cx2 + (Math.random() - 0.5) * 150));
+                let py2 = Math.max(20, Math.min(height - 20, cy2 + (Math.random() - 0.5) * 150));
+                this.addPoint(px2, py2, CLASS_B);
+            }
+        }
+    }
+
+    // 2. SVMAlgorithm (Pegasos Algorithm: Hinge Loss Gradient Descent)
+    class SVMAlgorithm {
+        constructor() {
+            this.w = [0, 0];
+            this.b = 0;
+            this.supportVectors = [];
+        }
+
+        train(points, canvasWidth, canvasHeight, C_param) {
+            // C parameter mapping (0~100 slider -> 0.01 to 1000)
+            let C = Math.pow(10, (C_param / 25) - 2);
+            if (C < 0.01) C = 0.01;
+
+            // 정규화 (좌표를 -1 ~ 1 범위로 변환하여 학습 안정성 확보)
+            let normPoints = points.map(p => ({
+                x1: (p.x - canvasWidth / 2) / (canvasWidth / 2),
+                x2: (canvasHeight / 2 - p.y) / (canvasHeight / 2),
+                y: p.cls,
+                original: p
+            }));
+
+            // Pegasos Training Loop
+            this.w = [0.0, 0.0];
+            this.b = 0.0;
+            let lambda = 1.0 / (C * normPoints.length);
+            let epochs = 1000;
+            let t = 0;
+
+            for (let epoch = 0; epoch < epochs; epoch++) {
+                // Shuffle for SGD
+                for (let i = normPoints.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [normPoints[i], normPoints[j]] = [normPoints[j], normPoints[i]];
+                }
+
+                for (let p of normPoints) {
+                    t++;
+                    let eta = 1.0 / (lambda * t);
+                    let margin = p.y * (this.w[0] * p.x1 + this.w[1] * p.x2 + this.thisb || this.b);
+
+                    if (margin < 1) {
+                        this.w[0] = (1 - eta * lambda) * this.w[0] + eta * p.y * p.x1;
+                        this.w[1] = (1 - eta * lambda) * this.w[1] + eta * p.y * p.x2;
+                        this.b = this.b + eta * p.y;
+                    } else {
+                        this.w[0] = (1 - eta * lambda) * this.w[0];
+                        this.w[1] = (1 - eta * lambda) * this.w[1];
+                    }
+                }
+            }
+
+            // Identify Support Vectors (margin <= 1.05 considering tolerance)
+            this.supportVectors = [];
+            for (let p of normPoints) {
+                let margin = p.y * (this.w[0] * p.x1 + this.w[1] * p.x2 + this.b);
+                if (margin <= 1.05 && margin >= -0.05) { // Roughly on or inside margin
+                    this.supportVectors.push(p.original);
+                }
+            }
+        }
+    }
+
+    // 3. CanvasRenderer
+    class CanvasRenderer {
+        constructor(canvas, data, svm) {
+            this.canvas = canvas;
+            this.ctx = canvas.getContext('2d');
+            this.data = data;
+            this.svm = svm;
+            this.resize();
+            window.addEventListener('resize', () => this.resize());
+            this.animate = this.animate.bind(this);
+            requestAnimationFrame(this.animate);
+        }
+
+        resize() {
+            const rect = this.canvas.parentElement.getBoundingClientRect();
+            this.canvas.width = rect.width;
+            this.canvas.height = rect.height;
+        }
+
+        animate() {
+            this.draw();
+            requestAnimationFrame(this.animate);
+        }
+
+        // 정규화된 공간의 직선을 캔버스 좌표계로 그려주는 헬퍼
+        drawLine(w0, w1, b, offset, color, isDashed) {
+            if (w0 === 0 && w1 === 0) return;
+            let cw = this.canvas.width / 2;
+            let ch = this.canvas.height / 2;
+
+            // w0 * x1 + w1 * x2 + b = offset
+            // x2 = (offset - b - w0 * x1) / w1
+
+            let drawCtx = this.ctx;
+            drawCtx.beginPath();
+            if (isDashed) drawCtx.setLineDash([10, 10]);
+            else drawCtx.setLineDash([]);
+
+            drawCtx.lineWidth = isDashed ? 2 : 3;
+            drawCtx.strokeStyle = color;
+
+            if (Math.abs(w1) > Math.abs(w0)) {
+                let p1_x1 = -1, p2_x1 = 1;
+                let p1_x2 = (offset - b - w0 * p1_x1) / w1;
+                let p2_x2 = (offset - b - w0 * p2_x1) / w1;
+
+                drawCtx.moveTo(p1_x1 * cw + cw, ch - p1_x2 * ch);
+                drawCtx.lineTo(p2_x1 * cw + cw, ch - p2_x2 * ch);
+            } else {
+                let p1_x2 = -1, p2_x2 = 1;
+                let p1_x1 = (offset - b - w1 * p1_x2) / w0;
+                let p2_x1 = (offset - b - w1 * p2_x2) / w0;
+
+                drawCtx.moveTo(p1_x1 * cw + cw, ch - p1_x2 * ch);
+                drawCtx.lineTo(p2_x1 * cw + cw, ch - p2_x2 * ch);
+            }
+            drawCtx.stroke();
+            drawCtx.setLineDash([]); // Reset
+        }
+
+        draw() {
+            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+            // 1. Draw SVM Boundary and Margins if trained
+            if (phase === 'DONE') {
+                // Margin 영역을 채우는 시각적 효과
+                this.ctx.globalAlpha = 0.1;
+                this.ctx.fillStyle = '#64748b';
+                // (Note: To strictly fill polygon, we'd need exact intersections.
+                // For simplicity & elegance, we draw thick lines or just rely on boundary lines)
+                this.ctx.globalAlpha = 1.0;
+
+                // 마진 선 (-1, +1)
+                this.drawLine(this.svm.w[0], this.svm.w[1], this.svm.b, 1, '#94a3b8', true); // Class A Margin
+                this.drawLine(this.svm.w[0], this.svm.w[1], this.svm.b, -1, '#94a3b8', true); // Class B Margin
+
+                // 결정 경계선 (0)
+                this.drawLine(this.svm.w[0], this.svm.w[1], this.svm.b, 0, '#334155', false);
+
+                // 서포트 벡터 하이라이트 (노란색 테두리와 큰 링)
+                this.svm.supportVectors.forEach(p => {
+                    this.ctx.beginPath();
+                    this.ctx.arc(p.x, p.y, 14, 0, Math.PI * 2);
+                    this.ctx.strokeStyle = '#fbbf24'; // Yellow
+                    this.ctx.lineWidth = 3;
+                    this.ctx.stroke();
+                });
+            }
+
+            // 2. Draw Data Points
+            this.data.points.forEach(p => {
+                this.ctx.beginPath();
+                if (p.cls === CLASS_A) {
+                    this.ctx.arc(p.x, p.y, 7, 0, Math.PI * 2);
+                    this.ctx.fillStyle = '#f43f5e'; // Rose
+                } else {
+                    // Class B는 사각형으로 그려 명확히 구분
+                    this.ctx.rect(p.x - 6, p.y - 6, 12, 12);
+                    this.ctx.fillStyle = '#3b82f6'; // Blue
+                }
+                this.ctx.fill();
+                this.ctx.strokeStyle = '#ffffff';
+                this.ctx.lineWidth = 1.5;
+                this.ctx.stroke();
+            });
+        }
+    }
+
+    // 4. UIController Logic
+    const dataManager = new DataManager();
+    const svm = new SVMAlgorithm();
+    const canvas = document.getElementById('svmCanvas');
+    const renderer = new CanvasRenderer(canvas, dataManager, svm);
+
+    const btnRandom = document.getElementById('btnRandomData');
+    const btnClear = document.getElementById('btnClearData');
+    const btnTrain = document.getElementById('btnTrain');
+    const btnResetAlg = document.getElementById('btnResetAlg');
+    const sliderC = document.getElementById('cSlider');
+    const labelC = document.getElementById('cValueDisplay');
+    const toolBtns = document.querySelectorAll('.tool-btn');
+
+    let activeTool = CLASS_A;
+    let phase = 'IDLE'; // IDLE -> TRAIN -> DONE
+
+    const THEMES = {
+        IDLE: {boxBg: 'bg-white', boxBorder: 'border-slate-400', text: 'text-slate-800', badgeBg: 'bg-slate-200'},
+        TRAIN: {boxBg: 'bg-rose-50', boxBorder: 'border-rose-500', text: 'text-rose-800', badgeBg: 'bg-rose-200'},
+        DONE: {
+            boxBg: 'bg-emerald-50',
+            boxBorder: 'border-emerald-500',
+            text: 'text-emerald-800',
+            badgeBg: 'bg-emerald-200'
+        }
+    };
+
+    function updateFlowUI(activePhase, message, icon, barBg = 'bg-slate-100', barText = 'text-slate-700') {
+        const msgBar = document.getElementById('statusMessageBar');
+        document.getElementById('statusMessageText').innerText = message;
+        document.getElementById('statusMessageIcon').className = `fa-solid ${icon} mr-3 text-2xl`;
+        msgBar.className = `w-full px-6 py-4 rounded-xl font-bold flex items-center shadow-sm transition-all duration-300 border-2 ${barBg} border-slate-200 ${barText}`;
+
+        ['IDLE', 'TRAIN', 'DONE'].forEach(p => {
+            const box = document.getElementById(`flow-${p}`);
+            if (p === activePhase) {
+                box.className = `flow-box relative z-10 opacity-100 shadow-md scale-[1.03] border-2 rounded-xl p-4 transition-all duration-300 ${THEMES[p].boxBg} ${THEMES[p].boxBorder}`;
+                box.querySelector('.step-badge').className = `step-badge inline-block px-2.5 py-1 rounded-md text-sm font-black mb-1 text-slate-800 ${THEMES[p].badgeBg}`;
+                box.querySelector('.step-title').className = `step-title font-bold text-lg flex items-center ${THEMES[p].text}`;
+            } else {
+                box.className = `flow-box relative z-10 opacity-50 grayscale-[30%] bg-slate-50 border-2 border-slate-200 rounded-xl p-4 transition-all duration-300 transform scale-100`;
+                box.querySelector('.step-badge').className = `step-badge inline-block px-2.5 py-1 rounded-md text-sm font-bold mb-1 bg-slate-200 text-slate-500`;
+                box.querySelector('.step-title').className = `step-title font-bold text-slate-500 text-lg flex items-center`;
+            }
+        });
+
+        // Toggle Train button depending on data presence
+        const hasA = dataManager.points.some(p => p.cls === CLASS_A);
+        const hasB = dataManager.points.some(p => p.cls === CLASS_B);
+        btnTrain.disabled = !(hasA && hasB);
+        btnResetAlg.disabled = (phase === 'IDLE');
+    }
+
+    // --- 이벤트 리스너 ---
+
+    toolBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            toolBtns.forEach(b => b.classList.remove('active'));
+            e.currentTarget.classList.add('active');
+            activeTool = parseInt(e.currentTarget.dataset.tool);
+            if (phase === 'DONE') resetSimulation();
+            updateFlowUI('IDLE', `클래스 ${activeTool === 1 ? 'A(원형)' : 'B(사각형)'} 데이터를 캔버스에 추가하세요.`, "fa-pen-nib");
+        });
+    });
+
+    canvas.addEventListener('click', (e) => {
+        if (phase === 'DONE') resetSimulation(); // 새 점을 찍으면 결과 리셋
+        const rect = canvas.getBoundingClientRect();
+        dataManager.addPoint(e.clientX - rect.left, e.clientY - rect.top, activeTool);
+        updateFlowUI('IDLE', '데이터가 추가되었습니다. 두 클래스 데이터가 모두 있다면 Train을 누르세요.', 'fa-check');
+    });
+
+    sliderC.addEventListener('input', (e) => {
+        // C 값을 단순 수치 말고 Hard/Soft 의미 부여하여 라벨 업데이트
+        let val = parseInt(e.target.value);
+        let text = val;
+        if (val < 30) text += " (Soft Margin)";
+        else if (val > 70) text += " (Hard Margin)";
+        labelC.innerText = text;
+
+        // 만약 이미 학습되었다면 실시간 렌더링 업데이트
+        if (phase === 'DONE') {
+            svm.train(dataManager.points, canvas.width, canvas.height, val);
+            updateFlowUI('DONE', 'C값이 변경되어 결정 경계와 마진이 갱신되었습니다.', 'fa-bolt', 'bg-emerald-50', 'text-emerald-800');
+        }
+    });
+
+    btnRandom.addEventListener('click', () => {
+        dataManager.generateRandom(canvas.width, canvas.height);
+        resetSimulation();
+        updateFlowUI('IDLE', '무작위 데이터가 생성되었습니다. Train 버튼을 눌러 학습을 시작하세요.', 'fa-bullseye');
+    });
+
+    btnClear.addEventListener('click', () => {
+        dataManager.clear();
+        resetSimulation();
+        updateFlowUI('IDLE', '캔버스가 초기화되었습니다. 데이터를 다시 찍어보세요.', 'fa-eraser');
+    });
+
+    function resetSimulation() {
+        phase = 'IDLE';
+        svm.w = [0, 0];
+        svm.b = 0;
+        svm.supportVectors = [];
+        updateFlowUI('IDLE', '데이터 입력 대기 중입니다.', 'fa-pen-nib');
+    }
+
+    btnResetAlg.addEventListener('click', resetSimulation);
+
+    btnTrain.addEventListener('click', () => {
+        // 애니메이션 효과를 위해 임시로 TRAIN 단계 표시
+        phase = 'TRAIN';
+        updateFlowUI('TRAIN', 'SVM 모델이 최적의 결정 경계와 마진을 계산 중입니다...', 'fa-spinner fa-spin', 'bg-rose-50', 'text-rose-800');
+        btnTrain.disabled = true;
+
+        setTimeout(() => {
+            svm.train(dataManager.points, canvas.width, canvas.height, parseInt(sliderC.value));
+            phase = 'DONE';
+            updateFlowUI('DONE', '학습 완료! 중앙의 실선(결정경계), 점선(마진), 그리고 노란 테두리(서포트 벡터)를 확인하세요.', 'fa-check-double', 'bg-emerald-50', 'text-emerald-800');
+            btnResetAlg.disabled = false;
+        }, 600); // 0.6초 뒤 완료 (학생들에게 연산 과정을 인지시킴)
+    });
+
+    // 퀴즈 처리
+    function checkAnswer(btn, isCorrect, message) {
+        const container = btn.parentElement;
+        const buttons = container.querySelectorAll('.quiz-btn');
+        buttons.forEach(b => {
+            if (!b.dataset.label) b.dataset.label = b.textContent;
+            b.classList.remove('correct', 'wrong');
+            b.classList.add('disabled');
+        });
+        if (isCorrect) {
+            btn.classList.add('correct');
+            btn.innerHTML = `<i class=\"fa-solid fa-circle-check mr-2\"></i>${btn.dataset.label}`;
+        } else {
+            btn.classList.add('wrong');
+            btn.innerHTML = `<i class=\"fa-solid fa-circle-xmark mr-2\"></i>${btn.dataset.label}`;
+        }
+        showToast(message, isCorrect ? 'success' : 'error');
+        setTimeout(() => {
+            buttons.forEach(b => {
+                b.classList.remove('correct', 'wrong', 'disabled');
+                b.innerHTML = b.dataset.label;
+            });
+        }, 3000);
+    }
+
+    function showToast(message, type) {
+        const toast = document.createElement('div');
+        toast.className = `fixed bottom-10 left-1/2 -translate-x-1/2 px-8 py-4 rounded-2xl text-white font-bold shadow-2xl transition-all transform translate-y-20 z-[1000] text-lg ${type === 'success' ? 'bg-indigo-600' : 'bg-rose-500'}`;
+        toast.innerText = message;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.classList.remove('translate-y-20'), 10);
+        setTimeout(() => {
+            toast.classList.add('opacity-0', 'translate-y-5');
+            setTimeout(() => toast.remove(), 500);
+        }, 2500);
+    }
+</script>
+</body>
+</html>
