@@ -15,12 +15,10 @@
             background-color: #f8fafc;
         }
 
-        /* Hero 배경 그라데이션 */
         .hero-gradient {
             background: linear-gradient(135deg, #f97316 0%, #f43f5e 100%);
         }
 
-        /* 네비게이션바 고정 */
         .sticky-nav {
             position: sticky;
             top: 0;
@@ -91,12 +89,17 @@
             background: #94a3b8;
         }
 
-        /* Tool active state */
         .tool-btn.active {
             border-color: #334155 !important;
             transform: scale(1.05);
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
             z-index: 10;
+        }
+
+        /* 수식 표시용 폰트 */
+        .math-font {
+            font-family: 'Courier New', Courier, monospace;
+            letter-spacing: -0.5px;
         }
     </style>
 </head>
@@ -123,6 +126,7 @@
             <a href="#intro" class="hover:text-rose-600 transition">도입</a>
             <a href="#concept" class="hover:text-rose-600 transition">핵심원리</a>
             <a href="#activity" class="hover:text-rose-600 transition">시뮬레이터</a>
+            <a href="#advanced" class="hover:text-rose-600 transition">심화학습</a>
             <a href="#quiz" class="hover:text-rose-600 transition">자가진단</a>
         </div>
     </div>
@@ -172,7 +176,7 @@
         <div class="mb-8 space-y-2 text-center md:text-left">
             <span class="text-rose-600 font-bold tracking-widest uppercase text-base">Interactive Simulator</span>
             <h2 class="text-3xl md:text-4xl font-black text-slate-800">SVM 시각화 시뮬레이터</h2>
-            <p class="text-slate-600 text-lg">데이터를 배치하고 'Train(학습)' 버튼을 눌러보세요. SVM이 어떻게 마진을 최대화하는지 눈으로 확인할 수 있습니다.</p>
+            <p class="text-slate-600 text-lg">데이터를 배치하고 'Train(학습)' 버튼을 눌러보세요. SVM이 선을 움직이며 마진을 찾아가는 과정을 볼 수 있습니다.</p>
         </div>
 
         <div class="flex flex-col lg:flex-row gap-6 items-stretch">
@@ -226,7 +230,17 @@
                 </div>
             </div>
 
-            <div class="w-full lg:w-[35%] flex flex-col gap-6">
+            <div class="w-full lg:w-[35%] flex flex-col gap-5">
+
+                <div class="bg-slate-800 p-5 rounded-2xl border-2 border-slate-700 shadow-lg text-white">
+                    <div class="flex justify-between items-center mb-3">
+                        <p class="font-black text-slate-300 text-sm flex items-center uppercase tracking-widest"><i
+                                class="fa-solid fa-calculator mr-2"></i>Decision Boundary</p>
+                    </div>
+                    <div class="bg-slate-900 rounded-xl p-4 text-center border border-slate-600 shadow-inner">
+                        <span id="equationDisplay" class="math-font text-xl md:text-2xl font-black text-emerald-400">w₁x₁ + w₂x₂ + b = 0</span>
+                    </div>
+                </div>
 
                 <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 flex-1">
                     <h3 class="font-black text-slate-800 mb-4 flex items-center text-xl">
@@ -292,6 +306,71 @@
         </div>
     </section>
 
+    <section id="advanced" class="scroll-mt-24 space-y-12 max-w-6xl mx-auto">
+        <div class="text-center space-y-4">
+            <span class="text-rose-600 font-bold tracking-widest uppercase text-base">Advanced Theory</span>
+            <h2 class="text-3xl md:text-4xl font-black text-slate-900">SVM의 숨겨진 기하학적 원리</h2>
+            <p class="text-slate-600 text-lg font-medium">수식과 파라미터가 실제로 어떤 의미를 가지는지 조금 더 깊이 알아볼까요?</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
+            <div class="bg-white rounded-3xl p-8 border border-slate-200 shadow-lg flex flex-col h-full transform transition-transform hover:-translate-y-1">
+                <div class="flex items-center mb-6">
+                    <div class="w-14 h-14 bg-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center text-2xl mr-4 shadow-inner">
+                        <i class="fa-solid fa-ruler-combined"></i></div>
+                    <h3 class="text-2xl font-black text-slate-800">결정 경계와 마진의 크기</h3>
+                </div>
+                <div class="space-y-4 text-slate-600 text-lg leading-relaxed flex-grow">
+                    <p>우측 시뮬레이터에서 보았던 방정식 <span class="font-bold text-slate-800 bg-slate-100 px-2 py-1 rounded">w₁x₁ + w₂x₂ + b = 0</span>
+                        은 두 클래스를 가르는 <strong>결정 경계선(실선)</strong>입니다.</p>
+                    <p>SVM은 이 선을 기준으로 양쪽에 <span class="font-bold text-slate-800 bg-slate-100 px-2 py-1 rounded">w·x + b = ±1</span>
+                        이라는 <strong>마진(점선)</strong>을 만듭니다.</p>
+                    <div class="bg-indigo-50 border border-indigo-100 p-5 rounded-xl my-4 text-center">
+                        <p class="font-black text-indigo-800 mb-2 text-xl">마진의 폭(Width) = 2 / ||w||</p>
+                        <p class="text-sm text-indigo-600 font-bold break-keep">즉, 여백을 최대화(Maximize Margin)한다는 것은 수학적으로
+                            가중치 벡터인 <strong>w의 크기를 최소화</strong>하는 것과 같습니다!</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-3xl p-8 border border-slate-200 shadow-lg flex flex-col h-full transform transition-transform hover:-translate-y-1">
+                <div class="flex items-center mb-6">
+                    <div class="w-14 h-14 bg-rose-100 text-rose-600 rounded-2xl flex items-center justify-center text-2xl mr-4 shadow-inner">
+                        <i class="fa-solid fa-sliders"></i></div>
+                    <h3 class="text-2xl font-black text-slate-800">규제 파라미터 C (Cost)</h3>
+                </div>
+                <div class="space-y-4 text-slate-600 text-lg leading-relaxed flex-grow">
+                    <p>현실의 데이터는 완벽하게 나누어지지 않습니다. 이때 오차(이상치)를 허용하는 정도를 조절하는 것이 <strong>규제 파라미터 C</strong>입니다.</p>
+
+                    <div class="bg-rose-50 border border-rose-100 p-4 rounded-xl my-3">
+                        <p class="font-bold text-rose-800 mb-1"><i class="fa-solid fa-tag mr-2"></i>C는 무엇의 약자일까요?</p>
+                        <p class="text-base text-rose-700">주로 <strong>Cost(비용/벌점)</strong>를 의미합니다. 모델이 오차를 냈을 때 치러야 하는
+                            '벌점'의 크기라고 생각하면 이해하기 쉽습니다!</p>
+                    </div>
+
+                    <ul class="space-y-4 mt-5">
+                        <li class="flex items-start bg-slate-50 p-4 rounded-xl border border-slate-100">
+                            <i class="fa-solid fa-shield-halved text-rose-500 mt-1 mr-3 text-xl"></i>
+                            <div>
+                                <strong class="text-slate-800 block mb-1">C가 클 때 (Hard Margin):</strong>
+                                <p class="text-base">"오차 하나당 벌점 1만 점!"<br>오차를 엄격하게 통제합니다. 데이터가 삐져나오는 것을 허용하지 않아 마진의 폭이
+                                    좁아지며, <strong>과대적합(Overfitting)</strong> 위험이 있습니다.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start bg-slate-50 p-4 rounded-xl border border-slate-100">
+                            <i class="fa-solid fa-handshake-angle text-blue-500 mt-1 mr-3 text-xl"></i>
+                            <div>
+                                <strong class="text-slate-800 block mb-1">C가 작을 때 (Soft Margin):</strong>
+                                <p class="text-base">"오차 하나당 벌점 0.1점~"<br>약간의 오차(데이터 침범)를 너그럽게 허용합니다. 대신 마진의 폭을 최대한 넓게
+                                    확보하여 새로운 데이터에 대한 <strong>일반화 성능</strong>이 높아집니다.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section id="quiz" class="scroll-mt-24 space-y-12 max-w-4xl mx-auto">
         <div class="text-center">
             <h2 class="text-3xl md:text-4xl font-black text-slate-900">학습 내용 확인하기</h2>
@@ -318,7 +397,6 @@
 </main>
 
 <script>
-    // --- 설정 및 유틸리티 ---
     const CLASS_A = 1;   // Rose (Circle)
     const CLASS_B = -1;  // Blue (Square)
 
@@ -336,19 +414,15 @@
             this.points = [];
         }
 
-        // 데이터 퍼짐 정도 슬라이더 값을 인자로 받도록 수정
         generateRandom(width, height, spreadRadius = 250) {
             this.clear();
             const cx1 = width * 0.3, cy1 = height * 0.3;
             const cx2 = width * 0.7, cy2 = height * 0.7;
-
-            // 클래스당 30개씩 생성
-            for (let i = 0; i < 30; i++) {
-                // Class A
+            for (let i = 0; i < 50; i++) {
                 let px1 = Math.max(20, Math.min(width - 20, cx1 + (Math.random() - 0.5) * spreadRadius));
                 let py1 = Math.max(20, Math.min(height - 20, cy1 + (Math.random() - 0.5) * spreadRadius));
                 this.addPoint(px1, py1, CLASS_A);
-                // Class B
+
                 let px2 = Math.max(20, Math.min(width - 20, cx2 + (Math.random() - 0.5) * spreadRadius));
                 let py2 = Math.max(20, Math.min(height - 20, cy2 + (Math.random() - 0.5) * spreadRadius));
                 this.addPoint(px2, py2, CLASS_B);
@@ -356,20 +430,20 @@
         }
     }
 
-    // 2. SVMAlgorithm (Pegasos Algorithm: Hinge Loss Gradient Descent)
+    // 2. SVMAlgorithm (Pegasos Algorithm with Async Animation)
     class SVMAlgorithm {
         constructor() {
             this.w = [0, 0];
             this.b = 0;
             this.supportVectors = [];
+            this.abortFlag = false; // ★ 추가됨: 학습 강제 중단 플래그
         }
 
-        train(points, canvasWidth, canvasHeight, C_param) {
-            // C parameter mapping (0~100 slider -> 0.01 to 1000)
+        async trainAnimated(points, canvasWidth, canvasHeight, C_param, onFrameUpdate) {
+            this.abortFlag = false; // 학습 시작 시 플래그 초기화
             let C = Math.pow(10, (C_param / 25) - 2);
             if (C < 0.01) C = 0.01;
 
-            // 정규화 (좌표를 -1 ~ 1 범위로 변환하여 학습 안정성 확보)
             let normPoints = points.map(p => ({
                 x1: (p.x - canvasWidth / 2) / (canvasWidth / 2),
                 x2: (canvasHeight / 2 - p.y) / (canvasHeight / 2),
@@ -377,15 +451,16 @@
                 original: p
             }));
 
-            // Pegasos Training Loop
             this.w = [0.0, 0.0];
             this.b = 0.0;
             let lambda = 1.0 / (C * normPoints.length);
-            let epochs = 1000;
+            let epochs = 400; // 애니메이션 효과를 위해 에포크 조정
             let t = 0;
 
             for (let epoch = 0; epoch < epochs; epoch++) {
-                // Shuffle for SGD
+                if (this.abortFlag) return; // ★ 추가됨: 지우기/랜덤 버튼 누르면 즉시 루프 탈출!
+
+                // SGD 셔플
                 for (let i = normPoints.length - 1; i > 0; i--) {
                     const j = Math.floor(Math.random() * (i + 1));
                     [normPoints[i], normPoints[j]] = [normPoints[j], normPoints[i]];
@@ -405,15 +480,66 @@
                         this.w[1] = (1 - eta * lambda) * this.w[1];
                     }
                 }
+
+                // 화면 업데이트 주기 (숫자가 작을수록 부드러움, 기본 15 -> 5로 변경)
+                if (epoch % 5 === 0) {
+                    this.identifySupportVectors(normPoints);
+                    onFrameUpdate();
+                    // 애니메이션 딜레이 (ms 단위, 숫자가 클수록 느려짐. 30~50 추천)
+                    await new Promise(r => setTimeout(r, 50));
+                }
             }
 
-            // Identify Support Vectors (margin <= 1.05 considering tolerance)
+            // 최종 수렴 (중단되지 않고 정상적으로 끝났을 때만)
+            if (!this.abortFlag) {
+                this.identifySupportVectors(normPoints);
+                onFrameUpdate();
+            }
+        }
+
+        // 실시간 조작을 위한 동기적 즉시 학습
+        trainInstant(points, canvasWidth, canvasHeight, C_param) {
+            let C = Math.pow(10, (C_param / 25) - 2);
+            if (C < 0.01) C = 0.01;
+
+            let normPoints = points.map(p => ({
+                x1: (p.x - canvasWidth / 2) / (canvasWidth / 2),
+                x2: (canvasHeight / 2 - p.y) / (canvasHeight / 2),
+                y: p.cls,
+                original: p
+            }));
+
+            this.w = [0.0, 0.0];
+            this.b = 0.0;
+            let lambda = 1.0 / (C * normPoints.length);
+            let t = 0;
+            for (let epoch = 0; epoch < 1000; epoch++) {
+                for (let i = normPoints.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [normPoints[i], normPoints[j]] = [normPoints[j], normPoints[i]];
+                }
+                for (let p of normPoints) {
+                    t++;
+                    let eta = 1.0 / (lambda * t);
+                    let margin = p.y * (this.w[0] * p.x1 + this.w[1] * p.x2 + this.b);
+                    if (margin < 1) {
+                        this.w[0] = (1 - eta * lambda) * this.w[0] + eta * p.y * p.x1;
+                        this.w[1] = (1 - eta * lambda) * this.w[1] + eta * p.y * p.x2;
+                        this.b = this.b + eta * p.y;
+                    } else {
+                        this.w[0] = (1 - eta * lambda) * this.w[0];
+                        this.w[1] = (1 - eta * lambda) * this.w[1];
+                    }
+                }
+            }
+            this.identifySupportVectors(normPoints);
+        }
+
+        identifySupportVectors(normPoints) {
             this.supportVectors = [];
             for (let p of normPoints) {
                 let margin = p.y * (this.w[0] * p.x1 + this.w[1] * p.x2 + this.b);
-                if (margin <= 1.05 && margin >= -0.05) { // Roughly on or inside margin
-                    this.supportVectors.push(p.original);
-                }
+                if (margin <= 1.05 && margin >= -0.05) this.supportVectors.push(p.original);
             }
         }
     }
@@ -442,79 +568,112 @@
             requestAnimationFrame(this.animate);
         }
 
-        // 정규화된 공간의 직선을 캔버스 좌표계로 그려주는 헬퍼
-        drawLine(w0, w1, b, offset, color, isDashed) {
+        drawLine(w0, w1, b, offset, color, isDashed, lineWidth) {
             if (w0 === 0 && w1 === 0) return;
             let cw = this.canvas.width / 2;
             let ch = this.canvas.height / 2;
-
-            // w0 * x1 + w1 * x2 + b = offset
-            // x2 = (offset - b - w0 * x1) / w1
 
             let drawCtx = this.ctx;
             drawCtx.beginPath();
             if (isDashed) drawCtx.setLineDash([10, 10]);
             else drawCtx.setLineDash([]);
 
-            drawCtx.lineWidth = isDashed ? 2 : 3;
+            drawCtx.lineWidth = lineWidth;
             drawCtx.strokeStyle = color;
 
             if (Math.abs(w1) > Math.abs(w0)) {
                 let p1_x1 = -1, p2_x1 = 1;
                 let p1_x2 = (offset - b - w0 * p1_x1) / w1;
                 let p2_x2 = (offset - b - w0 * p2_x1) / w1;
-
                 drawCtx.moveTo(p1_x1 * cw + cw, ch - p1_x2 * ch);
                 drawCtx.lineTo(p2_x1 * cw + cw, ch - p2_x2 * ch);
             } else {
                 let p1_x2 = -1, p2_x2 = 1;
                 let p1_x1 = (offset - b - w1 * p1_x2) / w0;
                 let p2_x1 = (offset - b - w1 * p2_x2) / w0;
-
                 drawCtx.moveTo(p1_x1 * cw + cw, ch - p1_x2 * ch);
                 drawCtx.lineTo(p2_x1 * cw + cw, ch - p2_x2 * ch);
             }
             drawCtx.stroke();
-            drawCtx.setLineDash([]); // Reset
+            drawCtx.setLineDash([]);
+        }
+
+        drawRegionsAndBoundary() {
+            if (this.svm.w[0] === 0 && this.svm.w[1] === 0) return;
+
+            let cw = this.canvas.width;
+            let ch = this.canvas.height;
+            let w0 = this.svm.w[0], w1 = this.svm.w[1], b = this.svm.b;
+
+            // 좌표 변환 계수 (캔버스 좌표계 기준 직선 방정식 Ax + By + C = 0)
+            let A = w0 / (cw / 2);
+            let B = -w1 / (ch / 2);
+            let C_term = b - w0 + w1;
+
+            // 양 끝점 구하기
+            let pt1, pt2;
+            if (Math.abs(A) > Math.abs(B)) {
+                pt1 = {y: -1000, x: -(B * -1000 + C_term) / A};
+                pt2 = {y: ch + 1000, x: -(B * (ch + 1000) + C_term) / A};
+            } else {
+                pt1 = {x: -1000, y: -(A * -1000 + C_term) / B};
+                pt2 = {x: cw + 1000, y: -(A * (cw + 1000) + C_term) / B};
+            }
+
+            // 법선 벡터 계산 (음수 영역 = Class B 방향)
+            let mag = Math.sqrt(A * A + B * B);
+            let nx = -A / mag * 3000;
+            let ny = -B / mag * 3000;
+
+            // 전체 캔버스를 Class A 색상(Rose)으로 연하게 칠함
+            this.ctx.fillStyle = 'rgba(244, 63, 94, 0.08)';
+            this.ctx.fillRect(0, 0, cw, ch);
+
+            // 결정 경계선 너머의 반쪽을 Class B 색상(Blue)으로 덮어씀
+            this.ctx.fillStyle = 'rgba(59, 130, 246, 0.08)';
+            this.ctx.beginPath();
+            this.ctx.moveTo(pt1.x, pt1.y);
+            this.ctx.lineTo(pt2.x, pt2.y);
+            this.ctx.lineTo(pt2.x + nx, pt2.y + ny);
+            this.ctx.lineTo(pt1.x + nx, pt1.y + ny);
+            this.ctx.closePath();
+            this.ctx.fill();
+
+            // 결정 경계 실선
+            this.drawLine(w0, w1, b, 0, '#1e293b', false, 3);
+
+            // 마진 점선 (에니메이션 중에는 은은하게, 완료되면 선명하게)
+            let marginAlpha = phase === 'TRAIN' ? 'rgba(148, 163, 184, 0.4)' : 'rgba(100, 116, 139, 0.8)';
+            this.drawLine(w0, w1, b, 1, marginAlpha, true, 2);
+            this.drawLine(w0, w1, b, -1, marginAlpha, true, 2);
         }
 
         draw() {
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-            // 1. Draw SVM Boundary and Margins if trained
-            if (phase === 'DONE') {
-                // Margin 영역을 채우는 시각적 효과
-                this.ctx.globalAlpha = 0.1;
-                this.ctx.fillStyle = '#64748b';
-                this.ctx.globalAlpha = 1.0;
+            // 1. 학습 중이거나 완료되었을 때 배경 영역과 경계선 그리기
+            if (phase === 'DONE' || phase === 'TRAIN') {
+                this.drawRegionsAndBoundary();
 
-                // 마진 선 (-1, +1)
-                this.drawLine(this.svm.w[0], this.svm.w[1], this.svm.b, 1, '#94a3b8', true); // Class A Margin
-                this.drawLine(this.svm.w[0], this.svm.w[1], this.svm.b, -1, '#94a3b8', true); // Class B Margin
-
-                // 결정 경계선 (0)
-                this.drawLine(this.svm.w[0], this.svm.w[1], this.svm.b, 0, '#334155', false);
-
-                // 서포트 벡터 하이라이트 (노란색 테두리와 큰 링)
+                // 서포트 벡터 하이라이트 (노란색 링)
                 this.svm.supportVectors.forEach(p => {
                     this.ctx.beginPath();
                     this.ctx.arc(p.x, p.y, 14, 0, Math.PI * 2);
-                    this.ctx.strokeStyle = '#fbbf24'; // Yellow
+                    this.ctx.strokeStyle = '#fbbf24';
                     this.ctx.lineWidth = 3;
                     this.ctx.stroke();
                 });
             }
 
-            // 2. Draw Data Points
+            // 2. 점 그리기
             this.data.points.forEach(p => {
                 this.ctx.beginPath();
                 if (p.cls === CLASS_A) {
                     this.ctx.arc(p.x, p.y, 7, 0, Math.PI * 2);
-                    this.ctx.fillStyle = '#f43f5e'; // Rose
+                    this.ctx.fillStyle = '#f43f5e';
                 } else {
-                    // Class B는 사각형으로 그려 명확히 구분
                     this.ctx.rect(p.x - 6, p.y - 6, 12, 12);
-                    this.ctx.fillStyle = '#3b82f6'; // Blue
+                    this.ctx.fillStyle = '#3b82f6';
                 }
                 this.ctx.fill();
                 this.ctx.strokeStyle = '#ffffff';
@@ -537,15 +696,15 @@
 
     const sliderC = document.getElementById('cSlider');
     const labelC = document.getElementById('cValueDisplay');
-    const labelCMargin = document.getElementById('cMarginLabel'); // 규제 파라미터 상태 라벨
+    const labelCMargin = document.getElementById('cMarginLabel');
 
     const spreadSlider = document.getElementById('spreadSlider');
     const spreadLabel = document.getElementById('spreadLabel');
-
+    const eqDisplay = document.getElementById('equationDisplay');
     const toolBtns = document.querySelectorAll('.tool-btn');
 
     let activeTool = CLASS_A;
-    let phase = 'IDLE'; // IDLE -> TRAIN -> DONE
+    let phase = 'IDLE';
 
     const THEMES = {
         IDLE: {boxBg: 'bg-white', boxBorder: 'border-slate-400', text: 'text-slate-800', badgeBg: 'bg-slate-200'},
@@ -577,14 +736,29 @@
             }
         });
 
-        // Toggle Train button depending on data presence
         const hasA = dataManager.points.some(p => p.cls === CLASS_A);
         const hasB = dataManager.points.some(p => p.cls === CLASS_B);
-        btnTrain.disabled = !(hasA && hasB);
-        btnResetAlg.disabled = (phase === 'IDLE');
+        btnTrain.disabled = !(hasA && hasB) || phase === 'TRAIN';
+        btnResetAlg.disabled = (phase === 'IDLE' || phase === 'TRAIN');
     }
 
-    // --- 이벤트 리스너 ---
+    // 방정식 텍스트 포맷팅
+    function updateEquationText() {
+        if (svm.w[0] === 0 && svm.w[1] === 0) {
+            eqDisplay.innerText = "w₁x₁ + w₂x₂ + b = 0";
+            return;
+        }
+        let w1 = svm.w[0].toFixed(2);
+        let w2 = svm.w[1];
+        let signW2 = w2 >= 0 ? "+" : "-";
+        let absW2 = Math.abs(w2).toFixed(2);
+
+        let b = svm.b;
+        let signB = b >= 0 ? "+" : "-";
+        let absB = Math.abs(b).toFixed(2);
+
+        eqDisplay.innerText = `${w1}x₁ ${signW2} ${absW2}x₂ ${signB} ${absB} = 0`;
+    }
 
     toolBtns.forEach(btn => {
         btn.addEventListener('click', (e) => {
@@ -597,20 +771,16 @@
     });
 
     canvas.addEventListener('click', (e) => {
-        if (phase === 'DONE') resetSimulation(); // 새 점을 찍으면 결과 리셋
+        if (phase === 'DONE') resetSimulation();
         const rect = canvas.getBoundingClientRect();
         dataManager.addPoint(e.clientX - rect.left, e.clientY - rect.top, activeTool);
         updateFlowUI('IDLE', '데이터가 추가되었습니다. 두 클래스 데이터가 모두 있다면 Train을 누르세요.', 'fa-check');
     });
 
-    // C 파라미터 슬라이더 조절 이벤트
     sliderC.addEventListener('input', (e) => {
         let val = parseInt(e.target.value);
-
-        // 숫자 부분만 업데이트
         labelC.innerText = val;
 
-        // 마진 상태 라벨 텍스트와 색상만 별도로 업데이트
         if (val < 30) {
             labelCMargin.innerText = "소프트 마진 (Soft)";
             labelCMargin.className = "text-sm font-bold text-blue-500";
@@ -622,14 +792,13 @@
             labelCMargin.className = "text-sm font-bold text-rose-400";
         }
 
-        // 만약 이미 학습되었다면 실시간 렌더링 업데이트
         if (phase === 'DONE') {
-            svm.train(dataManager.points, canvas.width, canvas.height, val);
+            svm.trainInstant(dataManager.points, canvas.width, canvas.height, val);
+            updateEquationText();
             updateFlowUI('DONE', 'C값이 변경되어 결정 경계와 마진이 실시간 갱신되었습니다.', 'fa-bolt', 'bg-emerald-50', 'text-emerald-800');
         }
     });
 
-    // 데이터 퍼짐 정도 슬라이더 텍스트 업데이트
     spreadSlider.addEventListener('input', (e) => {
         const val = parseInt(e.target.value);
         if (val < 150) spreadLabel.innerText = "조밀함";
@@ -638,7 +807,68 @@
         else spreadLabel.innerText = "매우 넓게 흩어짐 (혼합됨)";
     });
 
-    // 랜덤 데이터 생성 이벤트
+    btnRandom.addEventListener('click', () => {
+        const spreadValue = parseInt(spreadSlider.value);
+        dataManager.generateRandom(canvas.width, canvas.height, spreadValue);
+        resetSimulation();
+        updateFlowUI('IDLE', '무작위 데이터가 생성되었습니다. Train 버튼을 눌러 학습을 시작하세요.', 'fa-bullseye');
+    });
+
+    btnClear.addEventListener('click', () => {
+        dataManager.clear();
+        resetSimulation();
+        updateFlowUI('IDLE', '캔버스가 초기화되었습니다. 데이터를 다시 찍어보세요.', 'fa-eraser');
+    });
+
+    toolBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            toolBtns.forEach(b => b.classList.remove('active'));
+            e.currentTarget.classList.add('active');
+            activeTool = parseInt(e.currentTarget.dataset.tool);
+            if (phase === 'DONE' || phase === 'TRAIN') resetSimulation(); // ★ TRAIN 중에도 도구 바꾸면 리셋
+            updateFlowUI('IDLE', `클래스 ${activeTool === 1 ? 'A(원형)' : 'B(사각형)'} 데이터를 캔버스에 추가하세요.`, "fa-pen-nib");
+        });
+    });
+
+    canvas.addEventListener('click', (e) => {
+        if (phase === 'DONE' || phase === 'TRAIN') resetSimulation(); // ★ TRAIN 중에도 점 찍으면 리셋
+        const rect = canvas.getBoundingClientRect();
+        dataManager.addPoint(e.clientX - rect.left, e.clientY - rect.top, activeTool);
+        updateFlowUI('IDLE', '데이터가 추가되었습니다. 두 클래스 데이터가 모두 있다면 Train을 누르세요.', 'fa-check');
+    });
+
+    // ... (C 슬라이더, 퍼짐 정도 슬라이더 코드는 유지) ...
+
+    sliderC.addEventListener('input', (e) => {
+        let val = parseInt(e.target.value);
+        labelC.innerText = val;
+
+        if (val < 30) {
+            labelCMargin.innerText = "소프트 마진 (Soft)";
+            labelCMargin.className = "text-sm font-bold text-blue-500";
+        } else if (val > 70) {
+            labelCMargin.innerText = "하드 마진 (Hard)";
+            labelCMargin.className = "text-sm font-bold text-rose-500";
+        } else {
+            labelCMargin.innerText = "표준 마진";
+            labelCMargin.className = "text-sm font-bold text-rose-400";
+        }
+
+        if (phase === 'DONE') {
+            svm.trainInstant(dataManager.points, canvas.width, canvas.height, val);
+            updateEquationText();
+            updateFlowUI('DONE', 'C값이 변경되어 결정 경계와 마진이 실시간 갱신되었습니다.', 'fa-bolt', 'bg-emerald-50', 'text-emerald-800');
+        }
+    });
+
+    spreadSlider.addEventListener('input', (e) => {
+        const val = parseInt(e.target.value);
+        if (val < 150) spreadLabel.innerText = "조밀함";
+        else if (val < 280) spreadLabel.innerText = "적당함";
+        else if (val < 380) spreadLabel.innerText = "넓게 흩어짐";
+        else spreadLabel.innerText = "매우 넓게 흩어짐 (혼합됨)";
+    });
+
     btnRandom.addEventListener('click', () => {
         const spreadValue = parseInt(spreadSlider.value);
         dataManager.generateRandom(canvas.width, canvas.height, spreadValue);
@@ -654,29 +884,32 @@
 
     function resetSimulation() {
         phase = 'IDLE';
+        svm.abortFlag = true; // ★ 추가됨: 백그라운드 애니메이션 즉시 중지
         svm.w = [0, 0];
         svm.b = 0;
         svm.supportVectors = [];
+        updateEquationText();
         updateFlowUI('IDLE', '데이터 입력 대기 중입니다.', 'fa-pen-nib');
     }
 
     btnResetAlg.addEventListener('click', resetSimulation);
 
-    btnTrain.addEventListener('click', () => {
-        // 애니메이션 효과를 위해 임시로 TRAIN 단계 표시
+    btnTrain.addEventListener('click', async () => {
         phase = 'TRAIN';
-        updateFlowUI('TRAIN', 'SVM 모델이 최적의 결정 경계와 마진을 계산 중입니다...', 'fa-spinner fa-spin', 'bg-rose-50', 'text-rose-800');
-        btnTrain.disabled = true;
+        updateFlowUI('TRAIN', '최적의 마진을 찾는 중... 선이 이동하는 과정을 지켜보세요.', 'fa-spinner fa-spin', 'bg-rose-50', 'text-rose-800');
 
-        setTimeout(() => {
-            svm.train(dataManager.points, canvas.width, canvas.height, parseInt(sliderC.value));
-            phase = 'DONE';
-            updateFlowUI('DONE', '학습 완료! 중앙의 실선(결정경계), 점선(마진), 그리고 노란 테두리(서포트 벡터)를 확인하세요.', 'fa-check-double', 'bg-emerald-50', 'text-emerald-800');
-            btnResetAlg.disabled = false;
-        }, 600); // 0.6초 뒤 완료 (학생들에게 연산 과정을 인지시킴)
+        // 애니메이션 수행 (완료될 때까지 대기)
+        await svm.trainAnimated(dataManager.points, canvas.width, canvas.height, parseInt(sliderC.value), () => {
+            updateEquationText(); // 프레임마다 수식 업데이트
+        });
+
+        // ★ 추가됨: 중간에 강제 리셋을 당했다면, DONE(완료) 상태로 넘어가지 않고 조용히 빠져나감
+        if (svm.abortFlag) return;
+
+        phase = 'DONE';
+        updateFlowUI('DONE', '학습 완료! 배경색으로 나뉜 영역과 결정 경계선의 수식을 확인하세요.', 'fa-check-double', 'bg-emerald-50', 'text-emerald-800');
     });
 
-    // 퀴즈 처리
     function checkAnswer(btn, isCorrect, message) {
         const container = btn.parentElement;
         const buttons = container.querySelectorAll('.quiz-btn');
