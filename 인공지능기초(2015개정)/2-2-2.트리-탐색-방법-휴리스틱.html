@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>휴리스틱 탐색 알고리즘 - 학습 자료 템플릿</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;700;900&display=swap');
+
+        body {
+            font-family: 'Pretendard', sans-serif;
+            scroll-behavior: smooth;
+            background-color: #f8fafc;
+        }
+
+        /* Hero 배경 그라데이션 */
+        .hero-gradient {
+            background: linear-gradient(135deg, #3b82f6 0%, #14b8a6 100%);
+        }
+
+        /* 스크롤 시 상단 고정 네비게이션 */
+        .sticky-nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+            background-color: rgba(255, 255, 255, 0.9);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .section-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 2rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05);
+            border: 1px solid #f1f5f9;
+            transition: all 0.3s ease;
+        }
+
+        .quiz-btn {
+            width: 100%;
+            padding: 1.25rem;
+            text-align: left;
+            border-radius: 1rem;
+            border: 2px solid #e2e8f0;
+            background-color: #f8fafc;
+            font-weight: 500;
+            color: #374151;
+            transition: all 0.25s ease;
+        }
+
+        .quiz-btn:hover {
+            background: #f0fdfa;
+            border-color: #5eead4;
+        }
+
+        .quiz-btn.correct {
+            background: #4f46e5;
+            color: white;
+            border-color: #4f46e5;
+        }
+
+        .quiz-btn.wrong {
+            background: #f43f5e;
+            color: white;
+            border-color: #f43f5e;
+        }
+
+        .quiz-btn.disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        /* --- Grid Search 관련 커스텀 스타일 --- */
+        #grid-container {
+            display: grid;
+            gap: 2px;
+            background: #cbd5e1;
+            border: 4px solid #cbd5e1;
+            border-radius: .75rem;
+            overflow: hidden;
+            max-width: 100%;
+            aspect-ratio: 1;
+        }
+
+        .grid-cell {
+            background: white;
+            cursor: pointer;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            transition: background-color 0.2s;
+            user-select: none;
+        }
+
+        .grid-cell:hover {
+            background-color: #f8fafc;
+        }
+
+        /* 셀 내부 텍스트 레이아웃 */
+        .cell-g {
+            position: absolute;
+            top: 2px;
+            left: 4px;
+            font-size: 0.65rem;
+            color: #64748b;
+            font-weight: bold;
+        }
+
+        .cell-h {
+            position: absolute;
+            top: 2px;
+            right: 4px;
+            font-size: 0.65rem;
+            color: #64748b;
+            font-weight: bold;
+        }
+
+        .cell-f {
+            font-size: 1.1rem;
+            color: #1e293b;
+        }
+
+        .cell-h-only {
+            font-size: 1.1rem;
+            color: #8b5cf6;
+        }
+
+        /* 상태별 색상 (명확한 시각적 구분) */
+        .cell-wall {
+            background: #475569 !important;
+            border-color: #334155 !important;
+        }
+
+        .cell-start {
+            background: #10b981 !important;
+            color: white !important;
+        }
+
+        .cell-end {
+            background: #f43f5e !important;
+            color: white !important;
+        }
+
+        /* Open Set (탐색 후보) */
+        .cell-open {
+            background: #d9f99d !important;
+        }
+
+        /* Closed Set (탐색 완료) */
+        .cell-closed {
+            background: #bae6fd !important;
+        }
+
+        /* Current Node */
+        .cell-current {
+            background: #fde047 !important;
+            transform: scale(0.95);
+            border-radius: 4px;
+            box-shadow: 0 0 10px rgba(250, 204, 21, 0.8);
+            z-index: 10;
+        }
+
+        /* Final Path */
+        .cell-path {
+            background: #f59e0b !important;
+            color: white !important;
+            transform: scale(0.9);
+            border-radius: 8px;
+        }
+
+        .cell-start .cell-f, .cell-end .cell-f, .cell-path .cell-f,
+        .cell-start .cell-g, .cell-start .cell-h, .cell-end .cell-g, .cell-end .cell-h,
+        .cell-path .cell-g, .cell-path .cell-h {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .tool-btn.tool-active {
+            background: #4f46e5;
+            border-color: #4338ca;
+            color: white;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="text-slate-900">
+
+<header class="hero-gradient text-white py-32 px-6" id="intro">
+    <div class="max-w-4xl mx-auto text-center">
+        <span class="inline-block px-4 py-1.5 bg-white/20 rounded-full font-bold mb-6 backdrop-blur-md">
+            Focus: Heuristic Search
+        </span>
+        <h1 class="text-4xl md:text-6xl font-black mb-6 leading-tight">
+            목표를 향한 똑똑한 탐색,<br>휴리스틱 알고리즘
+        </h1>
+        <p class="text-lg md:text-xl opacity-90 font-medium max-w-2xl mx-auto leading-relaxed">
+            무작정 길을 찾는 것이 아니라, <strong>'목표까지의 예상 거리(Heuristic)'</strong>를 계산하여 최적의 경로를 찾아내는 알고리즘의 동작 원리를 눈으로 확인해보세요.
+        </p>
+    </div>
+</header>
+
+<nav class="sticky-nav px-6 py-4">
+    <div class="max-w-6xl mx-auto flex justify-between items-center">
+        <div class="flex items-center space-x-2">
+            <div class="w-8 h-8 bg-teal-500 rounded-lg flex items-center justify-center text-white">
+                <i class="fa-solid fa-map-location-dot"></i>
+            </div>
+            <span class="font-black text-xl tracking-tight text-slate-800">탐색 알고리즘 실습</span>
+        </div>
+        <div class="hidden md:flex space-x-8 font-bold text-slate-500">
+            <a class="hover:text-teal-600 transition" href="#intro">도입</a>
+            <a class="hover:text-teal-600 transition" href="#concept">핵심개념</a>
+            <a class="hover:text-teal-600 transition" href="#activity">시뮬레이터</a>
+            <a class="hover:text-teal-600 transition" href="#quiz">자가진단</a>
+        </div>
+    </div>
+</nav>
+
+<main class="max-w-6xl mx-auto px-6 py-20 space-y-24">
+
+    <section class="scroll-mt-24 space-y-12" id="concept">
+        <div class="text-center space-y-4">
+            <h2 class="text-3xl font-black text-slate-900">휴리스틱과 탐색 평가 함수</h2>
+            <div class="w-20 h-1.5 bg-teal-500 mx-auto rounded-full"></div>
+            <p class="text-slate-600 font-medium">탐색 과정에서 어떤 노드를 먼저 방문할지 결정하는 기준을 알아봅니다.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="section-card transform transition hover:-translate-y-2">
+                <div class="w-12 h-12 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center mb-6">
+                    <i class="fa-solid fa-lightbulb text-xl"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-3">휴리스틱 함수 $h(n)$</h3>
+                <p class="text-slate-600 leading-relaxed text-sm">
+                    현재 노드 $n$에서 목표 노드까지의 <strong>추정 비용(예상 거리)</strong>입니다. 이 실습에서는 가로/세로 이동 거리만 합산하는 맨해튼 거리(Manhattan
+                    Distance)를 사용합니다.
+                </p>
+            </div>
+
+            <div class="section-card transform transition hover:-translate-y-2 border-2 border-transparent hover:border-purple-200">
+                <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-2xl flex items-center justify-center mb-6">
+                    <i class="fa-solid fa-forward-fast text-xl"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-3">Greedy Best-First</h3>
+                <div class="bg-slate-50 p-2 rounded mb-3 text-center font-bold text-purple-700 font-mono">
+                    $f(n) = h(n)$
+                </div>
+                <p class="text-slate-600 leading-relaxed text-sm">
+                    지금 당장 목표에 <strong>가장 가까워 보이는 노드</strong>만 우선적으로 탐색합니다. 속도는 빠르지만, 장애물에 막혔을 때 최단 경로를 보장하지 못합니다.
+                </p>
+            </div>
+
+            <div class="section-card transform transition hover:-translate-y-2 border-2 border-transparent hover:border-blue-200">
+                <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center mb-6">
+                    <i class="fa-solid fa-route text-xl"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-3">A* Search (에이 스타)</h3>
+                <div class="bg-slate-50 p-2 rounded mb-3 text-center font-bold text-blue-700 font-mono">
+                    $f(n) = g(n) + h(n)$
+                </div>
+                <p class="text-slate-600 leading-relaxed text-sm">
+                    시작점부터의 <strong>실제 이동 비용 $g(n)$</strong>과 목표까지의 <strong>예상 비용 $h(n)$</strong>을 합산하여 평가합니다. 항상 최단 경로를
+                    보장하는 강력한 알고리즘입니다.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="scroll-mt-24" id="activity">
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex flex-col lg:flex-row gap-6">
+
+            <div class="lg:w-1/3 flex flex-col gap-6">
+
+                <div class="space-y-3">
+                    <div class="flex items-center gap-2 text-slate-700 font-bold">
+                        <i class="fa-solid fa-microchip text-teal-500"></i> 알고리즘 선택
+                    </div>
+                    <select id="algo-select"
+                            class="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl p-3 font-bold shadow-sm outline-none focus:ring-2 focus:ring-teal-500 cursor-pointer">
+                        <option value="astar">A* Search (최단 경로 보장)</option>
+                        <option value="greedy">Greedy Best-First (빠른 탐색)</option>
+                    </select>
+                </div>
+
+                <div class="space-y-3 border-t border-slate-100 pt-5">
+                    <div class="flex items-center gap-2 text-slate-700 font-bold">
+                        <i class="fa-solid fa-pen-ruler text-teal-500"></i> 맵 편집 (클릭/드래그)
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button class="tool-btn bg-slate-50 border border-slate-200 rounded-xl py-2 font-bold text-sm text-slate-600 hover:bg-slate-100 transition"
+                                data-tool="start">
+                            <i class="fa-solid fa-location-dot text-emerald-500 mr-1"></i> 시작점
+                        </button>
+                        <button class="tool-btn bg-slate-50 border border-slate-200 rounded-xl py-2 font-bold text-sm text-slate-600 hover:bg-slate-100 transition"
+                                data-tool="end">
+                            <i class="fa-solid fa-flag text-rose-500 mr-1"></i> 목표점
+                        </button>
+                        <button class="tool-btn tool-active bg-slate-50 border border-slate-200 rounded-xl py-2 font-bold text-sm text-slate-600 hover:bg-slate-100 transition"
+                                data-tool="wall">
+                            <i class="fa-solid fa-cubes text-slate-500 mr-1"></i> 장애물
+                        </button>
+                        <button class="tool-btn bg-slate-50 border border-slate-200 rounded-xl py-2 font-bold text-sm text-slate-600 hover:bg-slate-100 transition"
+                                data-tool="eraser">
+                            <i class="fa-solid fa-eraser text-slate-400 mr-1"></i> 지우개
+                        </button>
+                    </div>
+                    <button id="btn-clear-map"
+                            class="w-full py-2 bg-white text-slate-500 border border-slate-200 rounded-xl font-bold text-sm hover:bg-slate-50 transition">
+                        맵 전체 초기화
+                    </button>
+                </div>
+
+                <div class="space-y-3 border-t border-slate-100 pt-5">
+                    <div class="flex items-center justify-between text-slate-700 font-bold">
+                        <span class="flex items-center gap-2"><i
+                                class="fa-solid fa-play text-teal-500"></i> 시뮬레이션 제어</span>
+                        <span id="status-badge"
+                              class="px-2.5 py-1 text-xs bg-slate-100 text-slate-500 rounded-full font-bold">대기 중</span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button id="btn-step"
+                                class="bg-teal-50 text-teal-700 border border-teal-200 font-bold rounded-xl py-3 hover:bg-teal-100 transition flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-forward-step"></i> Step
+                        </button>
+                        <button id="btn-run"
+                                class="bg-teal-600 text-white font-bold rounded-xl py-3 shadow-md hover:bg-teal-700 transition flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-play"></i> Run
+                        </button>
+                    </div>
+                    <button id="btn-reset"
+                            class="w-full bg-slate-800 text-white font-bold rounded-xl py-3 hover:bg-slate-900 transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-rotate-left"></i> 탐색 상태 초기화
+                    </button>
+                </div>
+
+                <div class="bg-slate-50 rounded-xl p-4 text-sm font-bold text-slate-600 space-y-2 border border-slate-200 mt-auto">
+                    <div class="flex items-center justify-between">
+                        <span class="flex items-center gap-2"><span class="w-3 h-3 rounded bg-[#d9f99d]"></span> Open Set (후보)</span>
+                        <span class="flex items-center gap-2"><span class="w-3 h-3 rounded bg-[#bae6fd]"></span> Closed Set (완료)</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="flex items-center gap-2"><span class="w-3 h-3 rounded bg-[#fde047]"></span> 현재 탐색 노드</span>
+                        <span class="flex items-center gap-2"><span
+                                class="w-3 h-3 rounded bg-[#f59e0b]"></span> 최종 경로</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="lg:w-2/3 flex flex-col">
+                <div id="value-explain"
+                     class="mb-4 bg-blue-50 text-blue-800 px-4 py-2 rounded-lg text-sm font-bold flex justify-between items-center border border-blue-200">
+                    <span>좌상단: 실제 비용 $g(n)$</span>
+                    <span class="text-base text-blue-900">중앙: 평가값 $f(n)$</span>
+                    <span>우상단: 예상 비용 $h(n)$</span>
+                </div>
+
+                <div id="grid-container" class="w-full flex-grow">
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="scroll-mt-24 space-y-12" id="quiz">
+        <div class="text-center">
+            <h2 class="text-3xl font-black">학습 내용 확인하기</h2>
+            <div class="w-20 h-1.5 bg-teal-500 mx-auto rounded-full mt-4"></div>
+        </div>
+
+        <div class="max-w-3xl mx-auto space-y-8">
+            <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
+                <p class="text-xl font-bold mb-6">Q1. 장애물이 복잡하게 얽혀있을 때, 항상 최단 경로를 보장하는 탐색 알고리즘은 무엇인가요?</p>
+                <div class="grid grid-cols-1 gap-4">
+                    <button class="quiz-btn"
+                            onclick="checkAnswer(this, false, 'Greedy는 목표를 향해 가장 빠르게 직진하려 하지만 장애물에 갇히면 돌아가므로 최단 경로를 보장하지 않습니다.')">
+                        A. Greedy Best-First Search
+                    </button>
+                    <button class="quiz-btn"
+                            onclick="checkAnswer(this, true, '정답입니다! A* 알고리즘은 실제 이동 비용(g)과 예상 비용(h)을 모두 고려하여 최단 경로를 보장합니다.')">
+                        B. A* Search
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
+                <p class="text-xl font-bold mb-6">Q2. A* 알고리즘의 평가 함수인 $f(n) = g(n) + h(n)$ 에서 **$g(n)$**이 의미하는 것은
+                    무엇인가요?</p>
+                <div class="grid grid-cols-1 gap-4">
+                    <button class="quiz-btn" onclick="checkAnswer(this, true, '정답입니다! g(n)은 이미 걸어온 실제 거리를 의미합니다.')">A.
+                        시작점부터 현재 노드까지의 실제 이동 비용
+                    </button>
+                    <button class="quiz-btn" onclick="checkAnswer(this, false, '이것은 휴리스틱 함수인 h(n)에 대한 설명입니다.')">B. 현재
+                        노드에서 목표 노드까지의 예상 이동 비용
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<script>
+    // --- UI 퀴즈 로직 ---
+    function checkAnswer(btn, isCorrect, message) {
+        const container = btn.parentElement;
+        const buttons = container.querySelectorAll('.quiz-btn');
+        buttons.forEach(b => {
+            if (!b.dataset.label) b.dataset.label = b.textContent;
+            b.classList.remove('correct', 'wrong');
+            b.classList.add('disabled');
+        });
+        if (isCorrect) {
+            btn.classList.add('correct');
+            btn.innerHTML = `<i class="fa-solid fa-circle-check mr-2"></i>${btn.dataset.label}`;
+        } else {
+            btn.classList.add('wrong');
+            btn.innerHTML = `<i class="fa-solid fa-circle-xmark mr-2"></i>${btn.dataset.label}`;
+        }
+        showToast(message, isCorrect ? 'success' : 'error');
+        setTimeout(() => {
+            buttons.forEach(b => {
+                b.classList.remove('correct', 'wrong', 'disabled');
+                b.innerHTML = b.dataset.label;
+            });
+        }, 3500);
+    }
+
+    function showToast(message, type) {
+        const toast = document.createElement('div');
+        toast.className = `fixed bottom-10 left-1/2 -translate-x-1/2 px-8 py-4 rounded-2xl text-white font-bold shadow-2xl transition-all transform translate-y-20 z-[1000] ${type === 'success' ? 'bg-teal-600' : 'bg-rose-500'}`;
+        toast.innerText = message;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.classList.remove('translate-y-20'), 10);
+        setTimeout(() => {
+            toast.classList.add('opacity-0', 'translate-y-5');
+            setTimeout(() => toast.remove(), 500);
+        }, 3000);
+    }
+
+    // ==========================================
+    // 시뮬레이터 로직: GridManager & Algorithm
+    // ==========================================
+    const ROWS = 10;
+    const COLS = 12; // 비율 조정
+
+    let gridDOM = [];
+    let gridState = []; // 0: empty, 1: wall
+
+    let startNode = {r: 4, c: 2};
+    let endNode = {r: 4, c: 9};
+
+    let currentTool = 'wall';
+    let isDrawing = false;
+
+    // 탐색 엔진 상태
+    let searchGenerator = null;
+    let isPlaying = false;
+    let playInterval = null;
+
+    const container = document.getElementById('grid-container');
+    const algoSelect = document.getElementById('algo-select');
+    const valueExplain = document.getElementById('value-explain');
+    const statusBadge = document.getElementById('status-badge');
+
+    function initGrid() {
+        container.style.gridTemplateColumns = `repeat(${COLS}, minmax(0, 1fr))`;
+        container.style.gridTemplateRows = `repeat(${ROWS}, minmax(0, 1fr))`;
+        container.innerHTML = '';
+        gridDOM = [];
+        gridState = [];
+
+        for (let r = 0; r < ROWS; r++) {
+            let rowDOM = [];
+            let rowState = [];
+            for (let c = 0; c < COLS; c++) {
+                const cell = document.createElement('div');
+                cell.className = 'grid-cell';
+                cell.dataset.r = r;
+                cell.dataset.c = c;
+
+                cell.addEventListener('mousedown', handleCellMouseDown);
+                cell.addEventListener('mouseenter', handleCellMouseEnter);
+
+                container.appendChild(cell);
+                rowDOM.push(cell);
+                rowState.push(0); // 0: 빈칸
+            }
+            gridDOM.push(rowDOM);
+            gridState.push(rowState);
+        }
+
+        // 기본 장애물 몇 개 배치
+        gridState[2][5] = 1;
+        gridState[3][5] = 1;
+        gridState[4][5] = 1;
+        gridState[5][5] = 1;
+        gridState[6][5] = 1;
+        gridState[3][6] = 1;
+
+        document.onmouseup = () => isDrawing = false;
+
+        algoSelect.addEventListener('change', () => {
+            updateExplainUI();
+            resetSearchVisuals();
+        });
+
+        bindControls();
+        updateGridVisuals();
+        updateExplainUI();
+    }
+
+    function updateExplainUI() {
+        if (algoSelect.value === 'astar') {
+            valueExplain.className = "mb-4 bg-blue-50 text-blue-800 px-4 py-2 rounded-lg text-sm font-bold flex justify-between items-center border border-blue-200";
+            valueExplain.innerHTML = `<span>좌상단: 비용 $g(n)$</span><span class="text-base text-blue-900">중앙: 평가값 $f(n)$</span><span>우상단: 휴리스틱 $h(n)$</span>`;
+        } else {
+            valueExplain.className = "mb-4 bg-purple-50 text-purple-800 px-4 py-2 rounded-lg text-sm font-bold flex justify-center items-center border border-purple-200";
+            valueExplain.innerHTML = `<span class="text-base">오로지 휴리스틱 $h(n)$ 만으로 평가합니다.</span>`;
+        }
+    }
+
+    function bindControls() {
+        document.querySelectorAll('.tool-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('tool-active'));
+                e.currentTarget.classList.add('tool-active');
+                currentTool = e.currentTarget.dataset.tool;
+            });
+        });
+
+        document.getElementById('btn-clear-map').addEventListener('click', () => {
+            for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) gridState[r][c] = 0;
+            resetSearchVisuals();
+            updateGridVisuals();
+        });
+
+        document.getElementById('btn-reset').addEventListener('click', resetSearchVisuals);
+        document.getElementById('btn-step').addEventListener('click', stepSearch);
+        document.getElementById('btn-run').addEventListener('click', togglePlay);
+    }
+
+    function handleCellMouseDown(e) {
+        isDrawing = true;
+        applyTool(e.currentTarget);
+    }
+
+    function handleCellMouseEnter(e) {
+        if (!isDrawing) return;
+        if (currentTool === 'start' || currentTool === 'end') return;
+        applyTool(e.currentTarget);
+    }
+
+    function applyTool(cell) {
+        resetSearchVisuals();
+        const r = parseInt(cell.dataset.r);
+        const c = parseInt(cell.dataset.c);
+
+        const isStart = (r === startNode.r && c === startNode.c);
+        const isEnd = (r === endNode.r && c === endNode.c);
+
+        if (currentTool === 'start' && !isEnd) {
+            startNode = {r, c};
+            gridState[r][c] = 0;
+        } else if (currentTool === 'end' && !isStart) {
+            endNode = {r, c};
+            gridState[r][c] = 0;
+        } else if (currentTool === 'wall' && !isStart && !isEnd) gridState[r][c] = 1;
+        else if (currentTool === 'eraser' && !isStart && !isEnd) gridState[r][c] = 0;
+
+        updateGridVisuals();
+    }
+
+    function resetSearchVisuals() {
+        if (isPlaying) togglePlay();
+        searchGenerator = null;
+        for (let r = 0; r < ROWS; r++) {
+            for (let c = 0; c < COLS; c++) {
+                const cell = gridDOM[r][c];
+                cell.classList.remove('cell-open', 'cell-closed', 'cell-current', 'cell-path');
+                if ((r !== startNode.r || c !== startNode.c) && (r !== endNode.r || c !== endNode.c)) {
+                    cell.innerHTML = '';
+                }
+            }
+        }
+        updateGridVisuals(); // 시작, 끝 아이콘 복구
+        statusBadge.innerText = "대기 중";
+        statusBadge.className = "px-2.5 py-1 text-xs bg-slate-100 text-slate-500 rounded-full font-bold";
+    }
+
+    function updateGridVisuals() {
+        for (let r = 0; r < ROWS; r++) {
+            for (let c = 0; c < COLS; c++) {
+                const cell = gridDOM[r][c];
+                // 기본 초기화
+                cell.className = 'grid-cell';
+
+                if (r === startNode.r && c === startNode.c) {
+                    cell.classList.add('cell-start');
+                    cell.innerHTML = '<i class="fa-solid fa-location-dot"></i>';
+                } else if (r === endNode.r && c === endNode.c) {
+                    cell.classList.add('cell-end');
+                    cell.innerHTML = '<i class="fa-solid fa-flag"></i>';
+                } else if (gridState[r][c] === 1) {
+                    cell.classList.add('cell-wall');
+                    cell.innerHTML = '';
+                }
+            }
+        }
+    }
+
+    // --- 휴리스틱 (맨해튼 거리) ---
+    function getHeuristic(r, c) {
+        return Math.abs(r - endNode.r) + Math.abs(c - endNode.c);
+    }
+
+    // --- Search Algorithm Generator ---
+    function* createSearchGenerator(algoType) {
+        const isAStar = algoType === 'astar';
+        let openSet = [{r: startNode.r, c: startNode.c}];
+
+        let cameFrom = Array(ROWS).fill(0).map(() => Array(COLS).fill(null));
+        let gScore = Array(ROWS).fill(0).map(() => Array(COLS).fill(Infinity));
+        let fScore = Array(ROWS).fill(0).map(() => Array(COLS).fill(Infinity));
+
+        let inOpenSet = Array(ROWS).fill(0).map(() => Array(COLS).fill(false));
+        let closedSet = Array(ROWS).fill(0).map(() => Array(COLS).fill(false));
+
+        gScore[startNode.r][startNode.c] = 0;
+        fScore[startNode.r][startNode.c] = getHeuristic(startNode.r, startNode.c);
+        inOpenSet[startNode.r][startNode.c] = true;
+
+        const dr = [-1, 0, 1, 0];
+        const dc = [0, 1, 0, -1];
+
+        while (openSet.length > 0) {
+            // Priority Queue 역할 (fScore 기준 정렬, 같으면 hScore 기준)
+            openSet.sort((a, b) => {
+                let fA = fScore[a.r][a.c], fB = fScore[b.r][b.c];
+                if (fA === fB) return getHeuristic(a.r, a.c) - getHeuristic(b.r, b.c);
+                return fA - fB;
+            });
+
+            let current = openSet.shift();
+            inOpenSet[current.r][current.c] = false;
+
+            yield {type: 'current', node: current};
+
+            if (current.r === endNode.r && current.c === endNode.c) {
+                // 경로 역추적
+                let curr = current;
+                let path = [];
+                while (curr) {
+                    path.push(curr);
+                    curr = cameFrom[curr.r][curr.c];
+                }
+                path.reverse();
+                for (let p of path) yield {type: 'path', node: p};
+                return true;
+            }
+
+            closedSet[current.r][current.c] = true;
+            yield {type: 'closed', node: current};
+
+            for (let i = 0; i < 4; i++) {
+                let nr = current.r + dr[i];
+                let nc = current.c + dc[i];
+
+                if (nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS) {
+                    if (gridState[nr][nc] === 1 || closedSet[nr][nc]) continue;
+
+                    let tentative_gScore = gScore[current.r][current.c] + 1;
+                    let h = getHeuristic(nr, nc);
+
+                    if (isAStar) {
+                        if (tentative_gScore < gScore[nr][nc]) {
+                            cameFrom[nr][nc] = current;
+                            gScore[nr][nc] = tentative_gScore;
+                            fScore[nr][nc] = tentative_gScore + h;
+                            if (!inOpenSet[nr][nc]) {
+                                openSet.push({r: nr, c: nc});
+                                inOpenSet[nr][nc] = true;
+                                yield {
+                                    type: 'open',
+                                    node: {r: nr, c: nc},
+                                    g: tentative_gScore,
+                                    h: h,
+                                    f: fScore[nr][nc]
+                                };
+                            }
+                        }
+                    } else { // Greedy
+                        if (!inOpenSet[nr][nc]) {
+                            cameFrom[nr][nc] = current;
+                            fScore[nr][nc] = h; // gScore는 무시하고 h만 사용
+                            openSet.push({r: nr, c: nc});
+                            inOpenSet[nr][nc] = true;
+                            yield {type: 'open', node: {r: nr, c: nc}, g: null, h: h, f: h};
+                        }
+                    }
+                }
+            }
+        }
+        return false; // 경로 없음
+    }
+
+    function renderCellValues(cell, g, h, f, isAStar) {
+        if (cell.classList.contains('cell-start') || cell.classList.contains('cell-end')) return;
+
+        if (isAStar) {
+            cell.innerHTML = `
+                <span class="cell-g">${g}</span>
+                <span class="cell-h">${h}</span>
+                <span class="cell-f">${f}</span>
+            `;
+        } else {
+            cell.innerHTML = `<span class="cell-h-only">${h}</span>`;
+        }
+    }
+
+    function stepSearch() {
+        if (!searchGenerator) {
+            resetSearchVisuals();
+            searchGenerator = createSearchGenerator(algoSelect.value);
+            statusBadge.innerText = "탐색 진행 중...";
+            statusBadge.className = "px-2.5 py-1 text-xs bg-teal-100 text-teal-700 rounded-full font-bold";
+        }
+
+        const result = searchGenerator.next();
+        if (result.done) {
+            if (isPlaying) togglePlay();
+            if (result.value) {
+                statusBadge.innerText = "목표 도달 성공!";
+                statusBadge.className = "px-2.5 py-1 text-xs bg-emerald-100 text-emerald-700 rounded-full font-bold";
+            } else {
+                statusBadge.innerText = "경로 찾기 실패";
+                statusBadge.className = "px-2.5 py-1 text-xs bg-rose-100 text-rose-700 rounded-full font-bold";
+            }
+            return;
+        }
+
+        const action = result.value;
+        const cell = gridDOM[action.node.r][action.node.c];
+        const isAStar = algoSelect.value === 'astar';
+
+        // 현재 Current Node 스타일 제거 후 복구
+        document.querySelectorAll('.cell-current').forEach(el => {
+            el.classList.remove('cell-current');
+            el.classList.add('cell-closed');
+        });
+
+        if (action.type === 'current') {
+            cell.classList.remove('cell-open');
+            cell.classList.add('cell-current');
+        } else if (action.type === 'open') {
+            cell.classList.add('cell-open');
+            renderCellValues(cell, action.g, action.h, action.f, isAStar);
+        } else if (action.type === 'closed') {
+            cell.classList.remove('cell-current');
+            cell.classList.add('cell-closed');
+        } else if (action.type === 'path') {
+            cell.classList.remove('cell-open', 'cell-closed', 'cell-current');
+            cell.classList.add('cell-path');
+        }
+    }
+
+    function togglePlay() {
+        const btnRun = document.getElementById('btn-run');
+        if (isPlaying) {
+            isPlaying = false;
+            clearInterval(playInterval);
+            btnRun.innerHTML = `<i class="fa-solid fa-play"></i> Run`;
+            btnRun.classList.replace('bg-rose-500', 'bg-teal-600');
+            btnRun.classList.replace('hover:bg-rose-600', 'hover:bg-teal-700');
+        } else {
+            isPlaying = true;
+            btnRun.innerHTML = `<i class="fa-solid fa-pause"></i> Pause`;
+            btnRun.classList.replace('bg-teal-600', 'bg-rose-500');
+            btnRun.classList.replace('hover:bg-teal-700', 'hover:bg-rose-600');
+            playInterval = setInterval(stepSearch, 100); // 속도 제어
+        }
+    }
+
+    window.onload = initGrid;
+
+</script>
+</body>
+</html>
