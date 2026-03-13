@@ -56,15 +56,13 @@
         }
 
         .quiz-btn.correct {
-            background: #4f46e5;
-            color: white;
-            border-color: #4f46e5;
+            background: #4f46e5 !important;
+            color: white !important;
         }
 
         .quiz-btn.wrong {
-            background: #f43f5e;
-            color: white;
-            border-color: #f43f5e;
+            background: #f43f5e !important;
+            color: white !important;
         }
 
         .quiz-btn.disabled {
@@ -72,12 +70,23 @@
             pointer-events: none;
         }
 
-        /* 🔥 논리 기호(¬) 전용 스타일링 */
         .not-symbol {
-            font-size: 2.5rem; /* 폰트 크기를 매우 크게 설정 */
-            line-height: 0; /* 주변 줄간격에 영향을 주지 않음 */
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #f43f5e;
+            vertical-align: middle;
+            line-height: 0;
             margin-right: 2px;
-            text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.1); /* 약간의 입체감 */
+            display: inline-block;
+        }
+
+        .cell-transition {
+            transition: all 0.3s ease;
+        }
+
+        .sensor-icon {
+            font-size: 1.2rem;
+            margin-top: 2px;
         }
 
         ::-webkit-scrollbar {
@@ -93,23 +102,30 @@
             border-radius: 10px;
         }
 
-        ::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
+        /* 토글 스위치 커스텀 */
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #68D391;
         }
 
-        .cell-transition {
-            transition: background-color 0.4s ease, border-color 0.4s ease;
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #68D391;
         }
     </style>
 </head>
-<body class="text-lg text-slate-900">
+<body class="text-xl text-slate-900">
 
 <header class="hero-gradient text-white py-32 px-6" id="intro">
     <div class="max-w-4xl mx-auto text-center">
-        <span class="inline-block px-4 py-1.5 bg-white/20 rounded-full font-bold mb-6 backdrop-blur-md text-base">Chapter 01. 명제와 추론</span>
-        <h1 class="text-5xl md:text-7xl font-black mb-6 leading-tight">Wumpus World<br>AI 추론 시뮬레이터</h1>
-        <p class="text-xl md:text-2xl opacity-90 font-medium max-w-2xl mx-auto leading-relaxed">
-            인공지능은 '부정(NOT)' 기호인 <span class="not-symbol">¬</span>를 사용하여<br>환경의 위험 요소를 논리적으로 배제합니다.
+        <span class="inline-block px-4 py-1.5 bg-white/20 rounded-full font-bold mb-6 backdrop-blur-md text-base">
+            Chapter 01. 명제와 추론
+        </span>
+        <h1 class="text-6xl md:text-8xl font-black mb-6 leading-tight">
+            Wumpus World<br>AI 추론 엔진
+        </h1>
+        <p class="text-2xl md:text-3xl opacity-90 font-medium max-w-3xl mx-auto leading-relaxed">
+            인공지능은 '아님'을 뜻하는 기호 <span class="not-symbol">¬</span>를 사용하여<br>
+            위험이 없는 안전한 길을 논리적으로 찾아냅니다.
         </p>
     </div>
 </header>
@@ -117,8 +133,9 @@
 <nav class="sticky-nav px-6 py-4">
     <div class="max-w-6xl mx-auto flex justify-between items-center">
         <div class="flex items-center space-x-2">
-            <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white"><i
-                    class="fa-solid fa-brain"></i></div>
+            <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white">
+                <i class="fa-solid fa-brain"></i>
+            </div>
             <span class="font-black text-3xl tracking-tight text-slate-800">인공지능 기초</span>
         </div>
         <div class="hidden md:flex space-x-8 font-bold text-slate-500 text-lg">
@@ -134,84 +151,89 @@
 
     <section class="scroll-mt-24 space-y-12" id="concept">
         <div class="text-center space-y-4">
-            <h2 class="text-4xl font-black text-slate-900">논리적 추론의 3단계</h2>
+            <h2 class="text-5xl font-black text-slate-900">추론의 3단계</h2>
             <div class="w-20 h-1.5 bg-indigo-500 mx-auto rounded-full"></div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="section-card !p-8 text-base">
-                <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center mb-4"><i
-                        class="fa-solid fa-eye text-2xl"></i></div>
-                <h3 class="text-2xl font-bold mb-3">1. 지각 (Percept)</h3>
-                <p class="text-slate-600 leading-relaxed">
-                    환경 정보를 얻습니다.<br>
-                    • 💨 <b>Breeze:</b> 주변에 함정 존재<br>
-                    • 🤢 <b>Stench:</b> 주변에 괴물 존재
+            <div class="section-card !p-8">
+                <div class="w-14 h-14 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center mb-6"><i
+                        class="fa-solid fa-eye text-3xl"></i></div>
+                <h3 class="text-3xl font-bold mb-4">1. 지각</h3>
+                <p class="text-slate-600 text-lg">💨 바람이나 🤢 악취 같은 환경 정보를 센서로 감지합니다.</p>
+            </div>
+            <div class="section-card !p-8 border-indigo-200 bg-indigo-50/30">
+                <div class="w-14 h-14 bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center mb-6"><i
+                        class="fa-solid fa-book-journal-whills text-3xl"></i></div>
+                <h3 class="text-3xl font-bold mb-4">2. 추론</h3>
+                <p class="text-slate-600 text-lg">
+                    <span class="not-symbol">¬</span> 기호를 써서 "바람이 없으니 주변에 함정도 없다"는 결론을 냅니다.
                 </p>
             </div>
-            <div class="section-card !p-8 text-base">
-                <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center mb-4"><i
-                        class="fa-solid fa-book-journal-whills text-2xl"></i></div>
-                <h3 class="text-2xl font-bold mb-3">2. 지식 업데이트 (KB)</h3>
-                <p class="text-slate-600 leading-relaxed">
-                    지식 베이스를 업데이트합니다.<br>
-                    <span class="not-symbol">¬</span>Breeze → 주변 함정 없음
-                </p>
-            </div>
-            <div class="section-card !p-8 text-base">
-                <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center mb-4">
-                    <i class="fa-solid fa-shoe-prints text-2xl"></i></div>
-                <h3 class="text-2xl font-bold mb-3">3. 행동 (Action)</h3>
-                <p class="text-slate-600 leading-relaxed">
-                    지식을 바탕으로 100% 안전한(Safe) 칸으로 이동합니다.
-                </p>
+            <div class="section-card !p-8">
+                <div class="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center mb-6">
+                    <i class="fa-solid fa-shoe-prints text-3xl"></i></div>
+                <h3 class="text-3xl font-bold mb-4">3. 행동</h3>
+                <p class="text-slate-600 text-lg">가장 안전한 칸으로 이동하며, 막히면 위험을 감수하거나 되돌아갑니다.</p>
             </div>
         </div>
     </section>
 
     <section class="scroll-mt-24 section-card overflow-hidden" id="activity">
-        <div class="space-y-6 mb-8">
-            <span class="text-indigo-600 font-bold tracking-widest uppercase text-base">Interactive Reasoning</span>
-            <h2 class="text-4xl font-black">AI 논리 추론 시뮬레이터</h2>
+        <div class="space-y-6 mb-8 flex flex-col md:flex-row justify-between items-start md:items-end">
+            <div>
+                <h2 class="text-5xl font-black mb-4">실시간 논리 추론 시뮬레이터</h2>
+                <p class="text-slate-500 text-xl">에이전트가 단서를 바탕으로 지도를 넓혀갑니다. 멈추지 않고 스스로 답을 찾습니다.</p>
+            </div>
+            <label class="flex items-center space-x-3 cursor-pointer bg-slate-50 border border-slate-200 px-5 py-3 rounded-2xl shadow-sm hover:bg-slate-100 transition">
+                <span class="font-bold text-slate-700">정답 미리보기</span>
+                <div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+                    <input type="checkbox" id="toggle-vision"
+                           class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
+                           onchange="renderGrid()"/>
+                    <label for="toggle-vision"
+                           class="toggle-label block overflow-hidden h-6 rounded-full bg-slate-300 cursor-pointer"></label>
+                </div>
+            </label>
         </div>
 
         <div class="flex flex-col lg:flex-row gap-8">
             <div class="w-full lg:w-1/2 flex flex-col gap-6">
                 <div id="grid-container"
-                     class="grid grid-cols-4 grid-rows-4 gap-2 aspect-square bg-slate-300 p-3 rounded-2xl border-2 border-slate-400"></div>
+                     class="grid grid-cols-4 grid-rows-4 gap-2 aspect-square bg-slate-300 p-3 rounded-3xl border-4 border-slate-400"></div>
 
-                <div class="flex gap-3">
+                <div class="flex gap-4">
                     <button id="btn-step"
-                            class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-5 rounded-xl shadow-md text-2xl transition-all">
-                        <i class="fa-solid fa-forward-step mr-2"></i> Step
+                            class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-6 rounded-2xl shadow-xl text-3xl transition-all active:scale-95">
+                        Step
                     </button>
                     <button id="btn-run"
-                            class="flex-1 bg-slate-800 hover:bg-slate-900 text-white font-bold py-5 rounded-xl shadow-md text-2xl transition-all">
-                        <i class="fa-solid fa-play mr-2"></i> Run
+                            class="flex-1 bg-slate-800 hover:bg-slate-900 text-white font-bold py-6 rounded-2xl shadow-xl text-3xl transition-all">
+                        Run
                     </button>
                     <button id="btn-reset"
-                            class="bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 font-bold px-8 rounded-xl">
-                        <i class="fa-solid fa-arrow-rotate-right"></i>
+                            class="bg-rose-50 hover:bg-rose-100 text-rose-600 border-2 border-rose-200 px-8 rounded-2xl transition-colors">
+                        <i class="fa-solid fa-arrow-rotate-right text-2xl"></i>
                     </button>
                 </div>
             </div>
 
             <div class="w-full lg:w-1/2 flex flex-col gap-6">
-                <div class="bg-indigo-50 border border-indigo-200 p-6 rounded-2xl">
-                    <h3 class="font-bold text-indigo-800 mb-2 text-xl"><i class="fa-solid fa-satellite-dish mr-2"></i>현재
-                        센서 지각</h3>
-                    <div id="percept-panel" class="text-indigo-900 font-bold text-xl min-h-[1.5rem]">대기 중...</div>
+                <div class="bg-indigo-50 border-2 border-indigo-100 p-6 rounded-3xl">
+                    <h3 class="font-bold text-indigo-800 mb-2 flex items-center text-2xl"><i
+                            class="fa-solid fa-satellite-dish mr-3"></i>현재 지각 정보</h3>
+                    <div id="percept-panel" class="text-indigo-900 font-black text-2xl min-h-[1.5rem]">대기 중...</div>
                 </div>
 
-                <div class="bg-white border border-slate-200 shadow-sm p-6 rounded-2xl flex-1 flex flex-col max-h-[350px]">
-                    <h3 class="font-bold text-slate-800 mb-3 text-xl border-b pb-2"><i
-                            class="fa-solid fa-list-check text-indigo-500 mr-2"></i>추론 과정 (Log)</h3>
-                    <div id="log-panel" class="flex-1 overflow-y-auto text-base space-y-3 pr-2 text-slate-600"></div>
+                <div class="bg-white border-2 border-slate-100 shadow-inner p-6 rounded-3xl flex-1 flex flex-col max-h-[350px]">
+                    <h3 class="font-bold text-slate-800 mb-3 text-2xl"><i
+                            class="fa-solid fa-list-check text-indigo-500 mr-3"></i>추론 과정 로그</h3>
+                    <div id="log-panel" class="flex-1 overflow-y-auto text-lg space-y-3 pr-2 text-slate-600"></div>
                 </div>
 
-                <div class="bg-slate-800 p-6 rounded-2xl flex-1 flex flex-col max-h-[250px]">
-                    <h3 class="font-bold text-white mb-3 text-xl flex items-center"><i
-                            class="fa-solid fa-database text-teal-400 mr-2"></i>지식 베이스 (KB)</h3>
+                <div class="bg-slate-900 p-6 rounded-3xl flex-1 flex flex-col max-h-[250px]">
+                    <h3 class="font-bold text-white mb-3 text-2xl flex items-center"><i
+                            class="fa-solid fa-database text-teal-400 mr-3"></i>지식 베이스 (KB)</h3>
                     <div id="kb-panel"
                          class="flex-1 overflow-y-auto text-xl font-mono space-y-2 text-teal-300 pr-2"></div>
                 </div>
@@ -220,17 +242,21 @@
     </section>
 
     <section class="scroll-mt-24 space-y-12" id="quiz">
-        <div class="text-center"><h2 class="text-4xl font-black">학습 내용 확인</h2></div>
+        <div class="text-center">
+            <h2 class="text-5xl font-black">자가 진단</h2>
+            <div class="w-20 h-1.5 bg-indigo-500 mx-auto rounded-full mt-4"></div>
+        </div>
         <div class="max-w-3xl mx-auto">
-            <div class="bg-white p-10 rounded-3xl shadow-sm border border-slate-100 text-center">
-                <p class="text-2xl font-bold mb-8 text-slate-800">기호 <span class="not-symbol">¬</span>가 의미하는 것은 무엇인가요?
+            <div class="bg-white p-12 rounded-[3rem] shadow-xl border border-slate-100">
+                <p class="text-3xl font-bold mb-10 text-slate-800 leading-tight text-center">
+                    논리 기호 <span class="not-symbol">¬</span>의 올바른 의미는?
                 </p>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <button class="quiz-btn text-center justify-center text-xl py-6"
-                            onclick="checkAnswer(this, true, '정답입니다! ¬A는 A가 아님을 뜻합니다.')">부정 (NOT)
+                <div class="grid grid-cols-1 gap-4">
+                    <button class="quiz-btn text-2xl py-6 px-8 text-center justify-center"
+                            onclick="checkAnswer(this, true, '정답입니다! ¬A는 A가 아님(NOT)을 의미해요.')">부정 (NOT)
                     </button>
-                    <button class="quiz-btn text-center justify-center text-xl py-6"
-                            onclick="checkAnswer(this, false, '다시 생각해 보세요!')">긍정 (YES)
+                    <button class="quiz-btn text-2xl py-6 px-8 text-center justify-center"
+                            onclick="checkAnswer(this, false, '다시 한번 확인해보세요!')">긍정 (AND)
                     </button>
                 </div>
             </div>
@@ -239,13 +265,18 @@
 </main>
 
 <script>
-    // 🔥 기호 스타일링 함수: ¬를 발견하면 span.not-symbol로 감싸서 아주 크게 만듦
+    // 유틸리티 함수
     function formatLogic(text) {
         return text.replace(/¬/g, '<span class="not-symbol">¬</span>');
     }
 
     const SIZE = 4;
     const key = (x, y) => `${x},${y}`;
+    const parseKey = (k) => {
+        const [x, y] = k.split(',').map(Number);
+        return {x, y};
+    };
+
     const getAdj = (x, y) => {
         const adjs = [];
         if (x > 0) adjs.push({x: x - 1, y});
@@ -255,11 +286,11 @@
         return adjs;
     };
 
+    // Wumpus World 환경 생성 (완전 재작성)
     class WumpusWorld {
         constructor() {
             this.init();
         }
-
         init() {
             const rand = () => {
                 let rx, ry;
@@ -274,15 +305,15 @@
             do {
                 this.wumpus = rand();
             } while (this.wumpus.x === this.gold.x && this.wumpus.y === this.gold.y);
+
             this.pits = new Set();
             for (let x = 0; x < SIZE; x++) {
                 for (let y = 0; y < SIZE; y++) {
-                    if ((x === 0 && y === 0) || (x === this.gold.x && y === this.gold.y)) continue;
+                    if ((x === 0 && y === 0) || (x === this.gold.x && y === this.gold.y) || (x === this.wumpus.x && y === this.wumpus.y)) continue;
                     if (Math.random() < 0.15) this.pits.add(key(x, y));
                 }
             }
         }
-
         getPercepts(x, y) {
             let stench = false, breeze = false, glitter = false;
             if (this.gold.x === x && this.gold.y === y) glitter = true;
@@ -294,19 +325,20 @@
         }
     }
 
+    // 에이전트 클래스 상태 관리
     class Agent {
         constructor() {
             this.x = 0;
             this.y = 0;
             this.visited = new Set([key(0, 0)]);
-            this.safe = new Set([key(0, 0)]);
-            this.wumpusSafe = new Set([key(0, 0)]);
-            this.pitSafe = new Set([key(0, 0)]);
-            this.possibleWumpus = new Set();
-            this.possiblePit = new Set();
+            this.safe = new Set([key(0, 0)]); // 100% 안전 확인됨
+            this.pitSafe = new Set([key(0, 0)]); // 함정 없음
+            this.wumpusSafe = new Set([key(0, 0)]); // 괴물 없음
+            this.possiblePit = new Set(); // 함정 의심
+            this.possibleWumpus = new Set(); // 괴물 의심
             this.hasGold = false;
             this.isDead = false;
-            this.state = 'SENSE';
+            this.state = 'SENSE'; // SENSE -> INFER -> MOVE 순환
         }
     }
 
@@ -320,40 +352,66 @@
         stopAutoRun();
         renderGrid();
         updateKBUI();
+        logMessage("[시스템] 에이전트가 탐험을 시작합니다.");
     }
 
+    // ⭐ 화면 렌더링 (옵션 적용)
     function renderGrid() {
         const container = document.getElementById('grid-container');
+        const showHidden = document.getElementById('toggle-vision').checked; // 정답 보기 옵션
         container.innerHTML = '';
+
         for (let y = SIZE - 1; y >= 0; y--) {
             for (let x = 0; x < SIZE; x++) {
                 const k = key(x, y);
                 const isVisited = agent.visited.has(k);
                 const isSafe = agent.safe.has(k) && !isVisited;
                 const isRisk = (agent.possiblePit.has(k) || agent.possibleWumpus.has(k)) && !isVisited;
+
                 let bg = 'bg-slate-200';
                 let border = 'border-slate-300';
                 if (isVisited) {
                     bg = 'bg-white';
-                    border = 'border-indigo-300';
+                    border = 'border-indigo-500 shadow-md';
                 } else if (isSafe) {
                     bg = 'bg-green-100';
                     border = 'border-green-400';
                 } else if (isRisk) {
-                    bg = 'bg-yellow-100';
-                    border = 'border-yellow-400';
+                    bg = 'bg-yellow-50';
+                    border = 'border-yellow-300';
                 }
+
                 const cell = document.createElement('div');
-                cell.className = `cell-transition rounded-xl flex items-center justify-center border-2 text-4xl relative ${bg} ${border}`;
-                cell.innerHTML = `<span class="absolute top-1 left-1.5 text-[0.7rem] font-bold text-slate-400">${x},${y}</span>`;
-                let icons = '';
-                if (agent.x === x && agent.y === y) icons += '🤖';
-                else if (isVisited) {
-                    if (env.gold.x === x && env.gold.y === y) icons += '💰';
-                    else if (env.wumpus.x === x && env.wumpus.y === y) icons += '👹';
-                    else if (env.pits.has(k)) icons += '🕳️';
+                cell.className = `cell-transition rounded-2xl flex flex-col items-center justify-center border-2 text-4xl relative ${bg} ${border}`;
+                cell.innerHTML = `<span class="absolute top-1 left-2 text-[0.7rem] font-bold text-slate-400">${x},${y}</span>`;
+
+                let contentHTML = '';
+
+                // 1. 에이전트 그리기
+                if (agent.x === x && agent.y === y) {
+                    contentHTML = agent.isDead ? '💀' : '🤖';
                 }
-                if (icons) cell.innerHTML += `<span>${icons}</span>`;
+                // 2. 방문한 칸의 실제 정보 그리기
+                else if (isVisited) {
+                    if (env.pits.has(k)) contentHTML = '🕳️';
+                    else if (env.wumpus.x === x && env.wumpus.y === y) contentHTML = '👹';
+                    else if (env.gold.x === x && env.gold.y === y) contentHTML = '💰';
+                    else {
+                        const p = env.getPercepts(x, y);
+                        let s = '';
+                        if (p.breeze) s += '💨';
+                        if (p.stench) s += '🤢';
+                        contentHTML = `<div class="sensor-icon">${s}</div>`;
+                    }
+                }
+                // 3. 미방문 구역 + 정답 보기 옵션 ON 상태 (투명하게 표시)
+                else if (showHidden) {
+                    if (env.pits.has(k)) contentHTML = '<span class="opacity-30">🕳️</span>';
+                    else if (env.wumpus.x === x && env.wumpus.y === y) contentHTML = '<span class="opacity-30">👹</span>';
+                    else if (env.gold.x === x && env.gold.y === y) contentHTML = '<span class="opacity-30">💰</span>';
+                }
+
+                cell.innerHTML += `<span>${contentHTML}</span>`;
                 container.appendChild(cell);
             }
         }
@@ -362,7 +420,7 @@
     function logMessage(msg, isAction = false) {
         const panel = document.getElementById('log-panel');
         const entry = document.createElement('div');
-        entry.className = `py-2 border-b border-slate-100 ${isAction ? 'font-bold text-indigo-700' : ''}`;
+        entry.className = `py-2 border-b border-slate-50 ${isAction ? 'font-bold text-indigo-700' : ''}`;
         entry.innerHTML = formatLogic(msg);
         panel.appendChild(entry);
         panel.scrollTop = panel.scrollHeight;
@@ -371,117 +429,192 @@
     function updateKBUI() {
         const kbPanel = document.getElementById('kb-panel');
         const safeArr = Array.from(agent.safe).map(k => `Safe(${k})`);
-        const pPitArr = Array.from(agent.possiblePit).map(k => `PossPit(${k})`);
-        const pWumArr = Array.from(agent.possibleWumpus).map(k => `PossWum(${k})`);
-        kbPanel.innerHTML = formatLogic(safeArr.slice(-3).join(', ') + '<br>' + pPitArr.join(', ') + '<br>' + pWumArr.join(', '));
+        kbPanel.innerHTML = formatLogic(safeArr.slice(-6).join(', '));
     }
 
+    // ⭐ 목표 도달을 위한 길찾기 (방문한 길만 밟고 타겟으로 이동)
+    function getPathToTarget(tx, ty) {
+        const queue = [{x: agent.x, y: agent.y, path: []}];
+        const visited = new Set([key(agent.x, agent.y)]);
+
+        while (queue.length > 0) {
+            const curr = queue.shift();
+            if (curr.x === tx && curr.y === ty) return curr.path;
+
+            for (let adj of getAdj(curr.x, curr.y)) {
+                const ak = key(adj.x, adj.y);
+                const isTarget = (adj.x === tx && adj.y === ty);
+                // 이미 방문했던 길(안전함)을 통해서만 목적지로 이동 경로 계산
+                if (!visited.has(ak) && (agent.visited.has(ak) || isTarget)) {
+                    visited.add(ak);
+                    queue.push({x: adj.x, y: adj.y, path: [...curr.path, adj]});
+                }
+            }
+        }
+        return null;
+    }
+
+    // ⭐ 무한루프를 해결하는 리스크 평가 목표 설정 로직
+    function chooseBestTarget() {
+        let bestTarget = null;
+        let minRisk = Infinity;
+        let minDistance = Infinity;
+
+        // 경계(Frontier)에 있는 미방문 구역만 후보로 삼음
+        const candidates = [];
+        for (let x = 0; x < SIZE; x++) {
+            for (let y = 0; y < SIZE; y++) {
+                const k = key(x, y);
+                if (agent.visited.has(k)) continue;
+
+                const adjs = getAdj(x, y);
+                if (adjs.some(adj => agent.visited.has(key(adj.x, adj.y)))) {
+                    candidates.push({x, y, k});
+                }
+            }
+        }
+
+        candidates.forEach(cand => {
+            let risk = 0.1; // 정보가 없는 칸의 기본 위험도
+
+            if (agent.safe.has(cand.k)) risk = 0; // 안전 확인된 곳 최우선
+            else {
+                if (agent.possiblePit.has(cand.k)) risk += 0.4;
+                if (agent.possibleWumpus.has(cand.k)) risk += 0.6;
+            }
+
+            const path = getPathToTarget(cand.x, cand.y);
+            if (!path) return;
+
+            const dist = path.length;
+            // 리스크가 가장 낮고, 리스크가 같다면 거리가 가장 가까운 곳을 선택
+            if (risk < minRisk || (risk === minRisk && dist < minDistance)) {
+                minRisk = risk;
+                minDistance = dist;
+                bestTarget = cand;
+            }
+        });
+
+        return bestTarget;
+    }
+
+    // 메인 시뮬레이션 스텝
     function stepSimulation() {
         if (agent.hasGold || agent.isDead) return;
+
         if (agent.state === 'SENSE') {
             const p = env.getPercepts(agent.x, agent.y);
             let s = [];
             if (p.breeze) s.push("💨 Breeze");
             if (p.stench) s.push("🤢 Stench");
             if (p.glitter) s.push("✨ Glitter");
-            const txt = s.length > 0 ? s.join(', ') : "None (안전)";
-            document.getElementById('percept-panel').innerHTML = formatLogic(`(${agent.x},${agent.y}) 감지: ${txt}`);
-            logMessage(`[지각] (${agent.x},${agent.y}): ${txt}`);
+
+            const txt = s.length > 0 ? s.join(', ') : "None (평온함)";
+            document.getElementById('percept-panel').innerHTML = formatLogic(txt);
+            logMessage(`[1. 지각] (${agent.x},${agent.y}): ${txt}`);
+
             agent.lastPercept = p;
             agent.state = 'INFER';
+            renderGrid();
         } else if (agent.state === 'INFER') {
             const p = agent.lastPercept;
             const adjs = getAdj(agent.x, agent.y);
+
             if (!p.breeze) {
-                logMessage(`[추론] ¬Breeze → 주변 함정 없음`);
+                logMessage(`[2. 추론] ¬Breeze → 인접 칸 함정 없음`);
                 adjs.forEach(adj => {
                     const k = key(adj.x, adj.y);
                     agent.pitSafe.add(k);
                     agent.possiblePit.delete(k);
                 });
             } else {
-                logMessage(`[추론] Breeze → 주변 함정 의심`);
                 adjs.forEach(adj => {
                     const k = key(adj.x, adj.y);
                     if (!agent.visited.has(k) && !agent.pitSafe.has(k)) agent.possiblePit.add(k);
                 });
             }
+
             if (!p.stench) {
-                logMessage(`[추론] ¬Stench → 주변 괴물 없음`);
+                logMessage(`[2. 추론] ¬Stench → 인접 칸 괴물 없음`);
                 adjs.forEach(adj => {
                     const k = key(adj.x, adj.y);
                     agent.wumpusSafe.add(k);
                     agent.possibleWumpus.delete(k);
                 });
             } else {
-                logMessage(`[추론] Stench → 주변 괴물 의심`);
                 adjs.forEach(adj => {
                     const k = key(adj.x, adj.y);
                     if (!agent.visited.has(k) && !agent.wumpusSafe.has(k)) agent.possibleWumpus.add(k);
                 });
             }
-            adjs.forEach(adj => {
-                const k = key(adj.x, adj.y);
-                if (agent.pitSafe.has(k) && agent.wumpusSafe.has(k)) agent.safe.add(k);
-            });
+
+            // 글로벌 교차 검증: 맵 전체를 돌며 안전이 확정된 칸들을 찾아냄
+            for (let x = 0; x < SIZE; x++) {
+                for (let y = 0; y < SIZE; y++) {
+                    const k = key(x, y);
+                    if (agent.pitSafe.has(k) && agent.wumpusSafe.has(k) && !agent.safe.has(k)) {
+                        agent.safe.add(k);
+                        agent.possiblePit.delete(k);
+                        agent.possibleWumpus.delete(k);
+                        if (x !== agent.x || y !== agent.y) logMessage(`[2. 추론] 교차 검증: (${x},${y}) 안전함 확정`);
+                    }
+                }
+            }
+
             updateKBUI();
             renderGrid();
             agent.state = 'MOVE';
         } else if (agent.state === 'MOVE') {
             if (agent.lastPercept.glitter) {
                 agent.hasGold = true;
-                logMessage(`[성공] 금괴 발견 및 획득! 🏆`, true);
+                logMessage(`[성공] 💰 금괴를 획득했습니다! 탈출 성공!`, true);
                 stopAutoRun();
                 renderGrid();
                 return;
             }
-            let next = null;
-            for (let adj of getAdj(agent.x, agent.y)) {
-                if (agent.safe.has(key(adj.x, adj.y)) && !agent.visited.has(key(adj.x, adj.y))) {
-                    next = adj;
-                    break;
-                }
-            }
-            if (!next) {
-                for (let adj of getAdj(agent.x, agent.y)) {
-                    if (agent.safe.has(key(adj.x, adj.y))) {
-                        next = adj;
-                        break;
-                    }
-                }
-            }
-            if (next) {
-                agent.x = next.x;
-                agent.y = next.y;
+
+            const target = chooseBestTarget();
+
+            if (target) {
+                const path = getPathToTarget(target.x, target.y);
+                const nextStep = path[0]; // 타겟으로 가는 첫걸음 딛기
+                const isFrontierStep = !agent.visited.has(key(nextStep.x, nextStep.y));
+
+                agent.x = nextStep.x;
+                agent.y = nextStep.y;
                 agent.visited.add(key(agent.x, agent.y));
-                logMessage(`[이동] 증명된 안전 구역 (${agent.x}, ${agent.y})로 이동`, true);
-                if (env.pits.has(key(agent.x, agent.y)) || (env.wumpus.x === agent.x && env.wumpus.y === agent.y)) {
+
+                if (isFrontierStep) {
+                    if (agent.safe.has(key(agent.x, agent.y))) {
+                        logMessage(`[3. 행동] 안전 구역 (${agent.x}, ${agent.y}) 탐색 전진`, true);
+                    } else {
+                        logMessage(`[3. 행동] 확실한 길이 없어 위험 감수하고 (${agent.x}, ${agent.y}) 탐색`, true);
+                    }
+                } else {
+                    logMessage(`[3. 행동] 다른 목적지를 향해 (${agent.x}, ${agent.y}) 밟고 우회 중`, true);
+                }
+
+                // 사망 처리
+                if (env.pits.has(key(agent.x, agent.y))) {
                     agent.isDead = true;
-                    logMessage(`[실패] 💀 사고 발생!`, true);
+                    logMessage(`[사망] 🕳️ 함정에 빠졌습니다!`, true);
+                    stopAutoRun();
+                } else if (env.wumpus.x === agent.x && env.wumpus.y === agent.y) {
+                    agent.isDead = true;
+                    logMessage(`[사망] 👹 괴물에게 당했습니다!`, true);
                     stopAutoRun();
                 }
+            } else {
+                logMessage(`[오류] 맵이 닫혀있어 더 이상 탐색할 수 없습니다.`, true);
+                stopAutoRun();
             }
+
             renderGrid();
-            agent.state = 'SENSE';
+            if (!agent.isDead && !agent.hasGold) agent.state = 'SENSE';
         }
     }
 
-    document.getElementById('btn-step').addEventListener('click', stepSimulation);
-    document.getElementById('btn-reset').addEventListener('click', initGame);
-    document.getElementById('btn-run').addEventListener('click', () => {
-        if (runInterval) stopAutoRun();
-        else {
-            document.getElementById('btn-run').innerHTML = '<i class="fa-solid fa-pause mr-2"></i> Pause';
-            runInterval = setInterval(stepSimulation, 800);
-        }
-    });
-
-    function stopAutoRun() {
-        if (runInterval) clearInterval(runInterval);
-        runInterval = null;
-        document.getElementById('btn-run').innerHTML = '<i class="fa-solid fa-play mr-2"></i> Run';
-    }
-
+    /* 하단 공통 UI 로직 */
     function checkAnswer(btn, isCorrect, message) {
         const buttons = btn.parentElement.querySelectorAll('.quiz-btn');
         buttons.forEach(b => {
@@ -489,7 +622,7 @@
             b.classList.add('disabled');
         });
         btn.classList.add(isCorrect ? 'correct' : 'wrong');
-        btn.innerHTML = `<i class="fa-solid fa-circle-${isCorrect ? 'check' : 'xmark'} mr-2"></i>${btn.dataset.label}`;
+        btn.innerHTML = `<i class="fa-solid fa-circle-${isCorrect ? 'check' : 'xmark'} mr-3"></i>${btn.dataset.label}`;
         showToast(message, isCorrect ? 'success' : 'error');
         setTimeout(() => {
             buttons.forEach(b => {
@@ -501,10 +634,26 @@
 
     function showToast(message, type) {
         const t = document.createElement('div');
-        t.className = `fixed bottom-10 left-1/2 -translate-x-1/2 px-8 py-4 rounded-2xl text-white font-bold shadow-2xl transition-all z-[1000] ${type === 'success' ? 'bg-indigo-600' : 'bg-rose-500'}`;
+        t.className = `fixed bottom-10 left-1/2 -translate-x-1/2 px-10 py-5 rounded-3xl text-white font-bold shadow-2xl transition-all z-[1000] text-xl ${type === 'success' ? 'bg-indigo-600' : 'bg-rose-500'}`;
         t.innerText = message;
         document.body.appendChild(t);
         setTimeout(() => t.remove(), 2500);
+    }
+
+    document.getElementById('btn-step').addEventListener('click', stepSimulation);
+    document.getElementById('btn-reset').addEventListener('click', initGame);
+    document.getElementById('btn-run').addEventListener('click', () => {
+        if (runInterval) stopAutoRun();
+        else {
+            document.getElementById('btn-run').innerHTML = 'Pause';
+            runInterval = setInterval(stepSimulation, 500);
+        }
+    });
+
+    function stopAutoRun() {
+        if (runInterval) clearInterval(runInterval);
+        runInterval = null;
+        document.getElementById('btn-run').innerHTML = 'Run';
     }
 
     initGame();
