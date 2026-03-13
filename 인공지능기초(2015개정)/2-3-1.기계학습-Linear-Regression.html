@@ -511,6 +511,7 @@
             btn.innerHTML = '<i class="fa-solid fa-play mr-2"></i>학습 시작';
             btn.classList.remove('bg-emerald-500', 'bg-blue-700');
             btn.classList.add('bg-blue-500');
+            document.getElementById('btnPause').disabled = false;
         }
 
         bindEvents() {
@@ -540,9 +541,9 @@
                 this.model.isTraining = false;
                 cancelAnimationFrame(this.animationId);
                 const btn = document.getElementById('btnTrain');
+                btn.disabled = false;
                 btn.innerHTML = '<i class="fa-solid fa-play mr-2"></i>학습 재개';
                 btn.classList.replace('bg-blue-700', 'bg-blue-500');
-                btn.disabled = false;
             });
 
             document.getElementById('btnReset').addEventListener('click', () => this.enableTraining() || this.updateUI());
