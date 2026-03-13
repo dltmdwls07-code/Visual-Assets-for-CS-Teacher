@@ -151,7 +151,8 @@
             <div class="mb-8">
                 <h2 class="text-3xl md:text-4xl font-black text-slate-800 mb-3">
                     <i class="fa-solid fa-apple-whole text-emerald-500 mr-2"></i>스무고개 AI (과일 맞히기)</h2>
-                <p class="text-slate-600 text-lg">과일의 특징(색깔, 크기, 모양)이 담긴 표를 학습하여 AI가 최적의 질문 트리를 생성합니다.</p>
+                <p class="text-slate-600 text-lg">과일의 특징(색깔, 크기, 모양)이 담긴 표를 학습하여 AI가 불순도(Gini)를 낮추는 최적의 질문 트리를
+                    생성합니다.</p>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-5 gap-10 items-stretch">
@@ -191,7 +192,8 @@
                                 </select>
                             </div>
                         </div>
-                        <button class="w-full bg-emerald-100 text-emerald-700 py-3 rounded-xl font-bold text-lg hover:bg-emerald-200 transition"
+                        <button id="btnCatAdd"
+                                class="w-full bg-emerald-100 text-emerald-700 py-3 rounded-xl font-bold text-lg hover:bg-emerald-200 transition"
                                 onclick="addCatData()">
                             데이터 추가
                         </button>
@@ -199,7 +201,7 @@
 
                     <div class="border border-slate-200 rounded-2xl overflow-x-auto flex-grow max-h-[300px] overflow-y-auto">
                         <table class="w-full data-table text-base">
-                            <thead class="sticky top-0 bg-slate-50 shadow-sm">
+                            <thead class="sticky top-0 bg-slate-50 shadow-sm z-10">
                             <tr>
                                 <th>이름</th>
                                 <th>색깔</th>
@@ -213,11 +215,13 @@
                     </div>
 
                     <div class="flex gap-3">
-                        <button class="flex-1 bg-emerald-500 text-white py-4 rounded-xl font-black text-lg shadow-md hover:bg-emerald-600 transition"
+                        <button id="btnCatTrain"
+                                class="flex-1 bg-emerald-500 text-white py-4 rounded-xl font-black text-lg shadow-md hover:bg-emerald-600 transition"
                                 onclick="runCatTraining()">
                             <i class="fa-solid fa-wand-magic-sparkles mr-2"></i>트리 생성
                         </button>
-                        <button class="px-6 bg-slate-200 text-slate-700 rounded-xl font-bold text-lg hover:bg-slate-300 transition"
+                        <button id="btnCatReset"
+                                class="px-6 bg-slate-200 text-slate-700 rounded-xl font-bold text-lg hover:bg-slate-300 transition"
                                 onclick="initCatData()">
                             초기화
                         </button>
@@ -263,7 +267,8 @@
                                     <option value="길쭉함">길쭉함</option>
                                 </select>
                             </div>
-                            <button class="bg-slate-800 text-white px-6 py-2.5 rounded-xl hover:bg-slate-700 transition font-bold text-lg h-[46px]"
+                            <button id="btnCatPred"
+                                    class="bg-slate-800 text-white px-6 py-2.5 rounded-xl hover:bg-slate-700 transition font-bold text-lg h-[46px] whitespace-nowrap"
                                     onclick="runCatPrediction()">
                                 예측 시작 <i class="fa-solid fa-arrow-right ml-1"></i></button>
                         </div>
@@ -313,16 +318,16 @@
                                         class="font-medium text-slate-700">최대 깊이</span><span
                                         class="font-black text-indigo-600 text-xl" id="lblDepth2D">5</span></div>
                                 <input class="w-full accent-indigo-600 cursor-pointer" id="paramDepth2D" max="15"
-                                       min="1" oninput="update2DParams()"
-                                       type="range" value="5">
+                                       min="1" oninput="document.getElementById('lblDepth2D').innerText = this.value"
+                                       onchange="update2DParams()" type="range" value="5">
                             </div>
                             <div>
                                 <div class="flex justify-between mb-2"><span
                                         class="font-medium text-slate-700">리프 최소 개수</span><span
                                         class="font-black text-indigo-600 text-xl" id="lblMinLeaf2D">2</span></div>
                                 <input class="w-full accent-indigo-600 cursor-pointer" id="paramMinLeaf2D" max="20"
-                                       min="1" oninput="update2DParams()"
-                                       type="range" value="2">
+                                       min="1" oninput="document.getElementById('lblMinLeaf2D').innerText = this.value"
+                                       onchange="update2DParams()" type="range" value="2">
                             </div>
                         </div>
                     </div>
@@ -417,6 +422,16 @@
         }
     }
 
+    // XSS 방지 함수
+    function escapeHtml(unsafe) {
+        return (unsafe || '').toString()
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
     // ==========================================
     // 2. 범주형 표 기반 알고리즘 (Tab 1)
     // ==========================================
@@ -424,11 +439,13 @@
     let treeCat = null;
     let networkCat = null;
     let nodesDataCat = null;
+    let isPredictingCat = false; // 예측 애니메이션 도중 상태 오염을 막기 위한 플래그
 
     const FEATURES = ['color', 'size', 'shape'];
     const FEATURE_NAMES = {color: '색깔', size: '크기', shape: '모양'};
 
     function initCatData() {
+        if (isPredictingCat) return; // 비동기 충돌 방지
         datasetCat = [
             {id: 1, name: '사과', color: '빨강', size: '큼', shape: '둥긂'},
             {id: 2, name: '딸기', color: '빨강', size: '작음', shape: '길쭉함'},
@@ -444,28 +461,30 @@
     }
 
     function addCatData() {
+        if (isPredictingCat) return;
         const name = document.getElementById('catName').value.trim();
         if (!name) return showToast('이름을 입력하세요.', 'error');
         const id = datasetCat.length > 0 ? Math.max(...datasetCat.map(d => d.id)) + 1 : 1;
         datasetCat.push({
             id,
-            name,
+            name: escapeHtml(name), // XSS 공격 방어
             color: document.getElementById('catColor').value,
             size: document.getElementById('catSize').value,
             shape: document.getElementById('catShape').value
         });
         document.getElementById('catName').value = '';
-        treeCat = null;           // 데이터가 변했으므로 트리 초기화
+        treeCat = null;
         renderCatTable();
-        renderCatTree();          // 화면의 트리 삭제 및 알림 메시지 띄우기
+        renderCatTree();
         document.getElementById('predResult').classList.add('hidden');
     }
 
     function removeCatData(id) {
+        if (isPredictingCat) return;
         datasetCat = datasetCat.filter(d => d.id !== id);
-        treeCat = null;           // 데이터가 변했으므로 트리 초기화
+        treeCat = null;
         renderCatTable();
-        renderCatTree();          // 화면의 트리 삭제 및 알림 메시지 띄우기
+        renderCatTree();
         document.getElementById('predResult').classList.add('hidden');
     }
 
@@ -473,6 +492,7 @@
         const tbody = document.getElementById('catTableBody');
         tbody.innerHTML = '';
         datasetCat.forEach(d => {
+            // 탈출된 문자열 사용
             tbody.innerHTML += `<tr><td class="font-bold">${d.name}</td><td>${d.color}</td><td>${d.size}</td><td>${d.shape}</td> <td><button onclick="removeCatData(${d.id})" class="text-rose-500 hover:text-rose-700"><i class="fa-solid fa-trash"></i></button></td></tr>`;
         });
     }
@@ -542,12 +562,14 @@
             feature: bestFeature,
             value: bestVal,
             gini: bestGini,
+            // [논리 오류 수정] '아니오' 분기(right)에서는 다중 카테고리를 위해 해당 특징을 다시 물어볼 수 있도록 소진시키지 않음.
             left: buildTreeCat(bestSplits.left, [...usedFeatures, bestFeature], depth + 1),
-            right: buildTreeCat(bestSplits.right, [...usedFeatures, bestFeature], depth + 1)
+            right: buildTreeCat(bestSplits.right, [...usedFeatures], depth + 1)
         };
     }
 
     function runCatTraining() {
+        if (isPredictingCat) return;
         if (datasetCat.length === 0) return showToast('데이터가 없습니다.', 'error');
         treeCat = buildTreeCat(datasetCat, [], 0);
         renderCatTree();
@@ -557,7 +579,13 @@
 
     function renderCatTree() {
         const container = document.getElementById('network-cat');
-        // 트리가 없을 때 (초기화되었을 때) 안내 문구 표시
+
+        // [렌더링 오류 수정] 메모리 누수 및 DOM 중첩을 막기 위해 기존 네트워크 인스턴스 파괴
+        if (networkCat) {
+            networkCat.destroy();
+            networkCat = null;
+        }
+
         if (!treeCat) {
             container.innerHTML = '<div class="flex h-full items-center justify-center text-slate-500 text-lg font-bold"><i class="fa-solid fa-tree text-2xl mr-3 text-emerald-500"></i>데이터가 변경되었습니다. [트리 생성] 버튼을 다시 눌러주세요.</div>';
             return;
@@ -570,12 +598,13 @@
         function traverse(node, parentId = null, edgeLabel = '') {
             if (!node) return;
             let currId = nodeId++;
-            node.visId = currId; // 애니메이션 하이라이트를 위한 ID 저장
+            node.visId = currId;
 
             if (!node.isLeaf) {
                 nodesArr.push({
                     id: currId,
-                    label: `${FEATURE_NAMES[node.feature]}이(가)\n'${node.value}' 입니까?`,
+                    // [교육적 개선] Gini 계수를 시각적으로 표시하여 분할의 의미를 학습하도록 유도
+                    label: `${FEATURE_NAMES[node.feature]}이(가)\n'${node.value}' 입니까?\n(불순도: ${node.gini.toFixed(3)})`,
                     shape: 'box',
                     color: {background: '#f8fafc', border: '#10b981'},
                     font: {color: '#064e3b', bold: true, size: 16},
@@ -612,14 +641,14 @@
         traverse(treeCat);
         nodesDataCat = new vis.DataSet(nodesArr);
         networkCat = new vis.Network(container, {nodes: nodesDataCat, edges: edgesArr}, {
-            layout: {hierarchical: {direction: 'UD', sortMethod: 'directed', levelSeparation: 90, nodeSpacing: 150}},
+            layout: {hierarchical: {direction: 'UD', sortMethod: 'directed', levelSeparation: 90, nodeSpacing: 160}},
             physics: false,
+            // 애니메이션 충돌 방지를 위해 예측(상호작용) 중 드래그 뷰를 제어 가능토록 설정
             interaction: {dragNodes: false, zoomView: true, dragView: true},
             edges: {arrows: {to: {enabled: true, scaleFactor: 0.5}}, smooth: {type: 'cubicBezier'}}
         });
     }
 
-    // 노드 색상 원상복구 함수 (애니메이션 초기화 용도)
     function resetCatTreeColors() {
         if (!nodesDataCat) return;
         const updates = [];
@@ -633,21 +662,27 @@
         nodesDataCat.update(updates);
     }
 
-    // 트리 탐색 애니메이션 기능
+    // 트리 탐색 애니메이션 기능 (비동기 충돌 방지 로직 적용)
     async function runCatPrediction() {
         if (!treeCat) return showToast('먼저 트리를 생성해야 예측할 수 있습니다.', 'error');
+        if (isPredictingCat) return;
 
-        const btn = document.querySelector('button[onclick="runCatPrediction()"]');
+        isPredictingCat = true;
+
+        const btn = document.getElementById('btnCatPred');
         const resEl = document.getElementById('predResult');
 
-        // 버튼 잠금 및 상태 표시
+        // [상태 오류 방지] UI 버튼들 잠금 처리
+        const controls = [document.getElementById('btnCatAdd'), document.getElementById('btnCatTrain'), document.getElementById('btnCatReset')];
+        controls.forEach(c => c.classList.add('opacity-50', 'pointer-events-none'));
+
         btn.disabled = true;
         btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i>탐색 중...`;
         resEl.classList.remove('hidden');
         resEl.className = "mt-4 p-4 text-center font-bold border-2 border-emerald-500 bg-emerald-50 text-emerald-700 text-xl rounded-xl";
         resEl.innerHTML = '트리를 탐색하는 중입니다...';
 
-        resetCatTreeColors(); // 이전 탐색 흔적 지우기
+        resetCatTreeColors();
 
         const testData = {
             color: document.getElementById('testColor').value,
@@ -659,21 +694,24 @@
         const sleep = ms => new Promise(r => setTimeout(r, ms));
 
         while (current) {
-            // 현재 노드 하이라이트 (노란색)
+            // [예외 처리] 중간에 트리가 소멸되거나 데이터가 비정상 변경되었는지 확인
+            if (!networkCat || !nodesDataCat) break;
+
             nodesDataCat.update({
                 id: current.visId,
                 color: {background: '#fef08a', border: '#eab308'},
                 borderWidth: 4
             });
 
-            // 시선을 현재 노드로 부드럽게 이동
             networkCat.focus(current.visId, {scale: 1.2, animation: {duration: 500, easingFunction: 'easeInOutQuad'}});
 
-            await sleep(1000); // 1초 대기 (관찰 시간)
+            await sleep(1000);
+
+            // 상태 체크 다시 한번 (비동기 깨어난 직후)
+            if (!isPredictingCat || !nodesDataCat) break;
 
             if (current.isLeaf) break;
 
-            // 지나간 노드는 옅은 초록색으로 방문 표시
             nodesDataCat.update({
                 id: current.visId,
                 color: {background: '#dcfce3', border: '#22c55e'},
@@ -684,19 +722,21 @@
             else current = current.right;
         }
 
-        // 최종 결과 노드 강조 (빨간색) 및 텍스트 출력
-        nodesDataCat.update({
-            id: current.visId,
-            color: {background: '#ef4444', border: '#b91c1c'},
-            borderWidth: 4
-        });
+        if (current && nodesDataCat) {
+            nodesDataCat.update({
+                id: current.visId,
+                color: {background: '#ef4444', border: '#b91c1c'},
+                borderWidth: 4
+            });
+            resEl.innerHTML = `이 데이터는 <b>${current.result}</b>(으)로 분류되었습니다.`;
+            networkCat.fit({animation: {duration: 1000, easingFunction: 'easeInOutQuad'}});
+        }
 
-        resEl.innerHTML = `이 데이터는 <b>${current.result}</b>(으)로 분류되었습니다.`;
-        networkCat.fit({animation: {duration: 1000, easingFunction: 'easeInOutQuad'}}); // 전체 화면으로 카메라 복귀
-
-        // 버튼 원상복구
+        // 상태 해제
         btn.disabled = false;
         btn.innerHTML = `예측 시작 <i class="fa-solid fa-arrow-right ml-1"></i>`;
+        controls.forEach(c => c.classList.remove('opacity-50', 'pointer-events-none'));
+        isPredictingCat = false;
     }
 
     // ==========================================
@@ -709,7 +749,6 @@
     let tree2D = null;
     let network2D = null;
 
-    // Red, Blue, Green
     const colors2D = {
         1: {base: '#ef4444', light: 'rgba(239, 68, 68, 0.2)', text: '빨강'},
         2: {base: '#3b82f6', light: 'rgba(59, 130, 246, 0.2)', text: '파랑'},
@@ -726,12 +765,10 @@
     function draw2DCanvas() {
         ctx.clearRect(0, 0, canvas2d.width, canvas2d.height);
 
-        // 결정 경계 그리기
         if (tree2D) {
             drawBoundary(tree2D, 0, canvas2d.width, 0, canvas2d.height);
         }
 
-        // 점 그리기
         points2D.forEach(p => {
             ctx.beginPath();
             ctx.arc(p.x, p.y, 6, 0, Math.PI * 2);
@@ -779,8 +816,13 @@
         const y = (e.clientY - rect.top) * scaleY;
 
         points2D.push({x, y, cls: currentClass2D});
-        tree2D = null;
-        draw2DCanvas();
+
+        // [사용자 UX/UI 경험 개선] 점을 찍었을 때 기존 경계선이 사라지는 당혹감을 없애기 위해 즉시 재학습
+        if (tree2D) {
+            run2DTraining();
+        } else {
+            draw2DCanvas();
+        }
     });
 
     function random2DData() {
@@ -809,8 +851,6 @@
     }
 
     function update2DParams() {
-        document.getElementById('lblDepth2D').innerText = document.getElementById('paramDepth2D').value;
-        document.getElementById('lblMinLeaf2D').innerText = document.getElementById('paramMinLeaf2D').value;
         if (tree2D) run2DTraining();
     }
 
@@ -836,7 +876,7 @@
         for (let k in counts) {
             if (counts[k] > maxCount) {
                 maxCount = counts[k];
-                bestCls = k;
+                bestCls = parseInt(k);
             }
         }
 
@@ -900,6 +940,13 @@
 
     function render2DTree() {
         const container = document.getElementById('network-2d');
+
+        // [렌더링 오류 수정] 메모리 누수 방지
+        if (network2D) {
+            network2D.destroy();
+            network2D = null;
+        }
+
         if (!tree2D) return;
 
         let nodesArr = [];
@@ -913,7 +960,8 @@
             if (!node.isLeaf) {
                 nodesArr.push({
                     id: currId,
-                    label: `${node.feature.toUpperCase()}축 값이\n${Math.round(node.value)} 이하인가?`,
+                    // [교육적 개선] 불순도(Gini) 표시 추가
+                    label: `${node.feature.toUpperCase()}축 값이\n${Math.round(node.value)} 이하인가?\n(불순도: ${node.gini.toFixed(3)})`,
                     shape: 'box',
                     color: {background: '#f8fafc', border: '#6366f1'},
                     font: {color: '#312e81', bold: true, size: 16},
@@ -949,7 +997,7 @@
 
         traverse(tree2D);
         network2D = new vis.Network(container, {nodes: nodesArr, edges: edgesArr}, {
-            layout: {hierarchical: {direction: 'UD', sortMethod: 'directed', levelSeparation: 90, nodeSpacing: 150}},
+            layout: {hierarchical: {direction: 'UD', sortMethod: 'directed', levelSeparation: 90, nodeSpacing: 160}},
             physics: false,
             interaction: {dragNodes: false, zoomView: true, dragView: true},
             edges: {arrows: {to: {enabled: true, scaleFactor: 0.5}}, smooth: {type: 'cubicBezier'}},
