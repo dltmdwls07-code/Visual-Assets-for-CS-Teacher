@@ -82,10 +82,10 @@
 
         .cell-transition {
             transition: all 0.3s ease;
+            aspect-ratio: 1 / 1; /* 🔥 셀의 1:1 정사각형 비율 강제 유지 */
         }
 
         .sensor-icon {
-            font-size: 1.2rem;
             margin-top: 2px;
         }
 
@@ -180,27 +180,44 @@
     </section>
 
     <section class="scroll-mt-24 section-card overflow-hidden" id="activity">
-        <div class="space-y-6 mb-8 flex flex-col md:flex-row justify-between items-start md:items-end">
+        <div class="mb-8 flex flex-col gap-6">
             <div>
                 <h2 class="text-5xl font-black mb-4">실시간 논리 추론 시뮬레이터</h2>
                 <p class="text-slate-500 text-xl">에이전트가 단서를 바탕으로 지도를 넓혀갑니다. 멈추지 않고 스스로 답을 찾습니다.</p>
             </div>
-            <label class="flex items-center space-x-3 cursor-pointer bg-slate-50 border border-slate-200 px-5 py-3 rounded-2xl shadow-sm hover:bg-slate-100 transition">
-                <span class="font-bold text-slate-700">정답 미리보기</span>
-                <div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
-                    <input type="checkbox" id="toggle-vision"
-                           class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
-                           onchange="renderGrid()"/>
-                    <label for="toggle-vision"
-                           class="toggle-label block overflow-hidden h-6 rounded-full bg-slate-300 cursor-pointer"></label>
-                </div>
-            </label>
-        </div>
 
+            <div class="flex flex-col sm:flex-row items-center gap-4 w-full">
+                <div class="flex-1 w-full flex items-center justify-between bg-white border border-slate-200 px-5 py-3 rounded-2xl shadow-sm">
+                    <label for="grid-size" class="font-bold text-slate-700 whitespace-nowrap">
+                        <i class="fa-solid fa-table-cells mr-2"></i>격자 크기
+                    </label>
+                    <select id="grid-size"
+                            class="w-40 text-center bg-slate-50 border border-slate-200 text-slate-800 font-bold rounded-xl px-4 py-2 outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer"
+                            onchange="changeSize()">
+                        <option value="4" selected>4 x 4</option>
+                        <option value="5">5 x 5</option>
+                        <option value="6">6 x 6</option>
+                        <option value="7">7 x 7</option>
+                        <option value="8">8 x 8</option>
+                    </select>
+                </div>
+
+                <label class="flex-1 w-full flex items-center justify-between cursor-pointer bg-slate-50 border border-slate-200 px-6 py-4 rounded-2xl shadow-sm hover:bg-slate-100 transition">
+                    <span class="font-bold text-slate-700">정답 미리보기</span>
+                    <div class="relative inline-block w-12 align-middle select-none transition duration-200 ease-in">
+                        <input type="checkbox" id="toggle-vision"
+                               class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
+                               onchange="renderGrid()"/>
+                        <label for="toggle-vision"
+                               class="toggle-label block overflow-hidden h-6 rounded-full bg-slate-300 cursor-pointer"></label>
+                    </div>
+                </label>
+            </div>
+        </div>
         <div class="flex flex-col lg:flex-row gap-8">
             <div class="w-full lg:w-1/2 flex flex-col gap-6">
                 <div id="grid-container"
-                     class="grid grid-cols-4 grid-rows-4 gap-2 aspect-square bg-slate-300 p-3 rounded-3xl border-4 border-slate-400"></div>
+                     class="grid gap-2 aspect-square bg-slate-300 p-3 rounded-3xl border-4 border-slate-400"></div>
 
                 <div class="flex gap-4">
                     <button id="btn-step"
@@ -265,12 +282,13 @@
 </main>
 
 <script>
-    // 유틸리티 함수
     function formatLogic(text) {
         return text.replace(/¬/g, '<span class="not-symbol">¬</span>');
     }
 
-    const SIZE = 4;
+    // 전역 변수로 관리되는 그리드 크기
+    let SIZE = 4;
+
     const key = (x, y) => `${x},${y}`;
     const parseKey = (k) => {
         const [x, y] = k.split(',').map(Number);
@@ -286,11 +304,11 @@
         return adjs;
     };
 
-    // Wumpus World 환경 생성 (완전 재작성)
     class WumpusWorld {
         constructor() {
             this.init();
         }
+
         init() {
             const rand = () => {
                 let rx, ry;
@@ -314,6 +332,7 @@
                 }
             }
         }
+
         getPercepts(x, y) {
             let stench = false, breeze = false, glitter = false;
             if (this.gold.x === x && this.gold.y === y) glitter = true;
@@ -325,24 +344,29 @@
         }
     }
 
-    // 에이전트 클래스 상태 관리
     class Agent {
         constructor() {
             this.x = 0;
             this.y = 0;
             this.visited = new Set([key(0, 0)]);
-            this.safe = new Set([key(0, 0)]); // 100% 안전 확인됨
-            this.pitSafe = new Set([key(0, 0)]); // 함정 없음
-            this.wumpusSafe = new Set([key(0, 0)]); // 괴물 없음
-            this.possiblePit = new Set(); // 함정 의심
-            this.possibleWumpus = new Set(); // 괴물 의심
+            this.safe = new Set([key(0, 0)]);
+            this.pitSafe = new Set([key(0, 0)]);
+            this.wumpusSafe = new Set([key(0, 0)]);
+            this.possiblePit = new Set();
+            this.possibleWumpus = new Set();
             this.hasGold = false;
             this.isDead = false;
-            this.state = 'SENSE'; // SENSE -> INFER -> MOVE 순환
+            this.state = 'SENSE';
         }
     }
 
     let env, agent, runInterval = null;
+
+    // 격자 크기 변경 핸들러
+    function changeSize() {
+        SIZE = parseInt(document.getElementById('grid-size').value);
+        initGame();
+    }
 
     function initGame() {
         env = new WumpusWorld();
@@ -352,14 +376,23 @@
         stopAutoRun();
         renderGrid();
         updateKBUI();
-        logMessage("[시스템] 에이전트가 탐험을 시작합니다.");
+        logMessage(`[시스템] ${SIZE}x${SIZE} 환경으로 탐험을 시작합니다.`);
     }
 
-    // ⭐ 화면 렌더링 (옵션 적용)
+    // 화면 렌더링 (비율, 사이즈 반응형 동적 렌더링)
     function renderGrid() {
         const container = document.getElementById('grid-container');
-        const showHidden = document.getElementById('toggle-vision').checked; // 정답 보기 옵션
+        const showHidden = document.getElementById('toggle-vision').checked;
+
+        // 동적 격자 CSS 설정
+        container.style.gridTemplateColumns = `repeat(${SIZE}, minmax(0, 1fr))`;
+        container.style.gridTemplateRows = `repeat(${SIZE}, minmax(0, 1fr))`;
         container.innerHTML = '';
+
+        // 격자 크기에 따른 반응형 텍스트/이모지 사이즈 결정
+        const iconTextSize = SIZE <= 4 ? 'text-4xl' : SIZE <= 6 ? 'text-3xl' : 'text-2xl';
+        const coordTextSize = SIZE <= 5 ? 'text-[0.7rem]' : 'text-[0.5rem]';
+        const sensorStyle = SIZE <= 5 ? 'font-size: 1.2rem;' : 'font-size: 0.9rem;';
 
         for (let y = SIZE - 1; y >= 0; y--) {
             for (let x = 0; x < SIZE; x++) {
@@ -372,7 +405,7 @@
                 let border = 'border-slate-300';
                 if (isVisited) {
                     bg = 'bg-white';
-                    border = 'border-indigo-500 shadow-md';
+                    border = 'border-indigo-500 shadow-md z-10';
                 } else if (isSafe) {
                     bg = 'bg-green-100';
                     border = 'border-green-400';
@@ -382,17 +415,15 @@
                 }
 
                 const cell = document.createElement('div');
-                cell.className = `cell-transition rounded-2xl flex flex-col items-center justify-center border-2 text-4xl relative ${bg} ${border}`;
-                cell.innerHTML = `<span class="absolute top-1 left-2 text-[0.7rem] font-bold text-slate-400">${x},${y}</span>`;
+                // aspect-square 포함하여 1:1 보장
+                cell.className = `cell-transition rounded-2xl flex flex-col items-center justify-center border-2 ${iconTextSize} relative ${bg} ${border}`;
+                cell.innerHTML = `<span class="absolute top-1 left-2 font-bold text-slate-400 ${coordTextSize}">${x},${y}</span>`;
 
                 let contentHTML = '';
 
-                // 1. 에이전트 그리기
                 if (agent.x === x && agent.y === y) {
                     contentHTML = agent.isDead ? '💀' : '🤖';
-                }
-                // 2. 방문한 칸의 실제 정보 그리기
-                else if (isVisited) {
+                } else if (isVisited) {
                     if (env.pits.has(k)) contentHTML = '🕳️';
                     else if (env.wumpus.x === x && env.wumpus.y === y) contentHTML = '👹';
                     else if (env.gold.x === x && env.gold.y === y) contentHTML = '💰';
@@ -401,11 +432,9 @@
                         let s = '';
                         if (p.breeze) s += '💨';
                         if (p.stench) s += '🤢';
-                        contentHTML = `<div class="sensor-icon">${s}</div>`;
+                        contentHTML = `<div class="sensor-icon text-center" style="${sensorStyle}">${s}</div>`;
                     }
-                }
-                // 3. 미방문 구역 + 정답 보기 옵션 ON 상태 (투명하게 표시)
-                else if (showHidden) {
+                } else if (showHidden) {
                     if (env.pits.has(k)) contentHTML = '<span class="opacity-30">🕳️</span>';
                     else if (env.wumpus.x === x && env.wumpus.y === y) contentHTML = '<span class="opacity-30">👹</span>';
                     else if (env.gold.x === x && env.gold.y === y) contentHTML = '<span class="opacity-30">💰</span>';
@@ -432,7 +461,6 @@
         kbPanel.innerHTML = formatLogic(safeArr.slice(-6).join(', '));
     }
 
-    // ⭐ 목표 도달을 위한 길찾기 (방문한 길만 밟고 타겟으로 이동)
     function getPathToTarget(tx, ty) {
         const queue = [{x: agent.x, y: agent.y, path: []}];
         const visited = new Set([key(agent.x, agent.y)]);
@@ -444,7 +472,6 @@
             for (let adj of getAdj(curr.x, curr.y)) {
                 const ak = key(adj.x, adj.y);
                 const isTarget = (adj.x === tx && adj.y === ty);
-                // 이미 방문했던 길(안전함)을 통해서만 목적지로 이동 경로 계산
                 if (!visited.has(ak) && (agent.visited.has(ak) || isTarget)) {
                     visited.add(ak);
                     queue.push({x: adj.x, y: adj.y, path: [...curr.path, adj]});
@@ -454,13 +481,11 @@
         return null;
     }
 
-    // ⭐ 무한루프를 해결하는 리스크 평가 목표 설정 로직
     function chooseBestTarget() {
         let bestTarget = null;
         let minRisk = Infinity;
         let minDistance = Infinity;
 
-        // 경계(Frontier)에 있는 미방문 구역만 후보로 삼음
         const candidates = [];
         for (let x = 0; x < SIZE; x++) {
             for (let y = 0; y < SIZE; y++) {
@@ -475,9 +500,9 @@
         }
 
         candidates.forEach(cand => {
-            let risk = 0.1; // 정보가 없는 칸의 기본 위험도
+            let risk = 0.1;
 
-            if (agent.safe.has(cand.k)) risk = 0; // 안전 확인된 곳 최우선
+            if (agent.safe.has(cand.k)) risk = 0;
             else {
                 if (agent.possiblePit.has(cand.k)) risk += 0.4;
                 if (agent.possibleWumpus.has(cand.k)) risk += 0.6;
@@ -487,7 +512,6 @@
             if (!path) return;
 
             const dist = path.length;
-            // 리스크가 가장 낮고, 리스크가 같다면 거리가 가장 가까운 곳을 선택
             if (risk < minRisk || (risk === minRisk && dist < minDistance)) {
                 minRisk = risk;
                 minDistance = dist;
@@ -498,7 +522,6 @@
         return bestTarget;
     }
 
-    // 메인 시뮬레이션 스텝
     function stepSimulation() {
         if (agent.hasGold || agent.isDead) return;
 
@@ -548,7 +571,6 @@
                 });
             }
 
-            // 글로벌 교차 검증: 맵 전체를 돌며 안전이 확정된 칸들을 찾아냄
             for (let x = 0; x < SIZE; x++) {
                 for (let y = 0; y < SIZE; y++) {
                     const k = key(x, y);
@@ -577,7 +599,7 @@
 
             if (target) {
                 const path = getPathToTarget(target.x, target.y);
-                const nextStep = path[0]; // 타겟으로 가는 첫걸음 딛기
+                const nextStep = path[0];
                 const isFrontierStep = !agent.visited.has(key(nextStep.x, nextStep.y));
 
                 agent.x = nextStep.x;
@@ -594,7 +616,6 @@
                     logMessage(`[3. 행동] 다른 목적지를 향해 (${agent.x}, ${agent.y}) 밟고 우회 중`, true);
                 }
 
-                // 사망 처리
                 if (env.pits.has(key(agent.x, agent.y))) {
                     agent.isDead = true;
                     logMessage(`[사망] 🕳️ 함정에 빠졌습니다!`, true);
@@ -614,7 +635,6 @@
         }
     }
 
-    /* 하단 공통 UI 로직 */
     function checkAnswer(btn, isCorrect, message) {
         const buttons = btn.parentElement.querySelectorAll('.quiz-btn');
         buttons.forEach(b => {
