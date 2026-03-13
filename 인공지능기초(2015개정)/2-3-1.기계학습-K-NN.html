@@ -460,7 +460,6 @@
             this.queryPoint = null;
         }
 
-        // 기존 generateRandom(width, height) 함수를 찾아서 아래처럼 변경 (매개변수 spreadRadius 추가)
         generateRandom(width, height, spreadRadius = 60) {
             this.points = [];
             this.queryPoint = null;
@@ -470,7 +469,7 @@
                 let cy = Math.random() * (height - 150) + 75;
                 for (let i = 0; i < 30; i++) {
                     let angle = Math.random() * Math.PI * 2;
-                    let r = Math.random() * spreadRadius; // 고정값 60 대신 슬라이더 값 적용
+                    let r = Math.random() * spreadRadius;
                     let px = Math.max(10, Math.min(width - 10, cx + Math.cos(angle) * r));
                     let py = Math.max(10, Math.min(height - 10, cy + Math.sin(angle) * r));
                     this.addPoint(px, py, cls);
@@ -535,6 +534,10 @@
             this.ctx = canvas.getContext('2d');
             this.data = data;
             this.knn = knn;
+            this.needsRedraw = true; // [성능 최적화] 무한루프 방지 플래그
+            this.actualWidth = 0;
+            this.actualHeight = 0;
+
             this.resize();
             window.addEventListener('resize', () => this.resize());
             this.animate = this.animate.bind(this);
@@ -542,18 +545,36 @@
         }
 
         resize() {
+            // [렌더링 오류 수정] 고해상도(Retina) 화면의 뿌연 픽셀 방지
             const rect = this.canvas.parentElement.getBoundingClientRect();
-            this.canvas.width = rect.width;
-            this.canvas.height = rect.height;
+            const dpr = window.devicePixelRatio || 1;
+
+            this.canvas.style.width = `${rect.width}px`;
+            this.canvas.style.height = `${rect.height}px`;
+            this.canvas.width = rect.width * dpr;
+            this.canvas.height = rect.height * dpr;
+            this.ctx.scale(dpr, dpr);
+
+            this.actualWidth = rect.width;
+            this.actualHeight = rect.height;
+            this.requestDraw();
+        }
+
+        requestDraw() {
+            this.needsRedraw = true;
         }
 
         animate() {
-            this.draw();
+            if (this.needsRedraw) {
+                this.draw();
+                this.needsRedraw = false;
+            }
             requestAnimationFrame(this.animate);
         }
 
         draw() {
-            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            // scale(dpr, dpr) 덕분에 actualWidth/Height 로 클리어 및 좌표 계산 가능
+            this.ctx.clearRect(0, 0, this.actualWidth, this.actualHeight);
             if (this.data.queryPoint && (phase === 'CALC' || phase === 'SELECT' || phase === 'DONE')) {
                 this.ctx.globalAlpha = phase === 'CALC' ? 0.3 : 0.05;
                 this.ctx.lineWidth = 1;
@@ -622,9 +643,10 @@
     const btnStep = document.getElementById('btnStep'), btnRun = document.getElementById('btnRun');
     const sliderK = document.getElementById('kSlider'), labelK = document.getElementById('kValueDisplay');
     const toolBtns = document.querySelectorAll('.tool-btn');
+
     let activeTool = 'A';
     let phase = 'IDLE';
-    let autoRunInterval = null;
+    let autoRunTimer = null; // [타이머 오류 수정] 변수명 및 관리 방식 변경
 
     const THEMES = {
         IDLE: {boxBg: 'bg-white', boxBorder: 'border-slate-400', text: 'text-slate-800', badgeBg: 'bg-slate-200'},
@@ -637,6 +659,15 @@
         },
         DONE: {boxBg: 'bg-purple-50', boxBorder: 'border-purple-500', text: 'text-purple-800', badgeBg: 'bg-purple-200'}
     };
+
+    // [상태 오류 방지] 자동 실행 취소 공통 함수
+    function stopAutoRun() {
+        if (autoRunTimer) {
+            clearTimeout(autoRunTimer);
+            autoRunTimer = null;
+            btnRun.innerHTML = '<i class="fa-solid fa-play mr-2"></i> 자동 실행';
+        }
+    }
 
     function updateFlowUI(activePhase, message, icon, barBg = 'bg-slate-100', barText = 'text-slate-700') {
         const msgBar = document.getElementById('statusMessageBar');
@@ -695,27 +726,33 @@
             phase = 'DONE';
             updateVotingUI();
             updateFlowUI('DONE', 'Step 3: 다수결 투표가 완료되어 그룹이 분류되었습니다!', 'fa-check-to-slot', 'bg-purple-50', 'text-purple-800');
-            if (autoRunInterval) {
-                clearInterval(autoRunInterval);
-                autoRunInterval = null;
-                btnRun.innerHTML = '<i class="fa-solid fa-play mr-2"></i> 자동 실행';
-            }
+            stopAutoRun();
             btnStep.disabled = true;
             btnRun.disabled = true;
+        }
+        renderer.requestDraw();
+    }
+
+    function runLoop() {
+        if (!autoRunTimer) return;
+        if (phase === 'DONE') {
+            stopAutoRun();
+            return;
+        }
+        step();
+        if (phase !== 'DONE') {
+            autoRunTimer = setTimeout(runLoop, 1000);
         }
     }
 
     function run() {
-        if (autoRunInterval) {
-            clearInterval(autoRunInterval);
-            autoRunInterval = null;
-            btnRun.innerHTML = '<i class="fa-solid fa-play mr-2"></i> 자동 실행';
-            btnStep.disabled = false;
+        if (autoRunTimer) {
+            stopAutoRun();
         } else {
             if (phase === 'DONE') return;
             btnRun.innerHTML = '<i class="fa-solid fa-pause mr-2"></i> 정지';
             btnStep.disabled = true;
-            autoRunInterval = setInterval(step, 1000);
+            autoRunTimer = setTimeout(runLoop, 100);
         }
     }
 
@@ -734,6 +771,7 @@
         const rect = canvas.getBoundingClientRect();
         let x = e.clientX - rect.left;
         let y = e.clientY - rect.top;
+
         if (activeTool === 'QUERY') {
             if (dataManager.points.length === 0) {
                 alert("먼저 기존 데이터를 생성해주세요!");
@@ -744,15 +782,18 @@
             knn.voteCounts = {A: 0, B: 0, C: 0};
             updateVotingUI();
             toggleAlgControls(true);
-            if (autoRunInterval) {
-                clearInterval(autoRunInterval);
-                autoRunInterval = null;
-                btnRun.innerHTML = '<i class="fa-solid fa-play mr-2"></i> 자동 실행';
-            }
+            stopAutoRun(); // 타이머 안전 정지
             updateFlowUI('IDLE', 'Query Point가 등록되었습니다! Step 버튼을 눌러 알고리즘을 진행하세요.', 'fa-play-circle');
         } else {
             dataManager.addPoint(x, y, activeTool);
-            if (phase === 'DONE' && dataManager.queryPoint) {
+
+            // [상태 불일치 오류 수정] 진행 중에 점이 추가되면 상태를 초기화하거나 즉시 재반영
+            if (phase === 'CALC' || phase === 'SELECT') {
+                phase = 'IDLE';
+                stopAutoRun();
+                updateFlowUI('IDLE', '데이터가 추가되어 진행이 취소되었습니다. 처음부터 다시 실행하세요.', 'fa-rotate-left');
+                toggleAlgControls(true);
+            } else if (phase === 'DONE' && dataManager.queryPoint) {
                 knn.calcAllDistances();
                 knn.selectKNeighbors(parseInt(sliderK.value));
                 knn.doVoting();
@@ -760,6 +801,7 @@
                 updateFlowUI('DONE', '데이터가 추가되어 실시간으로 투표 현황이 재계산되었습니다.', 'fa-bolt', 'bg-purple-50', 'text-purple-800');
             }
         }
+        renderer.requestDraw();
     });
 
     sliderK.addEventListener('input', (e) => {
@@ -769,26 +811,34 @@
             knn.doVoting();
             updateVotingUI();
             updateFlowUI('DONE', `K값이 ${e.target.value}(으)로 변경되어 분류 결과가 실시간 갱신되었습니다.`, 'fa-bolt', 'bg-purple-50', 'text-purple-800');
+            renderer.requestDraw();
+        } else if (phase === 'CALC' || phase === 'SELECT') {
+            // 진행 중 슬라이더 조작 시 꼬임을 방지하기 위해 강제 리셋
+            phase = 'IDLE';
+            stopAutoRun();
+            updateFlowUI('IDLE', `K값이 변경되어 진행이 취소되었습니다. 다시 실행하세요.`, 'fa-rotate-left');
+            toggleAlgControls(true);
+            renderer.requestDraw();
         }
     });
 
-    // ⬇️ 기존 변수 선언부 근처에 슬라이더 변수 추가
     const spreadSlider = document.getElementById('spreadSlider');
     const spreadLabel = document.getElementById('spreadLabel');
 
-    // ⬇️ 슬라이더를 움직일 때 텍스트 업데이트 로직
     spreadSlider.addEventListener('input', (e) => {
         const val = parseInt(e.target.value);
         if (val < 150) spreadLabel.innerText = "조밀함";
-        else if (val < 280) spreadLabel.innerText = "적당함"; // 초기값 250이 여기에 포함됨
+        else if (val < 280) spreadLabel.innerText = "적당함";
         else if (val < 380) spreadLabel.innerText = "넓게 흩어짐";
         else spreadLabel.innerText = "매우 넓게 흩어짐 (혼합됨)";
     });
 
-    // ⬇️ 기존 btnRandom.addEventListener 코드를 아래 내용으로 덮어쓰기
     btnRandom.addEventListener('click', () => {
-        const spreadValue = parseInt(spreadSlider.value); // 슬라이더 값 읽어오기
-        dataManager.generateRandom(canvas.width, canvas.height, spreadValue); // 값 넘겨주기
+        stopAutoRun(); // 타이머 누수 방지
+        const spreadValue = parseInt(spreadSlider.value);
+        // DPR 스케일링을 고려하여 CSS Width 크기를 넘겨줌
+        dataManager.generateRandom(renderer.actualWidth, renderer.actualHeight, spreadValue);
+
         phase = 'IDLE';
         knn.voteCounts = {A: 0, B: 0, C: 0};
         updateVotingUI();
@@ -797,15 +847,18 @@
         document.querySelector('[data-tool="QUERY"]').classList.add('active');
         activeTool = 'QUERY';
         updateFlowUI('IDLE', '무작위 데이터가 생성되었습니다. 캔버스를 클릭하여 Query Point를 찍어보세요.', 'fa-crosshairs');
+        renderer.requestDraw();
     });
 
     btnClear.addEventListener('click', () => {
+        stopAutoRun(); // 타이머 누수 방지
         dataManager.clear();
         phase = 'IDLE';
         knn.voteCounts = {A: 0, B: 0, C: 0};
         updateVotingUI();
         toggleAlgControls(false);
         updateFlowUI('IDLE', '모든 데이터가 지워졌습니다. 데이터를 다시 생성하세요.', 'fa-eraser');
+        renderer.requestDraw();
     });
 
     btnStep.addEventListener('click', step);
