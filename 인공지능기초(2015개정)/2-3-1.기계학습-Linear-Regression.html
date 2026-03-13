@@ -514,7 +514,7 @@
         }
 
         bindEvents() {
-            this.renderer.canvas.addEventListener('mousedown', (e) => {
+            this.renderer.canvas.addEventListener('pointerdown', (e) => {
                 const rect = this.renderer.canvas.getBoundingClientRect();
                 const p = this.renderer.pixelToData(e.clientX - rect.left, e.clientY - rect.top, this.dataManager.getBounds());
                 this.dataManager.addPoint(p.x, p.y);
