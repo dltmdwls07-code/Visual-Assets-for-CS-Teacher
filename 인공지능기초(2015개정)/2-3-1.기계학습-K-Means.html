@@ -392,10 +392,16 @@
             this.k = k;
             this.centroids = [];
             this.data.resetAssignments();
-            for (let i = 0; i < k; i++) {
-                let rPt = this.data.points[Math.floor(Math.random() * this.data.points.length)];
-                let startX = rPt ? rPt.x + (Math.random() * 20 - 10) : Math.random() * width;
-                let startY = rPt ? rPt.y + (Math.random() * 20 - 10) : Math.random() * height;
+
+            // [논리 오류 수정] 데이터 수보다 K값이 클 경우 빈 군집 예외를 방지 및 중복되지 않는 위치(실제 데이터 위)에 생성
+            let availablePoints = [...this.data.points];
+            let actualK = Math.min(k, availablePoints.length);
+
+            for (let i = 0; i < actualK; i++) {
+                let rIdx = Math.floor(Math.random() * availablePoints.length);
+                let rPt = availablePoints.splice(rIdx, 1)[0];
+                let startX = rPt.x;
+                let startY = rPt.y;
                 this.centroids.push({x: startX, y: startY, targetX: startX, targetY: startY, clusterId: i + 1});
             }
         }
@@ -450,6 +456,10 @@
             this.data = data;
             this.kmeans = kmeans;
             this.isAnimatingCentroids = false;
+            this.needsRedraw = true; // [성능 최적화] 무한 렌더링을 막기 위한 플래그
+            this.actualWidth = 0;
+            this.actualHeight = 0;
+
             this.resize();
             window.addEventListener('resize', () => this.resize());
             this.animate = this.animate.bind(this);
@@ -457,9 +467,23 @@
         }
 
         resize() {
+            // [렌더링 오류 수정] 고해상도(Retina) 디스플레이 대응
             const rect = this.canvas.parentElement.getBoundingClientRect();
-            this.canvas.width = rect.width;
-            this.canvas.height = rect.height;
+            const dpr = window.devicePixelRatio || 1;
+
+            this.canvas.style.width = `${rect.width}px`;
+            this.canvas.style.height = `${rect.height}px`;
+            this.canvas.width = rect.width * dpr;
+            this.canvas.height = rect.height * dpr;
+            this.ctx.scale(dpr, dpr);
+
+            this.actualWidth = rect.width;
+            this.actualHeight = rect.height;
+            this.requestDraw();
+        }
+
+        requestDraw() {
+            this.needsRedraw = true;
         }
 
         updateAnimations() {
@@ -471,7 +495,9 @@
                     c.x += dx * 0.1;
                     c.y += dy * 0.1;
                     moving = true;
+                    this.needsRedraw = true;
                 } else {
+                    if (c.x !== c.targetX || c.y !== c.targetY) this.needsRedraw = true;
                     c.x = c.targetX;
                     c.y = c.targetY;
                 }
@@ -481,12 +507,36 @@
 
         animate() {
             this.updateAnimations();
-            this.draw();
+            if (this.needsRedraw) {
+                this.draw();
+                this.needsRedraw = false;
+            }
             requestAnimationFrame(this.animate);
         }
 
         draw() {
-            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            this.ctx.clearRect(0, 0, this.actualWidth, this.actualHeight);
+
+            // [교육용 시각화 추가] ASSIGN 단계일 때 각 데이터 포인트와 중심점 간의 연결선(거리) 렌더링
+            if (window.currentPhase === 'ASSIGN') {
+                this.data.points.forEach(p => {
+                    if (p.cluster !== -1) {
+                        const c = this.kmeans.centroids.find(cent => cent.clusterId === p.cluster);
+                        if (c) {
+                            this.ctx.beginPath();
+                            this.ctx.moveTo(p.x, p.y);
+                            this.ctx.lineTo(c.x, c.y);
+                            this.ctx.strokeStyle = `${COLORS[p.cluster]}40`; // 25% opacity
+                            this.ctx.lineWidth = 1.5;
+                            this.ctx.setLineDash([4, 4]);
+                            this.ctx.stroke();
+                        }
+                    }
+                });
+                this.ctx.setLineDash([]); // Reset
+            }
+
+            // 포인트 그리기
             this.data.points.forEach(p => {
                 this.ctx.beginPath();
                 this.ctx.arc(p.x, p.y, 6, 0, Math.PI * 2);
@@ -496,6 +546,8 @@
                 this.ctx.lineWidth = 1.5;
                 this.ctx.stroke();
             });
+
+            // 중심점 그리기
             this.kmeans.centroids.forEach(c => {
                 this.ctx.beginPath();
                 this.ctx.arc(c.x, c.y, 14, 0, Math.PI * 2);
@@ -504,6 +556,8 @@
                 this.ctx.strokeStyle = '#1e293b';
                 this.ctx.lineWidth = 3;
                 this.ctx.stroke();
+
+                // 중심 십자가 그리기
                 this.ctx.beginPath();
                 this.ctx.moveTo(c.x - 5, c.y - 5);
                 this.ctx.lineTo(c.x + 5, c.y + 5);
@@ -529,8 +583,8 @@
     const spreadSlider = document.getElementById('spreadSlider');
     const spreadLabel = document.getElementById('spreadLabel');
 
-    let phase = 'IDLE';
-    let autoRunInterval = null;
+    window.currentPhase = 'IDLE'; // Renderer가 접근 가능하도록 window 객체에 등록
+    let autoRunTimer = null; // [비동기 오류 수정] setInterval 대신 재귀형 setTimeout 사용
 
     const THEMES = {
         IDLE: {
@@ -551,7 +605,13 @@
         }
     };
 
+    function updatePhase(newPhase) {
+        window.currentPhase = newPhase;
+        renderer.requestDraw();
+    }
+
     function updateFlowUI(activePhase, message, icon) {
+        updatePhase(activePhase);
         const theme = THEMES[activePhase];
         const msgBar = document.getElementById('statusMessageBar');
         document.getElementById('statusMessageText').innerText = message;
@@ -581,66 +641,84 @@
     function step() {
         if (renderer.isAnimatingCentroids) return;
 
-        if (phase === 'IDLE' || phase === 'UPDATE') {
+        if (window.currentPhase === 'IDLE' || window.currentPhase === 'UPDATE') {
             const changed = kmeans.assignPoints();
-            if (!changed && phase === 'UPDATE') {
-                phase = 'DONE';
+            if (!changed && window.currentPhase === 'UPDATE') {
                 updateFlowUI('DONE', '수렴 완료! 데이터 소속이 더 이상 변하지 않아 알고리즘이 종료됩니다.', 'fa-flag-checkered');
-                if (autoRunInterval) {
-                    clearInterval(autoRunInterval);
-                    autoRunInterval = null;
-                    btnRun.innerHTML = '<i class="fa-solid fa-play mr-2"></i> Run';
-                }
+                stopAutoRun();
                 btnStep.disabled = true;
                 btnRun.disabled = true;
             } else {
-                phase = 'ASSIGN';
                 updateFlowUI('ASSIGN', 'Step 1: 포인트를 가장 가까운 중심점 그룹으로 할당했습니다.', 'fa-people-arrows');
             }
-        } else if (phase === 'ASSIGN') {
+        } else if (window.currentPhase === 'ASSIGN') {
             kmeans.calculateNewCentroids();
-            phase = 'UPDATE';
             updateFlowUI('UPDATE', 'Step 2: 중심점을 소속 데이터들의 정중앙(평균 위치)으로 이동시킵니다.', 'fa-route');
         }
     }
 
-    function run() {
-        if (autoRunInterval) {
-            clearInterval(autoRunInterval);
-            autoRunInterval = null;
-            btnRun.innerHTML = '<i class="fa-solid fa-play mr-2"></i> Run';
-            btnStep.disabled = false;
+    // [비동기 오류 수정] 애니메이션 완료를 기다린 후 다음 Step 진행
+    function runLoop() {
+        if (!autoRunTimer) return; // stopped
+        if (window.currentPhase === 'DONE') {
+            stopAutoRun();
+            return;
+        }
+
+        if (!renderer.isAnimatingCentroids) {
+            step();
+            // Step 완료 후 화면을 보여주기 위한 약간의 딜레이
+            autoRunTimer = setTimeout(runLoop, 800);
         } else {
-            if (phase === 'DONE') return;
+            // 애니메이션 진행 중일 때는 짧게 대기 후 재확인
+            autoRunTimer = setTimeout(runLoop, 100);
+        }
+    }
+
+    function stopAutoRun() {
+        if (autoRunTimer) {
+            clearTimeout(autoRunTimer);
+            autoRunTimer = null;
+            btnRun.innerHTML = '<i class="fa-solid fa-play mr-2"></i> Run';
+            btnStep.disabled = window.currentPhase === 'DONE' ? true : false;
+        }
+    }
+
+    function run() {
+        if (autoRunTimer) {
+            stopAutoRun();
+        } else {
+            if (window.currentPhase === 'DONE') return;
             btnRun.innerHTML = '<i class="fa-solid fa-pause mr-2"></i> Pause';
             btnStep.disabled = true;
-            autoRunInterval = setInterval(() => {
-                if (!renderer.isAnimatingCentroids) step();
-            }, 1200);
+            autoRunTimer = setTimeout(runLoop, 100);
         }
     }
 
     function resetAlgorithm() {
-        if (autoRunInterval) {
-            clearInterval(autoRunInterval);
-            autoRunInterval = null;
-            btnRun.innerHTML = '<i class="fa-solid fa-play mr-2"></i> Run';
-        }
+        stopAutoRun();
         kmeans.centroids = [];
         dataManager.resetAssignments();
-        phase = 'IDLE';
+        updatePhase('IDLE');
         toggleAlgControls(false);
+        renderer.requestDraw();
     }
 
     // --- 이벤트 리스너 ---
     canvas.addEventListener('click', (e) => {
         const rect = canvas.getBoundingClientRect();
-        dataManager.addPoint(e.clientX - rect.left, e.clientY - rect.top);
+        // DPR 적용된 좌표를 다시 원래 CSS 기준으로 계산
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        dataManager.addPoint(x, y);
+
         if (kmeans.centroids.length > 0) {
             resetAlgorithm();
             updateFlowUI('IDLE', '데이터가 변경되어 알고리즘이 초기화되었습니다. [중심점 생성]을 눌러주세요.', 'fa-rotate-left');
         } else {
             updateFlowUI('IDLE', '데이터가 추가되었습니다. [중심점 생성] 버튼을 누르세요.', 'fa-seedling');
+            renderer.requestDraw();
         }
     });
 
@@ -653,26 +731,32 @@
 
     btnRandom.addEventListener('click', () => {
         const spreadValue = parseInt(spreadSlider.value);
-        dataManager.generateRandom(canvas.width, canvas.height, 120, spreadValue);
+        dataManager.generateRandom(renderer.actualWidth, renderer.actualHeight, 120, spreadValue);
 
         if (kmeans.centroids.length > 0) {
             resetAlgorithm();
             updateFlowUI('IDLE', '랜덤 데이터가 생성되었습니다. 알고리즘이 초기화되었습니다.', 'fa-rotate-left');
         } else {
             updateFlowUI('IDLE', '랜덤 데이터가 생성되었습니다. [중심점 생성] 버튼을 누르세요.', 'fa-seedling');
+            renderer.requestDraw();
         }
     });
 
     btnClear.addEventListener('click', () => {
         dataManager.clear();
         kmeans.centroids = [];
-        phase = 'IDLE';
+        updatePhase('IDLE');
         toggleAlgControls(false);
         updateFlowUI('IDLE', '데이터가 초기화되었습니다. 캔버스를 클릭하여 데이터를 생성하세요.', 'fa-hand-pointer');
+        renderer.requestDraw();
     });
 
+    // [이벤트 오류 수정] 슬라이더 드래그 중(input)에는 숫자만 바꾸고, 마우스를 뗄 때(change) 로직을 실행하도록 최적화
     sliderK.addEventListener('input', (e) => {
         labelK.innerText = e.target.value;
+    });
+
+    sliderK.addEventListener('change', (e) => {
         if (kmeans.centroids.length > 0 || dataManager.points.some(p => p.cluster !== -1)) {
             resetAlgorithm();
             updateFlowUI('IDLE', 'K 값이 변경되어 알고리즘이 초기화되었습니다. [중심점 생성]을 다시 눌러주세요.', 'fa-rotate-left');
@@ -684,16 +768,13 @@
             alert("먼저 캔버스에 데이터를 생성해주세요!");
             return;
         }
-        if (autoRunInterval) {
-            clearInterval(autoRunInterval);
-            autoRunInterval = null;
-            btnRun.innerHTML = '<i class="fa-solid fa-play mr-2"></i> Run';
-        }
+        stopAutoRun();
 
-        kmeans.initCentroids(parseInt(sliderK.value), canvas.width, canvas.height);
-        phase = 'IDLE';
+        kmeans.initCentroids(parseInt(sliderK.value), renderer.actualWidth, renderer.actualHeight);
+        updatePhase('IDLE');
         toggleAlgControls(true);
-        updateFlowUI('IDLE', 'Step 0: 초기 중심점이 무작위로 생성되었습니다. [Step]을 눌러보세요.', 'fa-location-crosshairs');
+        updateFlowUI('IDLE', 'Step 0: 초기 중심점이 데이터 위치에 생성되었습니다. [Step]을 눌러보세요.', 'fa-location-crosshairs');
+        renderer.requestDraw();
     });
 
     btnStep.addEventListener('click', step);
