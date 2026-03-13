@@ -55,6 +55,8 @@
             overflow: hidden;
             width: 100%;
             aspect-ratio: 1;
+            /* 모바일에서 터치 드래그 시 화면 스크롤 방지 */
+            touch-action: none;
         }
 
         .grid-cell {
@@ -422,7 +424,15 @@
                     return {type: 'fail', msg: '❌ 목표까지의 경로를 찾을 수 없습니다 (막힘).'};
                 }
 
-                this.openSet.sort((a, b) => this.fScore.get(a) - this.fScore.get(b));
+                // [수정 핵심] Tie-breaking 로직 추가: f(n)이 같을 경우 h(n)이 작은 노드를 우선 선택
+                this.openSet.sort((a, b) => {
+                    let fDiff = this.fScore.get(a) - this.fScore.get(b);
+                    if (fDiff === 0) {
+                        return this.getH(a) - this.getH(b);
+                    }
+                    return fDiff;
+                });
+
                 this.currentNode = this.openSet.shift();
 
                 if (this.currentNode === this.goalId) {
@@ -514,23 +524,26 @@
             this.playInterval = null;
             this.nodeDataMap = new Map();
 
+            // 이벤트 리스너 등록
             document.getElementById('btn-tree-gen').onclick = () => this.generateTree();
             document.getElementById('btn-tree-step').onclick = () => {
-                if (this.playInterval) this.stopPlay(); // 자동 실행 중이면 정지
+                if (this.playInterval) this.stopPlay();
                 this.step();
             };
             document.getElementById('btn-tree-play').onclick = () => this.togglePlay();
             document.getElementById('btn-tree-reset').onclick = () => this.resetSearch();
 
+            // [수정 핵심] 알고리즘 변경 시 즉시 상태 동기화 및 엔진 리셋
+            document.getElementById('tree-algo').addEventListener('change', () => this.resetSearch());
+
             document.getElementById('tree-speed').addEventListener('input', (e) => {
-                if (this.playInterval) { // 자동 실행 중일 때만 즉시 갱신
+                if (this.playInterval) {
                     clearInterval(this.playInterval);
                     let speed = 1050 - parseInt(e.target.value);
                     this.playInterval = setInterval(() => this.step(), speed);
                 }
             });
 
-            // 🔥 추가된 부분: 노드 클릭 시 목표 노드(Goal) 변경 기능
             this.network.on("click", (params) => {
                 if (params.nodes.length > 0) {
                     let clickedNodeId = params.nodes[0];
@@ -542,19 +555,14 @@
                     }
 
                     let oldGoal = this.goalNode;
-
-                    // 1. 내부 목표 노드 변수를 새로운 클릭 노드로 가장 먼저 변경
                     this.goalNode = clickedNodeId;
 
-                    // 2. 휴리스틱(h) 값 업데이트 (새 목표는 0, 옛날 목표는 랜덤)
                     this.nodeDataMap.get(this.goalNode).h = 0;
                     if (oldGoal && oldGoal !== clickedNodeId) {
                         this.nodeDataMap.get(oldGoal).h = Math.floor(Math.random() * 20) + 1;
                     }
 
-                    // 3. 변수가 교체된 상태에서 화면을 전체 초기화 (이 안에서 라벨이 일괄 교체됨)
                     this.resetSearch();
-
                     this.setStatus(`노드 ${this.goalNode}이(가) 새로운 목표(Goal)로 설정되었습니다.`);
                     this.network.unselectAll();
                 }
@@ -603,6 +611,9 @@
             this.updateNodeStyle(this.startNode, 'start');
             this.updateNodeStyle(this.goalNode, 'goal');
             this.setStatus('새로운 트리가 생성되었습니다. 탐색을 시작하세요.');
+
+            // [수정 핵심] 트리 생성 후 네트워크 뷰를 화면 중앙에 자동으로 맞춰줌
+            setTimeout(() => this.network.fit(), 100);
         }
 
         addVisNode(id, type) {
@@ -616,7 +627,6 @@
             let h = this.nodeDataMap.get(id).h;
             let baseLabel = id === this.startNode ? 'Start' : (id === this.goalNode ? 'Goal' : `Node ${id}`);
 
-            // [수정 핵심 1] 평가값 f(n)을 먼저 보여주고, g(n)과 h(n)을 아래에 나란히 배치
             let labelText = `<b>${baseLabel}</b>`;
             if (extraInfo && extraInfo.g !== undefined) {
                 labelText += `\nf: ${extraInfo.f}\ng: ${extraInfo.g} | h: ${h}`;
@@ -652,7 +662,7 @@
                 id: id,
                 label: labelText,
                 color: {background: bg, border: border},
-                font: {color: fontColor} // 텍스트 컬러 강제 지정
+                font: {color: fontColor}
             });
         }
 
@@ -671,6 +681,13 @@
             let res = this.searchEngine.step();
 
             if (!res) return;
+
+            // [수정 핵심] 탐색 완료 시 무한루프(Interval Leak) 방지
+            if (res.type === 'finished') {
+                this.stopPlay();
+                this.setStatus('탐색이 이미 완료되었습니다. 초기화(리셋)를 진행해주세요.');
+                return;
+            }
 
             if (res.type === 'select') {
                 this.updateNodeStyle(res.node, 'current', {
@@ -715,8 +732,10 @@
         }
 
         stopPlay() {
-            clearInterval(this.playInterval);
-            this.playInterval = null;
+            if (this.playInterval) {
+                clearInterval(this.playInterval);
+                this.playInterval = null;
+            }
             let btn = document.getElementById('btn-tree-play');
             btn.innerHTML = `<i class="fa-solid fa-play"></i> 자동 실행 (Run)`;
             btn.classList.replace('bg-rose-500', 'bg-teal-600');
@@ -764,7 +783,6 @@
 
         initGrid() {
             this.container.innerHTML = '';
-            // [수정 핵심 2] Grid를 완벽한 바둑판(정사각형)으로 만들기 위해 행(Row) 비율도 명시적으로 설정
             this.container.style.gridTemplateColumns = `repeat(${this.gridSize}, 1fr)`;
             this.container.style.gridTemplateRows = `repeat(${this.gridSize}, 1fr)`;
 
@@ -775,6 +793,7 @@
                     cell.dataset.x = x;
                     cell.dataset.y = y;
 
+                    // 마우스 이벤트
                     cell.addEventListener('mousedown', (e) => this.handleCellClick(x, y, e));
                     cell.addEventListener('mouseenter', (e) => {
                         if (e.buttons === 1) this.handleCellClick(x, y, e);
@@ -784,6 +803,30 @@
                     this.cells.push(cell);
                 }
             }
+
+            // [수정 핵심] 모바일 환경 터치 드래그 지원 추가
+            this.container.addEventListener('touchmove', (e) => {
+                e.preventDefault();
+                let touch = e.touches[0];
+                let elem = document.elementFromPoint(touch.clientX, touch.clientY);
+                if (elem && elem.classList.contains('grid-cell')) {
+                    let tx = parseInt(elem.dataset.x);
+                    let ty = parseInt(elem.dataset.y);
+                    this.handleCellClick(tx, ty, e);
+                }
+            }, {passive: false});
+
+            this.container.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                let touch = e.touches[0];
+                let elem = document.elementFromPoint(touch.clientX, touch.clientY);
+                if (elem && elem.classList.contains('grid-cell')) {
+                    let tx = parseInt(elem.dataset.x);
+                    let ty = parseInt(elem.dataset.y);
+                    this.handleCellClick(tx, ty, e);
+                }
+            }, {passive: false});
+
             this.drawGrid();
         }
 
@@ -815,9 +858,12 @@
         handleCellClick(x, y, e) {
             if (this.searchEngine) this.resetSearch();
 
+            // [수정 핵심] 시작점과 목표점이 겹치는 DOM 렌더링 덮어쓰기 오류 방어
             if (this.currentTool === 'start') {
+                if (x === this.goalNode.x && y === this.goalNode.y) return; // 겹침 방지
                 this.startNode = {x, y};
             } else if (this.currentTool === 'end') {
+                if (x === this.startNode.x && y === this.startNode.y) return; // 겹침 방지
                 this.goalNode = {x, y};
             } else if (this.currentTool === 'wall') {
                 if ((x !== this.startNode.x || y !== this.startNode.y) && (x !== this.goalNode.x || y !== this.goalNode.y)) {
@@ -842,15 +888,17 @@
 
         setupControls() {
             document.getElementById('btn-grid-step').onclick = () => {
-                if (this.playInterval) this.stopPlay(); // 자동 실행 중이면 정지
+                if (this.playInterval) this.stopPlay();
                 this.step();
             };
             document.getElementById('btn-grid-play').onclick = () => this.togglePlay();
             document.getElementById('btn-grid-reset').onclick = () => this.resetSearch();
 
-            // 🔥 추가된 부분: 속도 슬라이더 실시간 반영
+            // [수정 핵심] 알고리즘 변경 시 즉시 상태 동기화 및 엔진 리셋
+            document.getElementById('grid-algo').addEventListener('change', () => this.resetSearch());
+
             document.getElementById('grid-speed').addEventListener('input', (e) => {
-                if (this.playInterval) { // 자동 실행 중일 때만 즉시 갱신
+                if (this.playInterval) {
                     clearInterval(this.playInterval);
                     let speed = 1050 - parseInt(e.target.value);
                     this.playInterval = setInterval(() => this.step(), speed);
@@ -907,6 +955,13 @@
             let res = this.searchEngine.step();
             if (!res) return;
 
+            // [수정 핵심] 탐색 완료 시 무한루프(Interval Leak) 방지
+            if (res.type === 'finished') {
+                this.stopPlay();
+                this.setStatus('탐색이 이미 완료되었습니다. 초기화(리셋)를 진행해주세요.');
+                return;
+            }
+
             if (res.type === 'select') {
                 if (res.node !== this.searchEngine.startId && res.node !== this.searchEngine.goalId) {
                     this.cells[res.node].classList.remove('cell-open');
@@ -953,8 +1008,10 @@
         }
 
         stopPlay() {
-            clearInterval(this.playInterval);
-            this.playInterval = null;
+            if (this.playInterval) {
+                clearInterval(this.playInterval);
+                this.playInterval = null;
+            }
             let btn = document.getElementById('btn-grid-play');
             btn.innerHTML = `<i class="fa-solid fa-play"></i> 자동 실행 (Run)`;
             btn.classList.replace('bg-rose-500', 'bg-teal-600');
