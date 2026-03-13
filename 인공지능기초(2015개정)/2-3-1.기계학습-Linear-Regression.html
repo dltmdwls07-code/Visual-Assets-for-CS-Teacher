@@ -566,24 +566,35 @@
             });
 
             // 학습 시작 버튼
+            // UIController.bindEvents 내부
             document.getElementById('btnTrain').addEventListener('click', () => {
                 if (this.dataManager.points.length < 2) {
                     alert('학습을 위해 최소 2개 이상의 데이터를 입력해주세요.');
                     return;
                 }
 
+                // 1. 모델이 시작되지 않았다면 초기화
                 if (!this.model.hasStarted) {
                     this.model.init();
                     this.model.hasStarted = true;
                 }
 
-                if (!this.model.isTraining) {
-                    this.model.isTraining = true;
-                    this.loop();
-                    document.getElementById('btnTrain').innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>학습 중...';
-                    document.getElementById('btnTrain').classList.remove('bg-blue-500', 'bg-emerald-500');
-                    document.getElementById('btnTrain').classList.add('bg-blue-700');
-                }
+                // 2. 이미 학습 중이면 중복 실행 방지
+                if (this.model.isTraining) return;
+
+                // 3. 시작 전, 이미 수렴한 상태인지 먼저 1회 체크
+                const normData = this.getNormalizedData();
+                // 가상의 trainStep을 통해 수렴 여부 확인 (실제 업데이트는 loop에서 수행)
+                // 여기서는 단순히 isTraining을 켜기 전에 조건을 확인합니다.
+
+                this.model.isTraining = true;
+
+                // UI 변경을 loop 호출 직전에 수행
+                document.getElementById('btnTrain').innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>학습 중...';
+                document.getElementById('btnTrain').classList.remove('bg-blue-500', 'bg-emerald-500', 'bg-blue-700');
+                document.getElementById('btnTrain').classList.add('bg-blue-700');
+
+                this.loop();
             });
 
             // 일시정지 버튼
@@ -723,6 +734,7 @@
             }));
         }
 
+        // UIController.loop 메서드 수정
         loop() {
             if (!this.model.isTraining) return;
 
@@ -731,6 +743,7 @@
 
             // 1프레임당 5번 반복 계산
             for (let i = 0; i < 5; i++) {
+                // trainStep이 true를 반환하면 즉시 루프 탈출
                 if (this.model.trainStep(normData)) {
                     isConverged = true;
                     break;
@@ -740,10 +753,14 @@
             this.updateUI();
 
             if (isConverged) {
-                // 수렴 완료 시 루프 정지 및 버튼 상태 변경
                 this.model.isTraining = false;
-                document.getElementById('btnTrain').innerHTML = '<i class="fa-solid fa-check mr-2"></i>학습 완료 (수렴)';
-                document.getElementById('btnTrain').classList.replace('bg-blue-700', 'bg-emerald-500');
+                // UI를 즉시 '학습 완료'로 변경
+                const btn = document.getElementById('btnTrain');
+                btn.innerHTML = '<i class="fa-solid fa-check mr-2"></i>학습 완료 (수렴)';
+                btn.classList.remove('bg-blue-700', 'bg-blue-500');
+                btn.classList.add('bg-emerald-500');
+
+                cancelAnimationFrame(this.animationId);
             } else {
                 this.animationId = requestAnimationFrame(() => this.loop());
             }
