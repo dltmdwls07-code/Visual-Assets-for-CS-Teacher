@@ -169,6 +169,17 @@
                 <div class="w-full lg:w-1/2 bg-slate-800 text-white p-5 rounded-xl flex flex-col shadow-lg border border-slate-700 justify-center">
                     <div class="mb-5">
                         <div class="flex justify-between text-base mb-2 font-bold">
+                            <span>목표 함수 (Objective Function)</span>
+                        </div>
+                        <select id="funcSelect"
+                                class="w-full p-3 rounded-lg border border-slate-600 bg-slate-700 text-white outline-none mb-2 font-bold">
+                            <option value="quad">f(w) = w² (단일 최적점)</option>
+                            <option value="hole">f(w) = 0.2w⁴ - 2.5w² + 10 (지역 최적점 함정)</option>
+                            <option value="sin">f(w) = 0.5w² + 5sin(w) + 5 (복잡한 굴곡)</option>
+                        </select>
+                    </div>
+                    <div class="mb-5">
+                        <div class="flex justify-between text-base mb-2 font-bold">
                             <span>학습률 (Learning Rate)</span>
                             <span id="lrValue" class="text-blue-400 text-lg">0.05</span>
                         </div>
@@ -424,6 +435,23 @@
         isFailed: false,
         isAnimating: false,
 
+        // 사용할 함수 모음
+        currentFunc: 'quad',
+        functions: {
+            quad: { // 기본 2차 함수
+                f: (w) => w * w,
+                df: (w) => 2 * w
+            },
+            hole: { // 4차 함수 (W모양, Local Minima 존재)
+                f: (w) => 0.2 * Math.pow(w, 4) - 2.5 * Math.pow(w, 2) + 10,
+                df: (w) => 0.8 * Math.pow(w, 3) - 5 * w
+            },
+            sin: {  // Sin 결합 함수 (여러 개의 굴곡)
+                f: (w) => 0.5 * w * w + 5 * Math.sin(w) + 5,
+                df: (w) => w + 5 * Math.cos(w)
+            }
+        },
+
         init() {
             this.resize();
             this.reset();
@@ -433,6 +461,10 @@
             });
             document.getElementById('btnGdStep').addEventListener('click', () => this.step());
             document.getElementById('btnGdReset').addEventListener('click', () => this.reset());
+            document.getElementById('funcSelect').addEventListener('change', (e) => {
+                this.currentFunc = e.target.value;
+                this.reset();
+            });
 
             window.addEventListener('resize', () => {
                 if (document.getElementById('tab0').classList.contains('active')) this.resize();
@@ -461,8 +493,11 @@
             this.isFailed = false;
             this.isAnimating = false;
 
+            let targetFunc = this.functions[this.currentFunc];
+
             this.updateFeedback(`초기화되었습니다. 현재 가중치(w)는 ${this.w.toFixed(2)}입니다.\n'1 Step 진행' 버튼을 눌러 학습을 시작하세요.`, 'normal');
-            this.updateLossDisplay(this.w * this.w);
+
+            this.updateLossDisplay(targetFunc.f(this.w));
             this.draw();
         },
 
@@ -471,8 +506,8 @@
 
             let lr = parseFloat(document.getElementById('lrSlider').value);
 
-            // 수식: f(w) = w^2  =>  Gradient = 2 * w
-            let grad = 2 * this.w;
+            let targetFunc = this.functions[this.currentFunc];
+            let grad = targetFunc.df(this.w);
 
             // 최적점 도달 체크 (기울기가 거의 0에 수렴)
             if (Math.abs(grad) < 0.05) {
@@ -482,19 +517,20 @@
                 return;
             }
 
-            // 파라미터 업데이트 공식 적용: w_next = w_now - (Learning Rate * Gradient)
+            // 파라미터 업데이트 공식 적용
             let nextW = this.w - lr * grad;
-            let lossNow = this.w * this.w;
-            let lossNext = nextW * nextW;
+
+            let lossNow = targetFunc.f(this.w);
+            let lossNext = targetFunc.f(nextW);
 
             let direction = grad > 0 ? '왼쪽(마이너스)' : '오른쪽(플러스)';
             let msg = `현재 기울기는 ${grad > 0 ? '+' : ''}${grad.toFixed(2)}입니다.\n손실을 줄이기 위해 ${direction} 방향으로 이동합니다.`;
 
-            // 발산 조건 체크 (x 범위 초과 또는 이전 손실보다 큰 손실이 발생하여 폭주하는 경우)
+            // 발산 조건 체크
             if (Math.abs(nextW) > 5.5 || lossNext > lossNow * 1.5) {
                 this.isFailed = true;
                 this.updateFeedback(`🚨 학습률이 너무 커서 값이 튕겨 나갔습니다(발산)!\n현재 보폭(학습률)을 줄이고 초기화 해보세요.`, 'error');
-                nextW = Math.sign(nextW) * 5.5; // 화면 밖으로 튕겨나가는 것을 시각적으로 표현하기 위해 끝에 고정
+                nextW = Math.sign(nextW) * 5.5;
             } else {
                 this.updateFeedback(msg, 'normal');
             }
@@ -507,6 +543,8 @@
             this.isAnimating = true;
             let progress = 0;
 
+            let targetFunc = this.functions[this.currentFunc];
+
             const animate = () => {
                 progress += 0.05; // 애니메이션 속도
                 if (progress > 1) progress = 1;
@@ -515,7 +553,7 @@
                 let easeProgress = 1 - Math.pow(1 - progress, 3);
                 this.w = startW + (endW - startW) * easeProgress;
 
-                this.updateLossDisplay(this.w * this.w);
+                this.updateLossDisplay(targetFunc.f(this.w));
                 this.draw();
 
                 if (progress < 1) {
@@ -526,7 +564,7 @@
 
                     if (this.isFailed) {
                         this.draw();
-                    } else if (Math.abs(2 * this.w) < 0.05) {
+                    } else if (Math.abs(targetFunc.df(this.w)) < 0.05) {
                         this.isSuccess = true;
                         this.updateFeedback("🎉 축하합니다! 최적의 손실값(골짜기 하단)에 도달했습니다.", 'success');
                         this.animateSuccess();
@@ -600,20 +638,29 @@
             let wSide = this.logicalWidthSide, hSide = this.logicalHeightSide;
             if (wTop === 0 || hTop === 0 || wSide === 0 || hSide === 0) return;
 
+            let targetFunc = this.functions[this.currentFunc];
+
             /* ===== 1. Top-down Canvas 그리기 ===== */
             let ctx = this.ctxTop;
             ctx.clearRect(0, 0, wTop, hTop);
 
-            let centerTop = this.toCanvasTop(0);
+            // [수정] 낡은 모니터에서도 잘 보이도록 투명도(alpha) 대신 뚜렷한 단색(Solid Color) 배열 적용
+            const contourColors = ['#2563eb', '#3b82f6', '#60a5fa', '#93c5fd', '#bfdbfe', '#dbeafe', '#f0f9ff'];
 
-            // 등고선(동심원) 그리기 (L = w^2, 원의 형태로 비유적 표현)
-            for (let r = 1; r <= 8; r++) {
-                ctx.beginPath();
-                ctx.arc(centerTop.cx, centerTop.cy, (r / 8) * (wTop / 2 - 20), 0, Math.PI * 2);
-                ctx.strokeStyle = `rgba(59, 130, 246, ${0.1 + (8 - r) * 0.05})`;
-                ctx.lineWidth = 2;
-                ctx.stroke();
+            for (let x = 0; x < wTop; x += 2) {
+                let wx = (x / wTop) * 11 - 5.5;
+                let wy = targetFunc.f(wx);
+
+                // 손실값(wy)을 구간으로 나누어 계단식 등고선 레벨 생성
+                let level = Math.floor(wy / 5);
+                let colorIndex = Math.min(level, contourColors.length - 1);
+
+                ctx.fillStyle = contourColors[colorIndex];
+                // 픽셀 사이에 빈틈이 생기지 않도록 약간 넓게 칠함
+                ctx.fillRect(x, 0, 2.5, hTop);
             }
+
+            let centerTop = this.toCanvasTop(0);
 
             // X축/Y축 보조선
             ctx.beginPath();
@@ -646,7 +693,7 @@
             let renderPointsTop = [...this.history];
             if (this.isAnimating || renderPointsTop.length > 0) {
                 if (this.isAnimating) renderPointsTop.push(this.w);
-                else renderPointsTop[renderPointsTop.length - 1] = this.w; // 마지막 점을 현재 w로
+                else renderPointsTop[renderPointsTop.length - 1] = this.w;
             }
 
             for (let i = 0; i < renderPointsTop.length; i++) {
@@ -674,17 +721,17 @@
                     ctx.fillStyle = '#cbd5e1';
                 }
                 ctx.fill();
-                ctx.shadowBlur = 0; // 초기화
+                ctx.shadowBlur = 0;
             }
 
-            /* ===== 2. Side-view Canvas (f(w)=w²) 그리기 ===== */
+            /* ===== 2. Side-view Canvas 그리기 ===== */
             let ctx2 = this.ctxSide;
             ctx2.clearRect(0, 0, wSide, hSide);
 
             // 포물선 그리기
             ctx2.beginPath();
             for (let wx = -5.5; wx <= 5.5; wx += 0.2) {
-                let wy = wx * wx;
+                let wy = targetFunc.f(wx);
                 let pt = this.toCanvasSide(wx, wy);
                 if (wx === -5.5) ctx2.moveTo(pt.cx, pt.cy);
                 else ctx2.lineTo(pt.cx, pt.cy);
@@ -704,7 +751,7 @@
             ctx2.stroke();
             ctx2.setLineDash([]);
 
-            // 히스토리 궤적 그리기 (곡선 위의 점들)
+            // 히스토리 궤적 그리기
             let renderPointsSide = [...this.history];
             if (this.isAnimating || renderPointsSide.length > 0) {
                 if (this.isAnimating) renderPointsSide.push(this.w);
@@ -714,7 +761,8 @@
             // 히스토리를 잇는 점선
             ctx2.beginPath();
             for (let i = 0; i < renderPointsSide.length; i++) {
-                let pt = this.toCanvasSide(renderPointsSide[i], renderPointsSide[i] ** 2);
+                let wVal = renderPointsSide[i];
+                let pt = this.toCanvasSide(wVal, targetFunc.f(wVal));
                 if (i === 0) ctx2.moveTo(pt.cx, pt.cy);
                 else ctx2.lineTo(pt.cx, pt.cy);
             }
@@ -728,7 +776,7 @@
             for (let i = 0; i < renderPointsSide.length; i++) {
                 let isLast = (i === renderPointsSide.length - 1);
                 let wVal = renderPointsSide[i];
-                let pt = this.toCanvasSide(wVal, wVal * wVal);
+                let pt = this.toCanvasSide(wVal, targetFunc.f(wVal));
 
                 ctx2.beginPath();
                 let radius = isLast ? 8 : 4;
