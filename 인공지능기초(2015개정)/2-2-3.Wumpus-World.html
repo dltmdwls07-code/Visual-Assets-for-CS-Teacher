@@ -453,55 +453,85 @@
                 const isSafe = agent.safe.has(k) && !isVisited;
                 const isRisk = (agent.possiblePit.has(k) || agent.possibleWumpus.has(k)) && !isVisited;
 
-                let bg = 'bg-slate-200';
+                let bg = 'bg-slate-200'; // 기본: 미탐색 지역
                 let border = 'border-slate-300';
-                if (isVisited) {
+                let shadow = '';
+
+                // --- [스타일 결정 로직: 우선순위 중요] ---
+
+                // 1순위: 에이전트가 현재 위치한 칸 (사망/성공 여부 체크)
+                if (agent.x === x && agent.y === y) {
+                    if (agent.isDead) {
+                        bg = 'bg-rose-300'; // 사망: 레드
+                        border = 'border-rose-500';
+                        shadow = 'shadow-lg z-20 scale-105';
+                    } else if (agent.hasGold) {
+                        bg = 'bg-amber-300'; // 성공: 골드
+                        border = 'border-amber-500';
+                        shadow = 'shadow-lg shadow-amber-200 z-20 scale-105';
+                    } else {
+                        bg = 'bg-white'; // 일반 위치
+                        border = 'border-indigo-500';
+                        shadow = 'shadow-md z-10 scale-105';
+                    }
+                }
+                // 2순위: 이미 지나온 길 (방문 완료)
+                else if (isVisited) {
                     bg = 'bg-white';
-                    border = 'border-indigo-500 shadow-md z-10';
-                } else if (isSafe) {
-                    bg = 'bg-green-100';
+                    border = 'border-indigo-500';
+                    shadow = 'shadow-md z-10';
+                }
+                // 3순위: 추론된 안전 지대
+                else if (isSafe) {
+                    bg = 'bg-green-50';
                     border = 'border-green-400';
-                } else if (isRisk) {
+                }
+                // 4순위: 추론된 위험 지역
+                else if (isRisk) {
                     bg = 'bg-yellow-50';
                     border = 'border-yellow-300';
                 }
 
                 const cell = document.createElement('div');
-                cell.className = `cell-transition rounded-2xl flex flex-col items-center justify-center border-2 ${iconTextSize} relative ${bg} ${border}`;
+                cell.className = `cell-transition rounded-2xl flex flex-col items-center justify-center border-2 ${iconTextSize} relative ${bg} ${border} ${shadow}`;
                 cell.innerHTML = `<span class="absolute top-1 left-2 font-bold text-slate-400 ${coordTextSize}">${x},${y}</span>`;
 
                 let contentHTML = '';
 
+                // --- [콘텐츠 결정 로직] ---
                 if (agent.x === x && agent.y === y) {
-                    // 사망 원인을 명확하게 보여주도록 개선
+                    // 에이전트 현재 위치 표시
                     if (agent.isDead) {
-                        contentHTML = '💀';
+                        contentHTML = '💀'; // 죽었을 땐 사망 원인 아이콘
+                    } else if (agent.hasGold) {
+                        contentHTML = '💰'; // 금 찾으면 금괴 표시
                     } else {
-                        contentHTML = '🤖';
+                        contentHTML = '🤖'; // 살아있으면 로봇
                     }
                 } else if (isVisited) {
+                    // 이미 방문한 칸의 실체 표시 (아이콘 하나만)
                     if (env.pits.has(k)) contentHTML = '🕳️';
                     else if (env.wumpus.x === x && env.wumpus.y === y) contentHTML = '👹';
-                    else if (env.gold.x === x && env.gold.y === y) contentHTML = '💰';
+                    else if (env.gold.x === x && env.gold.y === y && !agent.hasGold) contentHTML = '💰';
                     else {
+                        // 위험 요소가 없는 방문지라면 감지했던 센서 정보 표시
                         const p = env.getPercepts(x, y);
                         let s = '';
                         if (p.breeze) s += '💨';
                         if (p.stench) s += '🤢';
-
-                        // 💡 방어 코드: 바람과 냄새가 둘 다 있어서 이모지가 2개가 될 경우
-                        // 줄바꿈 방지(whitespace-nowrap), 자간 축소(tracking-tighter), 크기 축소(text-[0.6em]) 적용
                         let multiClass = (p.breeze && p.stench) ? 'whitespace-nowrap text-[0.6em] tracking-tighter' : '';
-
                         contentHTML = `<div class="sensor-icon text-center ${multiClass}" style="${sensorStyle}">${s}</div>`;
                     }
                 } else if (showHidden) {
+                    // 치트 모드: 안 가본 곳 흐리게 표시
                     if (env.pits.has(k)) contentHTML = '<span class="opacity-30">🕳️</span>';
                     else if (env.wumpus.x === x && env.wumpus.y === y) contentHTML = '<span class="opacity-30">👹</span>';
                     else if (env.gold.x === x && env.gold.y === y) contentHTML = '<span class="opacity-30">💰</span>';
                 }
 
-                cell.innerHTML += `<span>${contentHTML}</span>`;
+                const contentSpan = document.createElement('span');
+                contentSpan.innerHTML = contentHTML;
+                cell.appendChild(contentSpan);
                 container.appendChild(cell);
             }
         }
