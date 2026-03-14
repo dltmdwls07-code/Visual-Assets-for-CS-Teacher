@@ -246,6 +246,36 @@
 
             <div class="w-full lg:w-[35%] flex flex-col gap-5">
 
+                <div class="bg-rose-50/80 p-5 rounded-2xl border-2 border-rose-100 shadow-sm flex flex-col gap-4">
+                    <div class="bg-white p-4 rounded-xl border border-rose-100 shadow-sm">
+                        <div class="flex justify-between items-end mb-2">
+                            <label class="font-bold text-slate-700 text-lg mb-1">C (규제 파라미터)</label>
+                            <div class="flex flex-col items-end">
+                                <span id="cValueDisplay"
+                                      class="font-black text-rose-600 text-3xl leading-none mb-1">1.0</span>
+                                <span id="cMarginLabel" class="text-sm font-bold text-rose-400">표준 마진</span>
+                            </div>
+                        </div>
+                        <input type="range" id="cSlider" min="0" max="100" step="1" value="50"
+                               class="w-full accent-rose-600 mb-2 transition-all duration-300 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+                        <p class="text-sm font-bold text-rose-500 text-center bg-rose-50 py-1.5 rounded break-keep">
+                            ※ 작은 C 값은 너그러운 벌점 😌,<br>큰 C 값은 엄격한 벌점 😡
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 gap-3">
+                        <button id="btnTrain" disabled
+                                class="py-4 bg-rose-600 hover:bg-rose-700 text-white font-black text-xl rounded-xl transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 flex items-center justify-center whitespace-nowrap">
+                            <i class="fa-solid fa-play mr-2"></i> SVM 학습 (Train)
+                        </button>
+                        <button id="btnResetAlg" disabled
+                                class="py-3 bg-white hover:bg-slate-100 text-slate-700 font-bold text-lg rounded-xl transition-all border-2 border-slate-300 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center whitespace-nowrap">
+                            <i class="fa-solid fa-rotate-left mr-2"></i> 학습 결과 초기화
+                        </button>
+                    </div>
+                </div>
+
+
                 <div class="bg-slate-800 p-5 rounded-2xl border-2 border-slate-700 shadow-lg text-white">
                     <div class="flex justify-between items-center mb-3">
                         <p class="font-black text-slate-300 text-sm flex items-center uppercase tracking-widest"><i
@@ -284,35 +314,6 @@
                                     class="fa-solid fa-bullseye w-6"></i>서포트 벡터 추출 완료
                             </div>
                         </div>
-                    </div>
-                </div>
-
-                <div class="bg-rose-50/80 p-5 rounded-2xl border-2 border-rose-100 shadow-sm flex flex-col gap-4">
-                    <div class="bg-white p-4 rounded-xl border border-rose-100 shadow-sm">
-                        <div class="flex justify-between items-end mb-2">
-                            <label class="font-bold text-slate-700 text-lg mb-1">C (규제 파라미터)</label>
-                            <div class="flex flex-col items-end">
-                                <span id="cValueDisplay"
-                                      class="font-black text-rose-600 text-3xl leading-none mb-1">1.0</span>
-                                <span id="cMarginLabel" class="text-sm font-bold text-rose-400">표준 마진</span>
-                            </div>
-                        </div>
-                        <input type="range" id="cSlider" min="0" max="100" step="1" value="50"
-                               class="w-full accent-rose-600 mb-2 transition-all duration-300 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
-                        <p class="text-sm font-bold text-rose-500 text-center bg-rose-50 py-1.5 rounded break-keep">
-                            ※ 작은 C 값은 너그러운 벌점 😌,<br>큰 C 값은 엄격한 벌점 😡
-                        </p>
-                    </div>
-
-                    <div class="grid grid-cols-1 gap-3">
-                        <button id="btnTrain" disabled
-                                class="py-4 bg-rose-600 hover:bg-rose-700 text-white font-black text-xl rounded-xl transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 flex items-center justify-center whitespace-nowrap">
-                            <i class="fa-solid fa-play mr-2"></i> SVM 학습 (Train)
-                        </button>
-                        <button id="btnResetAlg" disabled
-                                class="py-3 bg-white hover:bg-slate-100 text-slate-700 font-bold text-lg rounded-xl transition-all border-2 border-slate-300 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center whitespace-nowrap">
-                            <i class="fa-solid fa-rotate-left mr-2"></i> 학습 결과 초기화
-                        </button>
                     </div>
                 </div>
 

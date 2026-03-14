@@ -234,6 +234,37 @@
 
             <div class="w-full lg:w-[35%] flex flex-col gap-6">
 
+                <div class="bg-blue-50/80 p-5 rounded-2xl border-2 border-blue-100 shadow-sm flex flex-col gap-4">
+                    <div class="bg-white p-4 rounded-xl border border-blue-100 shadow-sm">
+                        <div class="flex justify-between items-center mb-2">
+                            <label class="font-bold text-slate-700 text-base">K (클러스터 개수)</label>
+                            <span class="font-black text-blue-600 text-3xl" id="kValueDisplay">3</span>
+                        </div>
+                        <input class="w-full accent-blue-600 mb-3 cursor-pointer" id="kSlider" max="7" min="2"
+                               type="range" value="3">
+                        <button class="w-full py-3 text-lg bg-slate-800 hover:bg-slate-900 text-white font-bold rounded-lg transition-colors shadow-md flex justify-center items-center"
+                                id="btnInitCentroids">
+                            <i class="fa-solid fa-location-crosshairs mr-2"></i> 중심점 생성
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <button class="py-4 bg-blue-600 hover:bg-blue-700 text-white font-black text-xl rounded-xl transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none transform hover:scale-105 flex items-center justify-center"
+                                disabled id="btnStep">
+                            <i class="fa-solid fa-shoe-prints mr-2"></i> Step
+                        </button>
+                        <button class="py-4 bg-emerald-500 hover:bg-emerald-600 text-white font-black text-xl rounded-xl transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none transform hover:scale-105 flex items-center justify-center"
+                                disabled id="btnRun">
+                            <i class="fa-solid fa-play mr-2"></i> Run
+                        </button>
+                    </div>
+
+                    <button class="w-full py-3 bg-white text-slate-700 border-2 border-slate-300 hover:bg-slate-100 hover:border-slate-400 text-lg font-bold rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                            disabled id="btnResetAlg">
+                        <i class="fa-solid fa-rotate-left mr-2"></i> 알고리즘 진행 초기화
+                    </button>
+                </div>
+
                 <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 flex-1">
                     <h3 class="font-black text-slate-800 mb-4 flex items-center text-xl">
                         <i class="fa-solid fa-list-check text-blue-600 mr-2"></i>진행 상황 파악하기
@@ -272,36 +303,6 @@
                     </div>
                 </div>
 
-                <div class="bg-blue-50/80 p-5 rounded-2xl border-2 border-blue-100 shadow-sm flex flex-col gap-4">
-                    <div class="bg-white p-4 rounded-xl border border-blue-100 shadow-sm">
-                        <div class="flex justify-between items-center mb-2">
-                            <label class="font-bold text-slate-700 text-base">K (클러스터 개수)</label>
-                            <span class="font-black text-blue-600 text-3xl" id="kValueDisplay">3</span>
-                        </div>
-                        <input class="w-full accent-blue-600 mb-3 cursor-pointer" id="kSlider" max="7" min="2"
-                               type="range" value="3">
-                        <button class="w-full py-3 text-lg bg-slate-800 hover:bg-slate-900 text-white font-bold rounded-lg transition-colors shadow-md flex justify-center items-center"
-                                id="btnInitCentroids">
-                            <i class="fa-solid fa-location-crosshairs mr-2"></i> 중심점 생성
-                        </button>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-3">
-                        <button class="py-4 bg-blue-600 hover:bg-blue-700 text-white font-black text-xl rounded-xl transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none transform hover:scale-105 flex items-center justify-center"
-                                disabled id="btnStep">
-                            <i class="fa-solid fa-shoe-prints mr-2"></i> Step
-                        </button>
-                        <button class="py-4 bg-emerald-500 hover:bg-emerald-600 text-white font-black text-xl rounded-xl transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none transform hover:scale-105 flex items-center justify-center"
-                                disabled id="btnRun">
-                            <i class="fa-solid fa-play mr-2"></i> Run
-                        </button>
-                    </div>
-
-                    <button class="w-full py-3 bg-white text-slate-700 border-2 border-slate-300 hover:bg-slate-100 hover:border-slate-400 text-lg font-bold rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
-                            disabled id="btnResetAlg">
-                        <i class="fa-solid fa-rotate-left mr-2"></i> 알고리즘 진행 초기화
-                    </button>
-                </div>
             </div>
         </div>
     </section>
