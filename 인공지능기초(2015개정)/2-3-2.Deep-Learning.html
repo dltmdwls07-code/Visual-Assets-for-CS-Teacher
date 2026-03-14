@@ -184,7 +184,7 @@
                         <select id="funcSelect"
                                 class="w-full p-3 rounded-lg border border-slate-600 bg-slate-700 text-white outline-none mb-2 font-bold">
                             <option value="quad">f(w) = w² (단일 최적점)</option>
-                            <option value="hole">f(w) = 0.2w⁴ - 2.5w² + 10 (지역 최적점 함정)</option>
+                            <option value="hole">f(w) = 0.2w⁴ - 2.5w² + 1.5w + 15 (지역 최적점 함정)</option>
                             <option value="sin">f(w) = 0.5w² + 5sin(w) + 5 (복잡한 굴곡)</option>
                         </select>
                     </div>
@@ -214,7 +214,7 @@
 
                 <div class="canvas-container aspect-square bg-white border border-slate-400 shadow-sm relative min-h-[300px]">
                     <div class="absolute top-3 left-3 bg-white/90 backdrop-blur px-3 py-1.5 rounded-md text-base font-bold text-slate-700 shadow-sm border border-slate-100 z-10">
-                        <i class="fa-solid fa-chart-area mr-1 text-rose-500"></i> 단면 곡선 (Side View, f(w)=w²)
+                        <i class="fa-solid fa-chart-area mr-1 text-rose-500"></i> 단면 곡선 (Side View)
                     </div>
                     <div class="absolute top-3 right-3 bg-slate-800 text-white px-3 py-1.5 rounded-md text-base font-bold shadow-md z-10">
                         Loss: <span id="gdLossDisplay" class="text-rose-400">16.00</span>
@@ -460,9 +460,11 @@
                 f: (w) => w * w,
                 df: (w) => 2 * w
             },
-            hole: { // 4차 함수 (W모양, Local Minima 존재)
-                f: (w) => 0.2 * Math.pow(w, 4) - 2.5 * Math.pow(w, 2) + 10,
-                df: (w) => 0.8 * Math.pow(w, 3) - 5 * w
+            hole: { // 4차 함수 (비대칭 W모양, Local vs Global Minima)
+                // 기존 식에 + 1.5w 를 추가하여 비대칭으로 만들고, 높이 조절을 위해 상수항을 15로 변경
+                f: (w) => 0.2 * Math.pow(w, 4) - 2.5 * Math.pow(w, 2) + 1.5 * w + 15,
+                // 미분식에도 1.5w 를 미분한 + 1.5 를 추가
+                df: (w) => 0.8 * Math.pow(w, 3) - 5 * w + 1.5
             },
             sin: {  // Sin 결합 함수 (여러 개의 굴곡)
                 f: (w) => 0.5 * w * w + 5 * Math.sin(w) + 5,
