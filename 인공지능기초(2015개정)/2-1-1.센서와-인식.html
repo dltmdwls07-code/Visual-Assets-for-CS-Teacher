@@ -10,9 +10,12 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;700;900&display=swap');
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             font-family: 'Pretendard', sans-serif;
-            scroll-behavior: smooth;
             background-color: #f8fafc;
         }
 
@@ -463,11 +466,13 @@
                         </button>
 
                         <button class="quiz-btn"
-                                onclick="checkAnswer(this, true, '정답입니다! A/D 변환기(Analog to Digital)는 자연의 아날로그 신호를 컴퓨터용 디지털 신호로 통역해 줍니다.')">B. A/D 변환기
+                                onclick="checkAnswer(this, true, '정답입니다! A/D 변환기(Analog to Digital)는 자연의 아날로그 신호를 컴퓨터용 디지털 신호로 통역해 줍니다.')">
+                            B. A/D 변환기
                         </button>
 
                         <button class="quiz-btn"
-                                onclick="checkAnswer(this, false, '센서는 물리적 환경 정보를 전기 신호로 바꿀 뿐, 0과 1로 번역하는 일은 A/D 변환기가 담당합니다.')">C. 카메라 센서
+                                onclick="checkAnswer(this, false, '센서는 물리적 환경 정보를 전기 신호로 바꿀 뿐, 0과 1로 번역하는 일은 A/D 변환기가 담당합니다.')">
+                            C. 카메라 센서
                         </button>
                     </div>
 

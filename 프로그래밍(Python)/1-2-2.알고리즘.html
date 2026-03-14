@@ -9,6 +9,10 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;800&display=swap');
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             font-family: 'Pretendard', sans-serif;
         }
@@ -71,11 +75,13 @@
 
     <!-- Section Tabs -->
     <div class="bg-slate-200/50 p-1.5 rounded-2xl flex gap-1 mb-8">
-        <button class="tab-btn flex-1 py-3 px-4 rounded-xl font-bold transition-all bg-white text-indigo-600 shadow-sm" id="btn-1"
+        <button class="tab-btn flex-1 py-3 px-4 rounded-xl font-bold transition-all bg-white text-indigo-600 shadow-sm"
+                id="btn-1"
                 onclick="showTab(1)">
             1. 알고리즘의 요건
         </button>
-        <button class="tab-btn flex-1 py-3 px-4 rounded-xl font-bold transition-all text-slate-500 hover:bg-white/50" id="btn-2"
+        <button class="tab-btn flex-1 py-3 px-4 rounded-xl font-bold transition-all text-slate-500 hover:bg-white/50"
+                id="btn-2"
                 onclick="showTab(2)">
             2. 표현 방법
         </button>

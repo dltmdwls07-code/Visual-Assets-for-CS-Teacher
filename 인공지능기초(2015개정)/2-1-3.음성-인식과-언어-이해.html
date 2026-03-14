@@ -10,9 +10,12 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;700;900&display=swap');
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             font-family: 'Pretendard', sans-serif;
-            scroll-behavior: smooth;
             background-color: #f8fafc;
         }
 
@@ -383,7 +386,8 @@
                                 컴퓨터 비전
                             </button>
                             <button class="quiz-btn"
-                                    onclick="checkAnswer(this, true, '정답입니다! 소리를 글자로 바꾸는 받아쓰기 과정을 음성 인식(Speech Recognition)이라고 합니다.')">B. 음성 인식
+                                    onclick="checkAnswer(this, true, '정답입니다! 소리를 글자로 바꾸는 받아쓰기 과정을 음성 인식(Speech Recognition)이라고 합니다.')">
+                                B. 음성 인식
                             </button>
                             <button class="quiz-btn"
                                     onclick="checkAnswer(this, false, '의미 분석은 이미 텍스트로 바뀐 글의 뜻을 파악하는 단계입니다.')">C. 의미 분석
@@ -442,10 +446,12 @@
                                 형태소 분석
                             </button>
                             <button class="quiz-btn"
-                                    onclick="checkAnswer(this, false, '단어의 사전적 의미만 파악하는 것이 아니라 진짜 목적을 찾아야 합니다.')">B. 사전적 의미 분석
+                                    onclick="checkAnswer(this, false, '단어의 사전적 의미만 파악하는 것이 아니라 진짜 목적을 찾아야 합니다.')">B. 사전적
+                                의미 분석
                             </button>
                             <button class="quiz-btn"
-                                    onclick="checkAnswer(this, true, '정답입니다! 사용자가 이 말을 한 진짜 목적(의도)을 파악하여 행동하는 단계입니다.')">C. 의도 분석 (Intent Analysis)
+                                    onclick="checkAnswer(this, true, '정답입니다! 사용자가 이 말을 한 진짜 목적(의도)을 파악하여 행동하는 단계입니다.')">
+                                C. 의도 분석 (Intent Analysis)
                             </button>
                         </div>
                     </div>

@@ -10,9 +10,12 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;800&family=Fira+Code:wght@400;500&display=swap');
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             font-family: 'Pretendard', sans-serif;
-            scroll-behavior: smooth;
         }
 
         .code-font {
@@ -260,15 +263,18 @@
 
         <!-- 언어 선택 탭 -->
         <div class="flex gap-2 mb-4">
-            <button class="lang-tab px-4 py-2 rounded-lg font-bold transition-all bg-blue-600 text-white border border-transparent" id="tab-c"
+            <button class="lang-tab px-4 py-2 rounded-lg font-bold transition-all bg-blue-600 text-white border border-transparent"
+                    id="tab-c"
                     onclick="setLanguage('c')">
                 C
             </button>
-            <button class="lang-tab px-4 py-2 rounded-lg font-bold transition-all bg-slate-800 text-slate-400 border border-slate-700 hover:bg-slate-700" id="tab-java"
+            <button class="lang-tab px-4 py-2 rounded-lg font-bold transition-all bg-slate-800 text-slate-400 border border-slate-700 hover:bg-slate-700"
+                    id="tab-java"
                     onclick="setLanguage('java')">
                 Java
             </button>
-            <button class="lang-tab px-4 py-2 rounded-lg font-bold transition-all bg-slate-800 text-slate-400 border border-slate-700 hover:bg-slate-700" id="tab-python"
+            <button class="lang-tab px-4 py-2 rounded-lg font-bold transition-all bg-slate-800 text-slate-400 border border-slate-700 hover:bg-slate-700"
+                    id="tab-python"
                     onclick="setLanguage('python')">
                 Python
             </button>

@@ -10,9 +10,12 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;800&family=Fira+Code:wght@400;500&display=swap');
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             font-family: 'Pretendard', sans-serif;
-            scroll-behavior: smooth;
         }
 
         .code-font {
@@ -978,8 +981,9 @@ int main()
         </div>
     </section>
 
-    <details class="group bg-white border border-slate-300 rounded-3xl overflow-hidden mb-12 shadow-sm transition-all hover:border-rose-200"
-             id="input-buffer">
+    <details
+            class="group bg-white border border-slate-300 rounded-3xl overflow-hidden mb-12 shadow-sm transition-all hover:border-rose-200"
+            id="input-buffer">
         <summary
                 class="flex items-center justify-between p-6 cursor-pointer bg-rose-50/50 hover:bg-rose-50 transition-colors list-none [&::-webkit-details-marker]:hidden">
             <div class="flex items-center gap-4">
