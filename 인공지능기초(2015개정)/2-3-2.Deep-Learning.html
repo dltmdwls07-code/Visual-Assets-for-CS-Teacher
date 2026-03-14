@@ -200,33 +200,39 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                <div class="canvas-container aspect-square bg-white border-2 border-slate-200 shadow-sm relative">
-                    <div class="absolute top-3 left-3 bg-white/90 backdrop-blur px-3 py-1.5 rounded-md text-sm font-bold text-slate-700 shadow-sm border border-slate-100 z-10">
-                        <i class="fa-solid fa-bullseye mr-1 text-blue-500"></i> 평면도 (Top-down View)
-                    </div>
-                    <canvas id="gdCanvasTop" class="w-full h-full"></canvas>
-                </div>
 
-                <div class="canvas-container aspect-square bg-white border-2 border-slate-200 shadow-sm relative">
-                    <div class="absolute top-3 left-3 bg-white/90 backdrop-blur px-3 py-1.5 rounded-md text-sm font-bold text-slate-700 shadow-sm border border-slate-100 z-10">
+                <div class="canvas-container aspect-square bg-white border-2 border-slate-200 shadow-sm relative min-h-[300px]">
+                    <div class="absolute top-3 left-3 bg-white/90 backdrop-blur px-3 py-1.5 rounded-md text-base font-bold text-slate-700 shadow-sm border border-slate-100 z-10">
                         <i class="fa-solid fa-chart-area mr-1 text-rose-500"></i> 단면 곡선 (Side View, f(w)=w²)
                     </div>
-                    <div class="absolute top-3 right-3 bg-slate-800 text-white px-3 py-1.5 rounded-md text-sm font-bold shadow-md z-10">
+                    <div class="absolute top-3 right-3 bg-slate-800 text-white px-3 py-1.5 rounded-md text-base font-bold shadow-md z-10">
                         Loss: <span id="gdLossDisplay" class="text-rose-400">16.00</span>
                     </div>
                     <canvas id="gdCanvasSide" class="w-full h-full"></canvas>
                 </div>
-            </div>
 
-            <div id="gdFeedbackBox"
-                 class="p-6 rounded-xl border-2 transition-all duration-300 bg-slate-50 border-slate-200">
-                <h3 class="font-bold text-slate-800 mb-2 flex items-center">
-                    <i class="fa-solid fa-comment-dots mr-2 text-xl text-slate-500" id="gdFeedbackIcon"></i>
-                    학습 상태 피드백
-                </h3>
-                <p id="gdFeedbackText" class="text-lg text-slate-700 font-medium whitespace-pre-line leading-relaxed">
-                    시뮬레이터가 준비되었습니다. '1 Step 진행'을 눌러 학습을 시작하세요.
-                </p>
+                <div class="flex flex-col gap-6 h-full">
+
+                    <div class="canvas-container h-24 shrink-0 bg-white border-2 border-slate-200 shadow-sm relative min-h-[250px]">
+                        <div class="absolute top-3 left-3 bg-white/90 backdrop-blur px-3 py-1.5 rounded-md font-bold text-slate-700 shadow-sm border border-slate-100 z-10 text-sm">
+                            <i class="fa-solid fa-bullseye mr-1 text-blue-500"></i> 평면도 (Top-down View)
+                        </div>
+                        <canvas id="gdCanvasTop" class="w-full h-full"></canvas>
+                    </div>
+
+                    <div id="gdFeedbackBox"
+                         class="flex-1 p-6 rounded-xl border-2 transition-all duration-300 bg-slate-50 border-slate-200 flex flex-col justify-start min-h-[120px]">
+                        <h3 class="font-bold text-slate-800 mb-2 flex items-center">
+                            <i class="fa-solid fa-comment-dots mr-2 text-xl text-slate-500" id="gdFeedbackIcon"></i>
+                            학습 상태 피드백
+                        </h3>
+                        <p id="gdFeedbackText"
+                           class="text-lg text-slate-700 font-medium whitespace-pre-line leading-relaxed">
+                            시뮬레이터가 준비되었습니다. '1 Step 진행'을 눌러 학습을 시작하세요.
+                        </p>
+                    </div>
+                </div>
+
             </div>
 
         </div>
@@ -387,13 +393,14 @@
 <script>
     // 캔버스 해상도 보정 헬퍼 함수
     function setupCanvasDPR(canvas, ctx) {
+        // [수정] 캔버스가 부모 상자 크기에 맞춰 유연하게 꽉 차도록 100% 적용
         const dpr = window.devicePixelRatio || 1;
         const rect = canvas.parentElement.getBoundingClientRect();
+
         canvas.width = rect.width * dpr;
         canvas.height = rect.height * dpr;
         ctx.scale(dpr, dpr);
-        canvas.style.width = `${rect.width}px`;
-        canvas.style.height = `${rect.height}px`;
+
         return {w: rect.width, h: rect.height};
     }
 
@@ -469,6 +476,12 @@
             window.addEventListener('resize', () => {
                 if (document.getElementById('tab0').classList.contains('active')) this.resize();
             });
+
+            new ResizeObserver(() => {
+                if (document.getElementById('tab0').classList.contains('active')) {
+                    this.resize();
+                }
+            }).observe(this.canvasTop.parentElement);
         },
 
         resize() {
@@ -487,7 +500,7 @@
             if (this.animId) cancelAnimationFrame(this.animId);
             if (this.blinkAnimId) cancelAnimationFrame(this.blinkAnimId);
 
-            this.w = 4.0;
+            this.w = parseFloat((Math.random() * 10 - 5).toFixed(2)); // -5 ~ 5
             this.history = [this.w];
             this.isSuccess = false;
             this.isFailed = false;
@@ -585,6 +598,7 @@
             blink();
         },
 
+        // 스크립트 내부
         updateFeedback(msg, type) {
             const box = document.getElementById('gdFeedbackBox');
             const text = document.getElementById('gdFeedbackText');
@@ -592,17 +606,19 @@
 
             text.innerText = msg;
 
-            box.className = 'p-6 rounded-xl border-2 transition-all duration-300 ';
+            // [수정됨] 절대 지워지면 안 되는 필수 레이아웃 클래스를 baseClass로 묶어둠
+            const baseClass = 'flex-1 p-6 rounded-xl border-2 transition-all duration-300 flex flex-col justify-start min-h-[120px] ';
+
             if (type === 'success') {
-                box.className += 'bg-emerald-50 border-emerald-400';
+                box.className = baseClass + 'bg-emerald-50 border-emerald-400';
                 text.className = 'text-xl font-bold text-emerald-800 whitespace-pre-line leading-relaxed';
                 icon.className = 'fa-solid fa-face-grin-stars mr-2 text-2xl text-emerald-500';
             } else if (type === 'error') {
-                box.className += 'bg-rose-50 border-rose-500 shadow-inner';
+                box.className = baseClass + 'bg-rose-50 border-rose-500 shadow-inner';
                 text.className = 'text-xl font-bold text-rose-700 whitespace-pre-line leading-relaxed';
                 icon.className = 'fa-solid fa-triangle-exclamation mr-2 text-2xl text-rose-600';
             } else {
-                box.className += 'bg-slate-50 border-slate-200';
+                box.className = baseClass + 'bg-slate-50 border-slate-200';
                 text.className = 'text-lg text-slate-700 font-medium whitespace-pre-line leading-relaxed';
                 icon.className = 'fa-solid fa-circle-info mr-2 text-xl text-blue-500';
             }
