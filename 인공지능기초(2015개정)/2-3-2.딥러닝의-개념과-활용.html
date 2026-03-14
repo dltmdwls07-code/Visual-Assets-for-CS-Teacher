@@ -316,49 +316,98 @@
 
 
             <!-- 시각 자료: 퍼셉트론 흐름도 -->
-            <div class="bg-slate-800 p-8 rounded-3xl mb-8 overflow-x-auto shadow-xl">
-                <h3 class="text-white font-bold mb-6 text-center text-lg">⚙️ 퍼셉트론 정보 처리 흐름도</h3>
-                <div class="flex items-center justify-between min-w-[600px] gap-4">
-                    <!-- 입력 -->
-                    <div class="flex flex-col gap-4">
-                        <div class="bg-white px-4 py-3 rounded-lg font-bold text-slate-800 text-center shadow-md">입력값
-                            (X₁)
+            <div class="bg-slate-900 p-8 md:p-12 rounded-[2rem] mb-12 shadow-2xl overflow-hidden relative border border-slate-700">
+                <h3 class="text-indigo-300 font-black mb-10 text-center text-xl tracking-tight">
+                    <i class="fa-solid fa-circle-nodes mr-2"></i> 퍼셉트론의 내부 정보 처리 과정
+                </h3>
+
+                <div class="relative max-w-4xl mx-auto flex items-center justify-between min-h-[300px]">
+
+                    <svg class="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="none">
+                        <defs>
+                            <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                <polygon points="0 0, 10 3.5, 0 7" fill="#6366f1"/>
+                            </marker>
+                            <marker id="arrowhead-gold" markerWidth="10" markerHeight="7" refX="9" refY="3.5"
+                                    orient="auto">
+                                <polygon points="0 0, 10 3.5, 0 7" fill="#fbbf24"/>
+                            </marker>
+                        </defs>
+                        <path d="M 120 80 L 330 140" stroke="#475569" stroke-width="2" fill="none"/>
+                        <path d="M 120 220 L 330 160" stroke="#475569" stroke-width="2" fill="none"/>
+                        <line x1="470" y1="150" x2="630" y2="150" stroke="#10b981" stroke-width="3"
+                              marker-end="url(#arrowhead)"/>
+                    </svg>
+
+                    <div class="flex flex-col gap-16 z-10">
+                        <div class="group relative">
+                            <div class="bg-white w-24 h-16 rounded-2xl flex flex-col items-center justify-center shadow-lg border-2 border-slate-200 transition-transform group-hover:-translate-y-1">
+                                <span class="text-[10px] text-slate-400 font-bold uppercase tracking-tighter">Input 1</span>
+                                <span class="text-slate-800 font-black text-2xl">X₁</span>
+                            </div>
+                            <div class="absolute -right-4 -top-4 bg-amber-400 text-amber-900 text-base font-black px-2 py-1 rounded-lg shadow-md border border-amber-300">
+                                × W₁
+                            </div>
                         </div>
-                        <div class="bg-white px-4 py-3 rounded-lg font-bold text-slate-800 text-center shadow-md">입력값
-                            (X₂)
+
+                        <div class="group relative">
+                            <div class="bg-white w-24 h-16 rounded-2xl flex flex-col items-center justify-center shadow-lg border-2 border-slate-200 transition-transform group-hover:-translate-y-1">
+                                <span class="text-[10px] text-slate-400 font-bold uppercase tracking-tighter">Input 2</span>
+                                <span class="text-slate-800 font-black text-2xl">X₂</span>
+                            </div>
+                            <div class="absolute -right-4 -top-4 bg-amber-400 text-amber-900 text-base font-black px-2 py-1 rounded-lg shadow-md border border-amber-300">
+                                × W₂
+                            </div>
                         </div>
                     </div>
-                    <!-- 가중치 -->
-                    <div class="flex flex-col gap-8 text-amber-400 font-bold">
-                        <div class="flex items-center gap-2">
-                            <span>× 가중치 (W₁)</span>
-                            <i class="fa-solid fa-arrow-right"></i>
+
+                    <div class="relative z-10">
+                        <div class="w-40 h-40 bg-indigo-600 rounded-full flex items-center justify-center border-[6px] border-indigo-400/30 shadow-[0_0_50px_rgba(79,70,229,0.4)] relative overflow-hidden group">
+
+                            <div class="absolute inset-0 bg-indigo-500 animate-pulse opacity-50"></div>
+
+                            <!-- 중앙 콘텐츠 -->
+                            <div class="relative z-10 text-center flex flex-col items-center justify-center">
+                                <i class="fa-solid fa-sigma text-white text-2xl mb-1 opacity-80"></i>
+                                <div class="text-white text-2xl font-black leading-tight">
+                                    합산 및<br>판단
+                                </div>
+                            </div>
+
+                            <!-- 하단 라벨 -->
+                            <div class="absolute bottom-4 left-1/2 -translate-x-1/2 bg-indigo-900/80 px-2 py-0.5 rounded text-[9px] text-indigo-200 font-bold border border-indigo-700">
+                                Threshold
+                            </div>
                         </div>
-                        <div class="flex items-center gap-2">
-                            <span>× 가중치 (W₂)</span>
-                            <i class="fa-solid fa-arrow-right"></i>
+
+                        <div class="absolute -top-6 left-1/2 -translate-x-1/2 bg-rose-500 text-white text-[11px] font-black px-4 py-1.5 rounded-full shadow-lg border-2 border-white whitespace-nowrap animate-bounce">
+                            기준치를 넘었는가?
                         </div>
                     </div>
-                    <!-- 합산 및 활성화 -->
-                    <div class="relative w-32 h-32 bg-indigo-500 rounded-full flex items-center justify-center border-4 border-indigo-300 shadow-lg shrink-0">
-                        <div class="text-white text-center">
-                            <i class="fa-solid fa-calculator text-2xl mb-1"></i>
-                            <div class="font-black leading-tight">합산 및 <br>조건 판단</div>
-                        </div>
-                        <!-- 기준값 뱃지 -->
-                        <div class="absolute -top-3 -right-3 bg-rose-500 text-white font-bold px-2 py-1 rounded-md shadow">
-                            기준치 넘었나?
+
+                    <div class="z-10">
+                        <div class="bg-emerald-400 p-1 rounded-2xl shadow-[0_0_30px_rgba(16,185,129,0.3)]">
+                            <div class="bg-slate-900 border-2 border-emerald-300/30 px-8 py-6 rounded-xl flex flex-col items-center">
+                                <span class="text-emerald-400 text-[10px] font-black uppercase mb-1">Output</span>
+                                <span class="text-white font-black text-3xl">Y</span>
+                            </div>
                         </div>
                     </div>
-                    <div class="text-white text-2xl">
-                        <i class="fa-solid fa-arrow-right"></i>
+                </div>
+
+                <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-4 border-t border-slate-800 pt-8 text-center text-sm">
+                    <div class="text-slate-400"><span class="text-white font-bold block mb-1">1. 입력과 가중치</span>데이터에
+                        중요도(W)를 곱함
                     </div>
-                    <!-- 출력 -->
-                    <div class="bg-emerald-400 px-6 py-4 rounded-xl font-black text-slate-900 text-center shadow-md shrink-0">
-                        결과 출력 (Y)
+                    <div class="text-slate-400"><span class="text-white font-bold block mb-1">2. 가중합 계산</span>곱해진 값들을 모두
+                        더함
+                    </div>
+                    <div class="text-slate-400"><span class="text-white font-bold block mb-1">3. 임계치 판단</span>합계가 기준을
+                        넘으면 1 출력
                     </div>
                 </div>
             </div>
+
             <div class="space-y-6">
                 <!-- 예제 상황 -->
                 <div class="bg-indigo-50 p-6 rounded-2xl border border-indigo-300">
