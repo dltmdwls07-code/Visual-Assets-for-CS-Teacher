@@ -152,21 +152,31 @@
             <div class="mb-6 flex items-end justify-between">
                 <div>
                     <h2 class="text-2xl font-black text-slate-800 mb-2">경사하강법 (Gradient Descent)</h2>
-                    <p class="text-slate-600 text-base">인공지능은 '손실(오차)'을 최소화하는 방향으로 학습합니다.</p>
+                    <p class="text-slate-600 text-base">
+                        인공지능은 <strong>손실(오차)</strong>을 최소화하는 방향으로 학습합니다. 현재 위치에서 가장 가파른 내리막길(<strong>기울기</strong>)을 따라
+                        이동하며, 손실이 가장 낮은 지점인 골짜기(<strong>최적점</strong>)로 내려갑니다. 손실 함수(<strong>Loss Function</strong>)가 최소가
+                        되는 위치를 목표로 합니다.
+                    </p>
                 </div>
             </div>
 
             <div class="flex flex-col lg:flex-row gap-6 mb-6">
-                <div class="w-full lg:w-1/2 bg-blue-50 p-5 rounded-xl border border-blue-100 flex flex-col justify-center">
+                <div class="w-full lg:w-3/5 bg-blue-50 p-5 rounded-xl border border-blue-100 flex flex-col justify-center">
                     <h3 class="font-bold text-blue-800 mb-3"><i class="fa-solid fa-flask mr-2"></i>실험 안내</h3>
                     <ul class="text-base text-blue-900 space-y-2 list-disc list-inside">
-                        <li><strong>학습률(Learning Rate)</strong>은 한 번에 이동하는 보폭입니다.</li>
-                        <li>가장 가파른 내리막길(기울기)을 찾아 골짜기(최적점)로 내려가야 합니다.</li>
-                        <li>보폭이 너무 크면 오히려 골짜기를 벗어나 <strong>발산(실패)</strong>하게 됩니다.</li>
+                        <li><strong>학습률(Learning Rate)</strong>에 따라 경사하강법의 핵심 현상을 모두 관찰할 수 있습니다:
+                            <ul class="list-disc list-inside ml-5 space-y-1">
+                                <li><strong>0.01 ~ 0.05 (느린 수렴)</strong>: 학습이 매우 느리게 진행</li>
+                                <li><strong>0.1 ~ 0.5 (적절한 학습)</strong>: 안정적이고 빠르게 최적점에 도달</li>
+                                <li><strong>0.5 ~ 0.9 (진동 발생)</strong>: 최적점을 한 번에 못 찾고 지그재그로 수렴</li>
+                                <li><strong>1.0 (무한 진동)</strong>: 제자리에서 왔다 갔다 하며 수렴하지 않음</li>
+                                <li><strong>1.0 초과 ~ 1.1 (발산/Divergence)</strong>: 튕겨져 나가서 손실(Loss) 폭발</li>
+                            </ul>
+                        </li>
                     </ul>
                 </div>
 
-                <div class="w-full lg:w-1/2 bg-slate-800 text-white p-5 rounded-xl flex flex-col shadow-lg border border-slate-700 justify-center">
+                <div class="w-full lg:w-2/5 bg-slate-800 text-white p-5 rounded-xl flex flex-col shadow-lg border border-slate-700 justify-center">
                     <div class="mb-5">
                         <div class="flex justify-between text-base mb-2 font-bold">
                             <span>목표 함수 (Objective Function)</span>
@@ -183,7 +193,8 @@
                             <span>학습률 (Learning Rate)</span>
                             <span id="lrValue" class="text-blue-400 text-lg">0.05</span>
                         </div>
-                        <input type="range" id="lrSlider" min="0.01" max="1.1" step="0.01" value="0.05" class="w-full">
+                        <input type="range" id="lrSlider" min="0.001" max="1.1" step="0.001" value="0.050"
+                               class="w-full">
                     </div>
                     <div class="flex gap-3 mt-auto">
                         <button id="btnGdStep"
@@ -464,7 +475,7 @@
             this.reset();
 
             document.getElementById('lrSlider').addEventListener('input', (e) => {
-                document.getElementById('lrValue').innerText = parseFloat(e.target.value).toFixed(2);
+                document.getElementById('lrValue').innerText = parseFloat(e.target.value).toFixed(3);
             });
             document.getElementById('btnGdStep').addEventListener('click', () => this.step());
             document.getElementById('btnGdReset').addEventListener('click', () => this.reset());
@@ -525,7 +536,7 @@
             // 최적점 도달 체크 (기울기가 거의 0에 수렴)
             if (Math.abs(grad) < 0.05) {
                 this.isSuccess = true;
-                this.updateFeedback("🎉 축하합니다! 최적의 손실값(골짜기 하단)에 도달했습니다.", 'success');
+                this.updateFeedback("🎉 축하합니다! 모델이 최적의 손실값, 즉 골짜기 하단에 도달하여 손실이 최소가 되었고, 학습이 안정적으로 수렴했습니다.", 'success');
                 this.animateSuccess();
                 return;
             }
@@ -579,7 +590,7 @@
                         this.draw();
                     } else if (Math.abs(targetFunc.df(this.w)) < 0.05) {
                         this.isSuccess = true;
-                        this.updateFeedback("🎉 축하합니다! 최적의 손실값(골짜기 하단)에 도달했습니다.", 'success');
+                        this.updateFeedback("🎉 축하합니다! 모델이 최적의 손실값, 즉 골짜기 하단에 도달하여 손실이 최소가 되었고, 학습이 안정적으로 수렴했습니다.", 'success');
                         this.animateSuccess();
                     }
                 }
