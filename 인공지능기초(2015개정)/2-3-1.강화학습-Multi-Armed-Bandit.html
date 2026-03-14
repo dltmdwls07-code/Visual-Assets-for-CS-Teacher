@@ -49,8 +49,9 @@
         }
 
         .machine-card {
-            transition: all 0.2s ease;
+            transition: all 0.15s ease-out; /* 빠른 클릭에 반응하도록 시간 단축 */
             cursor: pointer;
+            position: relative;
         }
 
         .machine-card:hover {
@@ -58,8 +59,10 @@
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
         }
 
+        /* 순수 CSS로만 클릭 피드백 처리 (JS 딜레이 제거) */
         .machine-card:active {
-            transform: translateY(0);
+            transform: translateY(2px) scale(0.97);
+            box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1);
         }
 
         /* Toggle Switch CSS */
@@ -69,11 +72,39 @@
         }
 
         .toggle-checkbox:checked + .toggle-label {
-            background-color: #68D391;
+            background-color: #f59e0b; /* 자바스크립트 동적 주입 제거하고 CSS로 일원화 */
         }
 
-        .toggle-checkbox:checked + .toggle-label:before {
+        .toggle-checkbox:checked + .toggle-label + .dot {
             transform: translateX(100%);
+        }
+
+        /* 보상 플로팅 텍스트 애니메이션 */
+        @keyframes floatUpAndFade {
+            0% {
+                opacity: 1;
+                transform: translate(-50%, 0) scale(1);
+            }
+            50% {
+                transform: translate(-50%, -25px) scale(1.2);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -40px) scale(1);
+            }
+        }
+
+        .reward-floating {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.5rem;
+            font-weight: 900;
+            pointer-events: none;
+            z-index: 50;
+            animation: floatUpAndFade 0.8s ease-out forwards;
+            text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
         }
     </style>
 </head>
@@ -114,7 +145,6 @@
 
             <div class="max-w-4xl mx-auto text-slate-600 text-lg font-medium break-keep space-y-8">
 
-                <!-- 용어 설명 -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-base">
                     <div class="bg-slate-50 border border-slate-400 rounded-xl px-4 py-4">
                         <span class="font-bold text-slate-800">Multi-Armed</span>
@@ -131,7 +161,6 @@
                     </div>
                 </div>
 
-                <!-- 개념 설명 -->
                 <div class="text-center space-y-2">
                     <p>
                         <strong>Multi-Armed Bandit</strong>은 여러 슬롯머신 중 어떤 것을 선택해야
@@ -215,9 +244,9 @@
                             <label for="epsilonSlider" class="text-base font-bold text-slate-300">탐험 확률 (&epsilon; -
                                 엡실론)</label>
                             <span id="epsilonDisplay"
-                                  class="bg-orange-500/20 text-orange-400 font-black px-2 py-1 rounded text-base">10%</span>
+                                  class="bg-orange-500/20 text-orange-400 font-black px-2 py-1 rounded text-base">30%</span>
                         </div>
-                        <input type="range" id="epsilonSlider" min="0" max="1" step="0.05" value="0.1"
+                        <input type="range" id="epsilonSlider" min="0" max="1" step="0.05" value="0.3"
                                class="w-full accent-orange-500 cursor-pointer">
                         <p class="text-base text-slate-400 mt-2 break-keep">
                             값이 클수록 무작위로 다른 머신을 <strong class="text-orange-300">탐험(Exploration)</strong>하고, 작을수록 현재 1등
@@ -253,15 +282,15 @@
 
                     <div class="grid grid-cols-2 gap-3 mt-auto">
                         <button id="btnStep"
-                                class="py-3 bg-slate-600 hover:bg-slate-500 text-white font-bold rounded-xl transition-all shadow-md flex justify-center items-center">
+                                class="py-3 bg-slate-600 hover:bg-slate-500 text-white font-bold rounded-xl transition-all shadow-md flex justify-center items-center active:scale-95">
                             <i class="fa-solid fa-shoe-prints mr-2"></i>1 Step
                         </button>
                         <button id="btnRun"
-                                class="py-3 bg-orange-500 hover:bg-orange-600 text-white font-black rounded-xl transition-all shadow-md flex justify-center items-center">
+                                class="py-3 bg-orange-500 hover:bg-orange-600 text-white font-black rounded-xl transition-all shadow-md flex justify-center items-center active:scale-95">
                             <i class="fa-solid fa-play mr-2"></i>자동 실행
                         </button>
                         <button id="btnReset"
-                                class="col-span-2 py-2 mt-1 bg-rose-500/20 hover:bg-rose-500/40 text-rose-300 border border-rose-500/30 font-bold rounded-xl transition-all flex justify-center items-center">
+                                class="col-span-2 py-2 mt-1 bg-rose-500/20 hover:bg-rose-500/40 text-rose-300 border border-rose-500/30 font-bold rounded-xl transition-all flex justify-center items-center active:scale-95">
                             <i class="fa-solid fa-rotate-right mr-2"></i>초기화
                         </button>
                     </div>
@@ -303,8 +332,7 @@
                 <div class="bg-white p-4 rounded-xl border border-indigo-300 shadow-sm">
                     <p class="font-bold text-slate-800">Q1. 탐험(Exploration) 확률(Epsilon)을 0%로 설정하면 어떤 문제가 발생할까요?</p>
                     <p class="text-slate-500 text-base mt-2 ml-4"><strong>정답:</strong> 초반에 우연히 보상이 잘 나온 머신만 계속 누르게 되어,
-                        실제로
-                        확률이 더 높은 '진짜 최고의 머신'을 찾을 기회를 영원히 잃어버릴 수 있습니다.</p>
+                        실제로 확률이 더 높은 '진짜 최고의 머신'을 찾을 기회를 영원히 잃어버릴 수 있습니다.</p>
                 </div>
                 <div class="bg-white p-4 rounded-xl border border-indigo-300 shadow-sm">
                     <p class="font-bold text-slate-800">Q2. 우리가 학습 과정에서 구하는 '평균 보상(Q-value)'은 무엇을 의미하나요?</p>
@@ -318,21 +346,12 @@
 </main>
 
 <script>
-    // CSS for dynamic custom toggle logic
-    document.addEventListener('DOMContentLoaded', function () {
-        const style = document.createElement('style');
-        style.innerHTML = `.toggle-checkbox:checked + .toggle-label { background-color: #f59e0b; } .toggle-checkbox:checked + .toggle-label + .dot { transform: translateX(100%); }`;
-        document.head.appendChild(style);
-    });
-
     class BanditEnvironment {
-
         constructor() {
             this.reset();
         }
 
         generateMachineConfigs() {
-
             const machines = [
                 {id: 'A', color: '#ef4444'},
                 {id: 'B', color: '#3b82f6'},
@@ -368,26 +387,20 @@
 
         reset() {
             this.machineConfigs = this.generateMachineConfigs();
-            this.bestIndex = this.machineConfigs
-                .map(m => m.trueProb)
-                .indexOf(Math.max(...this.machineConfigs.map(m => m.trueProb)));
             this.machines = this.machineConfigs.map(config => ({
                 ...config,
                 qValue: 0,      // 예측된 평균 보상 (Q-value)
                 count: 0        // 선택 횟수
             }));
             this.episode = 0;
-            this.history = [];  // 그래프용 데이터: {ep, qValues: []}
-            // 최초 기록
+            this.history = [];  // 그래프용 데이터
             this.recordHistory();
         }
 
         playMachine(index) {
             const machine = this.machines[index];
-            // 확률에 따라 1 또는 0 보상 획득
             const reward = Math.random() < machine.trueProb ? 1 : 0;
 
-            // Q-value 업데이트 수식: 새로운 평균 = 기존평균 + (보상 - 기존평균) / 선택횟수
             machine.count++;
             machine.qValue += (reward - machine.qValue) / machine.count;
 
@@ -402,19 +415,15 @@
                 episode: this.episode,
                 qValues: this.machines.map(m => m.qValue)
             });
-            // 메모리 방지: 최대 500개 유지
             if (this.history.length > 500) {
-                this.history.shift(); // 오래된 데이터 제거
+                this.history.shift();
             }
         }
 
-        // Epsilon-Greedy 전략으로 다음 머신 선택
         chooseAction(epsilon) {
             if (Math.random() < epsilon) {
-                // 탐험 (Exploration): 무작위 선택
                 return Math.floor(Math.random() * this.machines.length);
             } else {
-                // 활용 (Exploitation): 가장 Q값이 높은 머신 선택
                 let maxQ = -Infinity;
                 let bestIndices = [];
 
@@ -423,11 +432,10 @@
                         maxQ = m.qValue;
                         bestIndices = [idx];
                     } else if (m.qValue === maxQ) {
-                        bestIndices.push(idx); // 동점일 경우 모아둠
+                        bestIndices.push(idx);
                     }
                 });
 
-                // 동점인 경우 무작위로 하나 선택
                 return bestIndices[Math.floor(Math.random() * bestIndices.length)];
             }
         }
@@ -441,7 +449,6 @@
             this.runInterval = null;
             this.isRunning = false;
 
-            // 옵션 상태
             this.showTrueProb = false;
             this.showBest = true;
 
@@ -463,27 +470,26 @@
             this.env.machines.forEach((m, i) => {
                 const card = document.createElement('div');
                 card.className = `machine-card bg-white border-2 rounded-2xl p-3 flex flex-col items-center justify-center relative shadow-sm`;
-                card.style.borderColor = `${m.color}40`; // opacity 40%
+                card.style.borderColor = `${m.color}40`;
 
                 card.innerHTML = `
-                    <div class="best-badge absolute -top-3 -right-2 bg-amber-400 text-white text-base font-black px-2 py-1 rounded-full shadow-md hidden z-10">
-                        <i class="fa-solid fa-crown mr-1"></i>AI's BEST
+                    <div class="best-badge absolute -top-3 -right-2 bg-amber-400 text-white text-base font-black px-2 py-1 rounded-full shadow-md hidden z-10 transition-all">
+                        <i class="fa-solid fa-crown mr-1"></i>AI's Pick
                     </div>
-                    <div class="w-12 h-12 rounded-xl mb-2 flex items-center justify-center text-white font-black text-xl shadow-inner" style="background-color: ${m.color}">
+                    <div class="w-12 h-12 rounded-xl mb-2 flex items-center justify-center text-white font-black text-xl shadow-inner transition-transform" style="background-color: ${m.color}">
                         ${m.id}
                     </div>
                     <div class="text-center w-full">
                         <p class="text-base text-slate-500 font-bold mb-1">예측 <span class="text-slate-800 text-base val-q">0.00</span></p>
                         <p class="text-base text-slate-400 bg-slate-100 rounded px-1 py-0.5 inline-block">선택 <span class="val-count font-bold text-slate-600">0</span>회</p>
                     </div>
-                    <div class="true-prob-label w-full text-center mt-2 bg-slate-800 text-white text-base font-bold py-1 rounded-md hidden">
+                    <div class="true-prob-label w-full text-center mt-2 bg-slate-800 text-white text-base font-bold py-1 rounded-md hidden transition-opacity">
                         실제: ${m.trueProb.toFixed(2)}
                     </div>
                 `;
 
-                // 클릭 시 해당 머신 실행 (사용자 Action)
                 card.addEventListener('click', () => {
-                    if (this.isRunning) return; // 자동실행 중 방지
+                    if (this.isRunning) return;
                     this.step(i);
                 });
 
@@ -517,15 +523,15 @@
                     this.runInterval = setInterval(() => {
                         const epsilon = parseFloat(document.getElementById('epsilonSlider').value);
                         const action = this.env.chooseAction(epsilon);
-                        this.step(action, true); // true = auto mode
-                    }, 50); // 속도
+                        this.step(action, true);
+                    }, 50);
                 }
             });
 
             document.getElementById('btnReset').addEventListener('click', () => {
                 this.pause();
                 this.env.reset();
-                this.machineCards.forEach(card => card.classList.remove('ring-4', 'ring-orange-400', 'opacity-50'));
+                this.machineCards.forEach(card => card.classList.remove('ring-4', 'ring-orange-400', 'opacity-50', 'ring-2', 'ring-amber-300'));
                 this.updateUI();
             });
 
@@ -553,19 +559,17 @@
         step(actionIndex, isAuto = false) {
             const result = this.env.playMachine(actionIndex);
 
-            // UI 시각 효과 (선택된 카드 강조)
-            this.machineCards.forEach((card, idx) => {
-                if (idx === actionIndex) {
-                    card.style.transform = 'scale(0.95)';
-                    card.style.borderColor = this.env.machines[idx].color;
-                    card.style.borderWidth = '3px';
-                    setTimeout(() => {
-                        card.style.transform = 'none';
-                        card.style.borderWidth = '2px';
-                        card.style.borderColor = `${this.env.machines[idx].color}40`;
-                    }, 100);
-                }
-            });
+            // 개선: 시각적 보상(Reward) 피드백 플로팅 텍스트 애니메이션 추가
+            const card = this.machineCards[actionIndex];
+            const floatEl = document.createElement('div');
+            floatEl.className = `reward-floating ${result.reward === 1 ? 'text-green-500' : 'text-slate-400'}`;
+            floatEl.innerText = result.reward === 1 ? '+1' : '+0';
+            card.appendChild(floatEl);
+
+            // 애니메이션 종료 후 돔 엘리먼트 제거
+            setTimeout(() => {
+                if (card.contains(floatEl)) card.removeChild(floatEl);
+            }, 800);
 
             this.updateUI();
         }
@@ -573,31 +577,33 @@
         updateUI() {
             document.getElementById('episodeCount').innerText = this.env.episode;
 
-            // 🌟 추가된 부분: 인공지능이 판단한 현재 최고의 슬롯머신 찾기 (Q-value 기준)
-            let currentBestIndex = 0;
-            let maxQ = -Infinity;
-            this.env.machines.forEach((m, idx) => {
-                // 한 번도 선택되지 않아 Q-value가 0인 경우를 포함하여 가장 높은 값 탐색
-                if (m.qValue > maxQ) {
-                    maxQ = m.qValue;
-                    currentBestIndex = idx;
-                }
-            });
+            // 로직 수정: Episode가 0이 아닐 때만 최고 Q-value 계산
+            let bestIndices = [];
+            if (this.env.episode > 0) {
+                let maxQ = -Infinity;
+                this.env.machines.forEach((m, idx) => {
+                    if (m.qValue > maxQ) {
+                        maxQ = m.qValue;
+                        bestIndices = [idx];
+                    } else if (m.qValue === maxQ) {
+                        bestIndices.push(idx); // 동점일 경우 여러 개 선택
+                    }
+                });
+            }
 
             this.env.machines.forEach((m, i) => {
                 const card = this.machineCards[i];
                 card.querySelector('.val-q').innerText = m.qValue.toFixed(2);
                 card.querySelector('.val-count').innerText = m.count;
 
-                // Toggle True Prob
                 const probLabel = card.querySelector('.true-prob-label');
                 probLabel.innerText = `실제: ${m.trueProb.toFixed(2)}`;
                 if (this.showTrueProb) probLabel.classList.remove('hidden');
                 else probLabel.classList.add('hidden');
 
-                // 🌟 수정된 부분: this.env.bestIndex 대신 currentBestIndex 사용
                 const bestBadge = card.querySelector('.best-badge');
-                if (this.showBest && i === currentBestIndex) {
+                // 수정: 초기 상태(Episode 0)에서는 뱃지를 띄우지 않음. 동점은 모두 강조.
+                if (this.showBest && bestIndices.includes(i)) {
                     bestBadge.classList.remove('hidden');
                     card.classList.add('ring-2', 'ring-amber-300');
                 } else {
@@ -611,16 +617,12 @@
 
         resizeCanvas() {
             const rect = this.canvas.parentElement.getBoundingClientRect();
-
             const dpr = window.devicePixelRatio || 1;
 
             this.canvas.width = rect.width * dpr;
             this.canvas.height = rect.height * dpr;
 
-            // transform 초기화 (중요)
             this.ctx.setTransform(1, 0, 0, 1, 0, 0);
-
-            // DPR 적용
             this.ctx.scale(dpr, dpr);
 
             this.canvas.style.width = `${rect.width}px`;
@@ -638,7 +640,6 @@
             const innerW = w - padding.left - padding.right;
             const innerH = h - padding.top - padding.bottom;
 
-            // 배경 가이드라인 (Y = 0.0 ~ 1.0)
             ctx.strokeStyle = '#e2e8f0';
             ctx.lineWidth = 1;
             ctx.fillStyle = '#94a3b8';
@@ -658,10 +659,9 @@
                 ctx.fillText(yVal.toFixed(1), padding.left - 5, yPos);
             }
 
-            // X축 에피소드
             let maxEp = this.env.history.length > 0 ? this.env.history[this.env.history.length - 1].episode : 100;
             let minEp = this.env.history.length > 0 ? this.env.history[0].episode : 0;
-            let rangeEp = Math.max(10, maxEp - minEp); // 최소 10칸 여백
+            let rangeEp = Math.max(10, maxEp - minEp);
 
             ctx.textAlign = 'center';
             ctx.textBaseline = 'top';
@@ -670,7 +670,6 @@
 
             if (this.env.history.length === 0) return;
 
-            // 실제 확률 선 그리기 (Show True Prob ON일 경우)
             if (this.showTrueProb) {
                 this.env.machines.forEach((m) => {
                     const yPos = padding.top + innerH - (m.trueProb * innerH);
@@ -678,17 +677,18 @@
                     ctx.setLineDash([4, 4]);
                     ctx.moveTo(padding.left, yPos);
                     ctx.lineTo(w - padding.right, yPos);
-                    ctx.strokeStyle = `${m.color}60`; // 약간 투명하게
+                    ctx.strokeStyle = `${m.color}60`;
                     ctx.lineWidth = 1;
                     ctx.stroke();
                     ctx.setLineDash([]);
                 });
             }
 
-            // 각 머신별 Q-value 변화 선 그리기
             for (let mIdx = 0; mIdx < this.env.machines.length; mIdx++) {
                 ctx.beginPath();
                 ctx.lineJoin = 'round';
+                ctx.strokeStyle = this.env.machines[mIdx].color;
+                ctx.lineWidth = 2.5;
 
                 for (let i = 0; i < this.env.history.length; i++) {
                     const data = this.env.history[i];
@@ -697,12 +697,16 @@
                     const xPos = padding.left + ((data.episode - minEp) / rangeEp) * innerW;
                     const yPos = padding.top + innerH - (qVal * innerH);
 
-                    if (i === 0) ctx.moveTo(xPos, yPos);
-                    else ctx.lineTo(xPos, yPos);
+                    if (i === 0) {
+                        ctx.moveTo(xPos, yPos);
+                        // 개선: 점이 1개일 때 시각화를 위해 점(arc)을 찍음
+                        if (this.env.history.length === 1) {
+                            ctx.arc(xPos, yPos, 1.5, 0, Math.PI * 2);
+                        }
+                    } else {
+                        ctx.lineTo(xPos, yPos);
+                    }
                 }
-
-                ctx.strokeStyle = this.env.machines[mIdx].color;
-                ctx.lineWidth = 2.5;
                 ctx.stroke();
             }
         }
