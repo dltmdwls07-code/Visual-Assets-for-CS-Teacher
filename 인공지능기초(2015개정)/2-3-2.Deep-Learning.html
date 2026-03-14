@@ -196,6 +196,13 @@
                         <input type="range" id="lrSlider" min="0.001" max="1.1" step="0.001" value="0.050"
                                class="w-full">
                     </div>
+                    <div class="mb-5">
+                        <div class="flex gap-2 mt-auto justify-start text-base mb-2 font-bold">
+                            <input type="checkbox" id="chkGdZoom" class="accent-blue-600">
+                            <label for="chkGdZoom" class="text-base cursor-pointer">Auto Zoom
+                                (바닥 집중)</label>
+                        </div>
+                    </div>
                     <div class="flex gap-2 mt-auto">
                         <button id="btnGdStep"
                                 class="flex-1 py-3 bg-blue-500 hover:bg-blue-600 font-bold text-white rounded-lg transition-colors text-base shadow-md">
@@ -460,6 +467,9 @@
         isAnimating: false,
         isAuto: false,
         autoTimer: null,
+        isZoomed: false,
+        zoomFactor: 1.0, // 1.0은 전체 보기, 숫자가 작아질수록 확대
+        currentRange: {minW: -5, maxW: 5}, // 현재 화면에 보이는 w의 범위
 
         // 사용할 함수 모음
         currentFunc: 'quad',
@@ -488,11 +498,22 @@
                 document.getElementById('lrValue').innerText = parseFloat(e.target.value).toFixed(3);
             });
             document.getElementById('btnGdStep').addEventListener('click', () => this.step());
-            document.getElementById('btnGdReset').addEventListener('click', () => this.reset());
+            document.getElementById('btnGdReset').addEventListener('click', () => {
+                this.currentRange = {minW: -5, maxW: 5};
+                this.reset();
+                this.draw();
+            });
             document.getElementById('btnGdAuto').addEventListener('click', () => this.toggleAuto());
             document.getElementById('funcSelect').addEventListener('change', (e) => {
                 this.currentFunc = e.target.value;
                 this.reset();
+            });
+            document.getElementById('chkGdZoom').addEventListener('change', (e) => {
+                this.isZoomed = e.target.checked;
+                if (!this.isZoomed) {
+                    // 체크 해제 시 즉시 원래 범위로 복구
+                    this.currentRange = {minW: -5, maxW: 5};
+                }
             });
 
             window.addEventListener('resize', () => {
@@ -526,6 +547,11 @@
             if (this.autoTimer) clearTimeout(this.autoTimer);
             this.updateAutoUI();
 
+            // 카메라 범위를 즉시 전체 모드로 초기화 (이 코드가 있어야 즉시 돌아옵니다)
+            this.viewMinW = -5.5;
+            this.viewMaxW = 5.5;
+
+            // 파라미터 초기화
             this.w = parseFloat((Math.random() * 10 - 5).toFixed(2)); // -5 ~ 5
             this.history = [this.w];
             this.isSuccess = false;
@@ -771,9 +797,9 @@
             ctx.lineTo(centerTop.cx, hTop);
             ctx.moveTo(0, centerTop.cy);
             ctx.lineTo(wTop, centerTop.cy);
-            ctx.strokeStyle = '#cbd5e1';
+            ctx.strokeStyle = '#8fa7b9';
             ctx.setLineDash([5, 5]);
-            ctx.lineWidth = 1;
+            ctx.lineWidth = 2;
             ctx.stroke();
             ctx.setLineDash([]);
 
@@ -828,46 +854,88 @@
             }
 
             /* ===== 2. Side-view Canvas 그리기 ===== */
+            // 1. [좌표 범위 계산] Auto Zoom 로직
+            // --- [설정 및 변수] ---
+            const yMargin = 40;
+            const maxLossValue = 25;
+
+            // 줌 범위 변수 초기화 방어 코드 (gdSim 객체 생성 시 넣어두면 더 좋음)
+            if (!this.viewMinW) {
+                this.viewMinW = -5.5;
+                this.viewMaxW = 5.5;
+            }
+
+            // [목표 범위 결정]
+            let targetMinW = -5.5;
+            let targetMaxW = 5.5;
+
+            // 학습이 시작되어 isZoomed가 true가 되면 공(this.w) 주변으로 타겟 설정
+            if (this.isZoomed) {
+                targetMinW = this.w - 1.5;
+                targetMaxW = this.w + 1.5;
+            }
+
+            // [핵심: 카메라 이동] 현재 범위에서 목표 범위로 10%씩 부드럽게 이동 (Lerp)
+            this.viewMinW += (targetMinW - this.viewMinW) * 0.1;
+            this.viewMaxW += (targetMaxW - this.viewMaxW) * 0.1;
+
+            // 좌표 변환 헬퍼
+            const toX = (w) => ((w - this.viewMinW) / (this.viewMaxW - this.viewMinW)) * wSide;
+            const toY = (y) => (hSide - yMargin) - (y / maxLossValue) * (hSide - 2 * yMargin);
+
             let ctx2 = this.ctxSide;
             ctx2.clearRect(0, 0, wSide, hSide);
 
-            // 포물선 그리기
+            // 1. 바닥 가이드 라인
             ctx2.beginPath();
-            for (let wx = -5.5; wx <= 5.5; wx += 0.2) {
+            ctx2.moveTo(0, toY(0));
+            ctx2.lineTo(wSide, toY(0));
+            ctx2.strokeStyle = '#94a3b8';
+            ctx2.lineWidth = 2;
+            ctx2.setLineDash([5, 5]); // 5px 선, 5px 간격
+            ctx2.stroke();
+            ctx2.setLineDash([]); // 점선 해제, 다른 선에 영향 안 주도록
+
+            // 2. 곡선 그리기 (확대 시 깨짐 방지를 위해 해상도 조절)
+            ctx2.beginPath();
+            const stepSize = (this.viewMaxW - this.viewMinW) / 60;
+            for (let wx = this.viewMinW - 0.5; wx <= this.viewMaxW + 0.5; wx += stepSize) {
                 let wy = targetFunc.f(wx);
-                let pt = this.toCanvasSide(wx, wy);
-                if (wx === -5.5) ctx2.moveTo(pt.cx, pt.cy);
-                else ctx2.lineTo(pt.cx, pt.cy);
+                let cx = toX(wx);
+                let cy = toY(wy);
+                if (wx <= this.viewMinW - 0.45) ctx2.moveTo(cx, cy);
+                else ctx2.lineTo(cx, cy);
             }
             ctx2.strokeStyle = '#3b82f6';
             ctx2.lineWidth = 3;
             ctx2.stroke();
 
-            // 중앙 y축 선
-            let centerSide = this.toCanvasSide(0, 0);
+            // 3. 중앙 y축 선
             ctx2.beginPath();
-            ctx2.moveTo(centerSide.cx, 0);
-            ctx2.lineTo(centerSide.cx, hSide);
-            ctx2.strokeStyle = '#cbd5e1';
+            let centerX = toX(0);
+            ctx2.moveTo(centerX, yMargin);
+            ctx2.lineTo(centerX, hSide - yMargin);
+            ctx2.strokeStyle = '#94a3b8';
             ctx2.setLineDash([5, 5]);
-            ctx2.lineWidth = 1;
+            ctx2.lineWidth = 2;
             ctx2.stroke();
             ctx2.setLineDash([]);
 
-            // 히스토리 궤적 그리기
+            // 4. 히스토리 데이터 준비
             let renderPointsSide = [...this.history];
             if (this.isAnimating || renderPointsSide.length > 0) {
                 if (this.isAnimating) renderPointsSide.push(this.w);
                 else renderPointsSide[renderPointsSide.length - 1] = this.w;
             }
 
-            // 히스토리를 잇는 점선
+            // 5. 히스토리 점선 궤적
             ctx2.beginPath();
             for (let i = 0; i < renderPointsSide.length; i++) {
                 let wVal = renderPointsSide[i];
-                let pt = this.toCanvasSide(wVal, targetFunc.f(wVal));
-                if (i === 0) ctx2.moveTo(pt.cx, pt.cy);
-                else ctx2.lineTo(pt.cx, pt.cy);
+                let cx = toX(wVal);
+                let cy = toY(targetFunc.f(wVal));
+                if (i === 0) ctx2.moveTo(cx, cy);
+                else ctx2.lineTo(cx, cy);
             }
             ctx2.strokeStyle = '#94a3b8';
             ctx2.setLineDash([3, 3]);
@@ -875,27 +943,26 @@
             ctx2.stroke();
             ctx2.setLineDash([]);
 
-            // 각 점 렌더링
+            // 6. 각 점(Ball) 렌더링
             for (let i = 0; i < renderPointsSide.length; i++) {
                 let isLast = (i === renderPointsSide.length - 1);
                 let wVal = renderPointsSide[i];
-                let pt = this.toCanvasSide(wVal, targetFunc.f(wVal));
+                let cx = toX(wVal);
+                let cy = toY(targetFunc.f(wVal));
+
+                if (cx < -20 || cx > wSide + 20) continue;
 
                 ctx2.beginPath();
                 let radius = isLast ? 8 : 4;
 
-                if (isLast && this.isSuccess && glowIntensity > 0) {
+                // 성공/실패 효과
+                if (isLast && (this.isSuccess || this.isFailed) && typeof glowIntensity !== 'undefined') {
                     ctx2.shadowBlur = 15;
-                    ctx2.shadowColor = '#10b981';
-                    radius += glowIntensity * 4;
-                } else if (isLast && this.isFailed) {
-                    ctx2.shadowBlur = 15;
-                    ctx2.shadowColor = '#f43f5e';
-                } else {
-                    ctx2.shadowBlur = 0;
+                    ctx2.shadowColor = this.isSuccess ? '#10b981' : '#f43f5e';
+                    if (this.isSuccess) radius += (glowIntensity || 0) * 4;
                 }
 
-                ctx2.arc(pt.cx, pt.cy, radius, 0, Math.PI * 2);
+                ctx2.arc(cx, cy, radius, 0, Math.PI * 2);
 
                 if (isLast) {
                     ctx2.fillStyle = this.isSuccess ? '#10b981' : (this.isFailed ? '#e11d48' : '#f43f5e');
@@ -904,13 +971,14 @@
                     ctx2.fill();
                     ctx2.stroke();
 
-                    // 현재 위치 안내선 그리기
+                    // 현재 위치 안내 수직선
                     ctx2.shadowBlur = 0;
                     ctx2.beginPath();
-                    ctx2.moveTo(pt.cx, pt.cy);
-                    ctx2.lineTo(pt.cx, centerSide.cy);
-                    ctx2.strokeStyle = 'rgba(244, 63, 94, 0.4)';
+                    ctx2.moveTo(cx, cy);
+                    ctx2.lineTo(cx, toY(0));
+                    ctx2.strokeStyle = 'rgba(244, 63, 94, 0.8)';
                     ctx2.setLineDash([4, 4]);
+                    ctx2.lineWidth = 2;
                     ctx2.stroke();
                     ctx2.setLineDash([]);
                 } else {
