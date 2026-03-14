@@ -137,7 +137,8 @@
             <a class="hover:text-indigo-600 transition" href="#intro">도입</a>
             <a class="hover:text-indigo-600 transition" href="#concept">딥러닝이란?</a>
             <a class="hover:text-indigo-600 transition" href="#activity">퍼셉트론</a>
-            <a class="hover:text-indigo-600 transition" href="#learning">딥러닝 원리</a>
+            <a class="hover:text-indigo-600 transition" href="#learning">딥러닝의 원리</a>
+            <a class="hover:text-indigo-600 transition" href="#practice">실습</a>
             <a class="hover:text-indigo-600 transition" href="#quiz">확인질문</a>
         </div>
     </div>
@@ -258,6 +259,7 @@
             </div>
         </div>
     </section>
+
     <!-- 활동 및 예제 섹션 -->
     <section class="scroll-mt-24 space-y-12" id="activity">
         <!-- 섹션 헤더 -->
@@ -774,6 +776,48 @@
         </div>
     </section>
 
+    <!-- 딥러닝 시각화 실습 -->
+    <section class="scroll-mt-24 space-y-8" id="practice">
+        <div class="text-center space-y-4">
+            <h2 class="text-3xl font-black text-slate-900">한눈에 보는 딥러닝</h2>
+            <div class="w-20 h-1.5 bg-indigo-500 mx-auto rounded-full"></div>
+        </div>
+
+        <div class="bg-slate-50 p-8 md:p-10 rounded-3xl border border-slate-200 shadow-sm text-center">
+            <h3 class="text-xl font-bold text-slate-800 mb-4">딥러닝의 핵심 원리를 직접 체험해 보세요!</h3>
+            <p class="text-slate-600 mb-10 max-w-2xl mx-auto leading-relaxed">
+                경사하강법부터 과적합까지, 딥러닝 학습 과정을 시각화하며 이해할 수 있는 실습 페이지입니다.
+                각 실습을 통해 모델이 데이터를 학습하고 분류하는 과정을 직접 확인할 수 있습니다.
+            </p>
+
+            <div class="flex flex-col md:flex-row gap-6 justify-center max-w-4xl mx-auto">
+
+                <a class="group relative p-1 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300"
+                   style="background: linear-gradient(135deg, #f472b6 0%, #db2777 50%, #ec4899 100%);"
+                   href="2-3-2.Deep-Learning.html"
+                   target="_blank">
+                    <div class="bg-white/10 backdrop-blur-md h-full rounded-xl p-8 text-white flex flex-col items-center justify-center gap-4 border border-white/30">
+
+                        <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mb-2 group-hover:bg-white/30 transition-colors">
+                            <i class="fa-solid fa-brain text-3xl group-hover:scale-125 transition-transform duration-300"></i>
+                        </div>
+
+                        <div class="text-2xl font-black tracking-tight">Deep Learning의 작동 원리</div>
+
+                        <div class="text-pink-50 font-medium text-center leading-relaxed opacity-90">
+                            퍼셉트론과 신경망이 학습하는 과정을 경사하강법부터 과적합까지 <br class="hidden md:block"> 단계별로 시각화하며 체험할 수 있습니다.
+                        </div>
+
+                        <div class="mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <i class="fa-solid fa-arrow-right text-white/80"></i>
+                        </div>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+    </section>
+
     <!-- 확인 질문 섹션 -->
     <section class="scroll-mt-24 space-y-12" id="quiz">
         <div class="text-center">
@@ -831,6 +875,7 @@
             </div>
         </div>
     </section>
+
 </main>
 <!-- 푸터 -->
 <footer class="bg-slate-900 py-12 px-6 text-center mt-20">
