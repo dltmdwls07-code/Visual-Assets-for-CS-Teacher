@@ -379,7 +379,7 @@
             </div>
 
             <div class="w-full lg:w-[65%] flex flex-col gap-4">
-                <div class="relative w-full max-w-md mx-auto aspect-square bg-slate-100 rounded-2xl overflow-hidden border-4 border-slate-300 shadow-inner flex flex-col">
+                <div class="relative w-full max-w-xl mx-auto aspect-square bg-slate-100 rounded-2xl overflow-hidden border-4 border-slate-300 shadow-inner flex flex-col">
                     <div id="gridContainer" class="w-full h-full relative grid">
                         <div id="agent">🤖</div>
                     </div>
@@ -770,7 +770,10 @@
         }
 
         step(isAuto = false) {
-            // 목적지에 도착해서 한 턴을 기다리고 있던 상태라면, 이제서야 환경을 리셋
+            // 강제 대기 시간(300ms) 동안에는 버튼을 눌러도 중복 실행되지 않도록 방지
+            if (this.isDelaying) return;
+
+            // 목적지에 도착해서 한 턴을 기다리고 있던 상태라면, 환경 리셋 후 출발점으로 텔레포트
             if (this.waitingForReset) {
                 this.history.push({
                     episode: this.env.totalEpisodes,
@@ -779,8 +782,10 @@
                 if (this.history.length > 150) this.history.shift(); // Keep last 150
                 this.env.reset();
                 this.waitingForReset = false;
-                this.updateUI();
-                return; // 리셋만 하고 이번 턴 종료 (다음에 행동)
+
+                // true를 전달하여 뿅! 하고 나타나는 텔레포트 효과 실행
+                this.updateUI(true);
+                return; // 리셋만 하고 이번 턴 종료 (출발점에서 대기)
             }
 
             const epsilon = parseFloat(document.getElementById('epsilonSlider').value);
@@ -799,25 +804,53 @@
             // 3. Learn
             this.agent.learn(currX, currY, action, reward, nx, ny, done, alpha, gamma);
 
-            // If done, set flag to wait one turn before resetting
+            // 목적지 도착 시 처리
             if (done) {
                 this.waitingForReset = true;
-                this.updateUI(); // 강제로 UI 업데이트하여 깃발 위에 도착한 모습을 보여줌
+                this.updateUI(false); // 깃발에 도착한 모습 렌더링
+
+                // 자동 실행 중일 경우 300ms 동안 깃발에서 대기
+                if (isAuto) {
+                    this.isDelaying = true;
+                    clearInterval(this.runInterval); // 기존 자동 실행 타이머 일시정지
+
+                    setTimeout(() => {
+                        this.isDelaying = false;
+                        // 대기하는 동안 사용자가 '일시정지'나 '초기화'를 누르지 않았다면 계속 진행
+                        if (this.isRunning) {
+                            this.step(true); // 출발점으로 텔레포트하는 스텝 실행
+
+                            // 텔레포트 후 기존 속도대로 자동 실행 타이머 다시 시작
+                            this.runInterval = setInterval(() => {
+                                this.step(true);
+                            }, this.getDelay());
+                        }
+                    }, 300); // ★ 대기 시간 조절: 300ms
+                }
                 return;
             }
 
-            // Optimization: Update full UI less frequently in auto mode to prevent lag
             if (!isAuto || this.env.stepCount % 2 === 0) {
-                this.updateUI();
+                this.updateUI(false);
             }
         }
 
-        updateAgentPosition() {
+        updateAgentPosition(isReset = false) {
             const agentDiv = document.getElementById('agent');
             const x = this.env.agentPos.x;
             const y = this.env.agentPos.y;
-            // Translate by 100% of its own width/height
-            agentDiv.style.transform = `translate(${x * 100}%, ${y * 100}%)`;
+
+            if (isReset) {
+                // 텔레포트 효과: 애니메이션 끄고 좌표 즉시 이동 & 즉시 나타나기
+                agentDiv.style.transition = 'none';
+                agentDiv.style.opacity = '1'; // 0에서 1로 바로 변경
+                agentDiv.style.transform = `translate(${x * 100}%, ${y * 100}%)`;
+            } else {
+                // 일반 이동 애니메이션
+                agentDiv.style.transition = 'transform 0.15s ease-out, opacity 0.3s ease-in';
+                agentDiv.style.transform = `translate(${x * 100}%, ${y * 100}%)`;
+                agentDiv.style.opacity = '1';
+            }
         }
 
         updateGridVisuals() {
@@ -864,11 +897,12 @@
             }
         }
 
-        updateUI() {
+        updateUI(isReset = false) {
             document.getElementById('stepCount').innerText = this.env.stepCount;
             document.getElementById('episodeCount').innerText = this.env.totalEpisodes;
 
-            this.updateAgentPosition();
+            // 위치 업데이트 시 리셋 여부 전달
+            this.updateAgentPosition(isReset);
             this.updateGridVisuals();
 
             if (this.history.length > 0) {
