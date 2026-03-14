@@ -365,7 +365,7 @@
         </div>
     </section>
 
-
+    <!-- Wumpus World -->
     <section id="wumpus-world" class="mb-24 scroll-mt-24">
         <div class="text-center space-y-4 mb-10">
         <span class="inline-block bg-rose-100 text-rose-700 px-4 py-1.5 rounded-full font-bold tracking-wider mb-2 text-sm">
@@ -373,29 +373,27 @@
         </span>
             <h2 class="text-3xl font-black text-slate-900">추론 기반 에이전트와 Wumpus World</h2>
             <div class="w-20 h-1.5 bg-rose-500 mx-auto rounded-full"></div>
-            <p class="text-lg text-slate-600 max-w-2xl mx-auto">
-                지금까지 배운 지식 표현과 논리가 실제 AI에 어떻게 적용될까요? <br>
-                위험이 도사리는 미지의 동굴에서 <strong>논리 추론</strong>만으로 살아남는 에이전트를 만나봅시다.
+            <p class="text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
+                지금까지 배운 지식 표현과 논리가 실제 AI에 어떻게 적용될까요?
+                위험이 도사리는 미지의 동굴에서 <strong>논리 추론</strong>만으로 살아남는 에이전트를 만나봅시다. <br><br>
+                단순한 로봇은 눈앞에 벽이 보일 때만 방향을 바꿉니다. 하지만 <strong>추론 기반 에이전트</strong>는 보이지 않는 상황까지 머릿속으로 그려냅니다. 우리가 일상에서 명탐정처럼
+                추리하는 것과 똑같습니다.
             </p>
         </div>
 
         <div class="bg-white p-8 md:p-10 rounded-3xl shadow-xl border border-slate-100 relative overflow-hidden space-y-12">
-            <div class="absolute -right-10 -top-10 opacity-5 pointer-events-none">
-                <i class="fa-solid fa-dragon text-[200px]"></i>
-            </div>
 
             <div>
-                <h3 class="text-2xl font-bold text-slate-800 mb-4 flex items-center">
-                    <div class="w-10 h-10 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center mr-3">
-                        <i class="fa-solid fa-brain"></i>
-                    </div>
-                    추론 기반 에이전트 (Logical Agent)
-                </h3>
-                <p class="text-slate-700 text-lg leading-relaxed mb-6">
-                    단순한 로봇은 눈앞에 벽이 보일 때만 방향을 바꿉니다(단순 반응). 하지만 <strong>추론 기반 에이전트</strong>는 자신이 알고 있는
-                    <strong>지식(규칙)</strong>과 현재 센서로 파악한 <strong>단서(퍼셉트)</strong>를 결합하여, 보이지 않는 곳의 상황까지 <strong>논리적으로
-                    유추</strong>해 내고 행동을 결정합니다.
-                </p>
+                <div class="bg-amber-50 border-l-4 border-amber-400 p-5 rounded-r-xl mb-6">
+                    <h4 class="font-bold text-amber-800 text-lg mb-2">
+                        <i class="fa-solid fa-magnifying-glass mr-2"></i> 일상 속의 논리 추론
+                    </h4>
+                    <p class="text-slate-700 text-base leading-relaxed">
+                        현관문을 열었는데 <strong>달콤한 치킨 냄새(단서)</strong>가 납니다. 내 머릿속에는 <strong>"치킨 냄새가 나면, 주변에 치킨이 있을
+                        것이다(지식/규칙)"</strong>라는 정보가 있습니다. 거실에 들어가 보지 않아도 우리는 식탁 위에 <strong>치킨이 있을 것이라고 100% 확신(추론
+                        결과)</strong>할 수 있습니다. AI 에이전트도 정확히 이 방식으로 세상을 이해합니다.
+                    </p>
+                </div>
             </div>
 
             <div class="bg-slate-50 p-6 md:p-8 rounded-2xl border border-slate-200">
@@ -404,60 +402,84 @@
                 </h4>
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="bg-white border border-rose-200 p-5 rounded-xl shadow-sm relative overflow-hidden group hover:border-rose-400 transition">
+                    <div class="bg-white border border-rose-200 p-6 rounded-xl shadow-sm relative overflow-hidden group hover:border-rose-400 transition">
                         <div class="absolute top-0 right-0 w-16 h-16 bg-rose-50 rounded-bl-full -z-10 group-hover:scale-110 transition"></div>
                         <div class="text-rose-500 text-3xl mb-3"><i class="fa-solid fa-biohazard"></i></div>
-                        <h5 class="font-bold text-lg text-slate-800 mb-1">냄새 (Stench)</h5>
-                        <p class="text-slate-600 text-sm">에이전트가 끔찍한 냄새를 맡았다면?<br>→ <strong>인접한 상하좌우 칸 어딘가에 굶주린 괴물
-                            'Wumpus'가 있습니다.</strong></p>
+                        <h5 class="font-bold text-lg text-slate-800 mb-2">냄새 (Stench)</h5>
+                        <p class="text-slate-600 text-base leading-relaxed">에이전트가 끔찍한 냄새를 맡았다면?<br>→ <strong>인접한 상하좌우 칸
+                            어딘가에 굶주린 괴물 'Wumpus'가 있습니다.</strong></p>
                     </div>
 
-                    <div class="bg-white border border-blue-200 p-5 rounded-xl shadow-sm relative overflow-hidden group hover:border-blue-400 transition">
+                    <div class="bg-white border border-blue-200 p-6 rounded-xl shadow-sm relative overflow-hidden group hover:border-blue-400 transition">
                         <div class="absolute top-0 right-0 w-16 h-16 bg-blue-50 rounded-bl-full -z-10 group-hover:scale-110 transition"></div>
                         <div class="text-blue-500 text-3xl mb-3"><i class="fa-solid fa-wind"></i></div>
-                        <h5 class="font-bold text-lg text-slate-800 mb-1">바람 (Breeze)</h5>
-                        <p class="text-slate-600 text-sm">에이전트에게 서늘한 바람이 느껴진다면?<br>→ <strong>인접한 상하좌우 칸 어딘가에 빠지면 죽는
-                            '함정(Pit)'이 있습니다.</strong></p>
+                        <h5 class="font-bold text-lg text-slate-800 mb-2">바람 (Breeze)</h5>
+                        <p class="text-slate-600 text-base leading-relaxed">에이전트에게 서늘한 바람 소리가 느껴진다면?<br>→ <strong>인접한
+                            상하좌우
+                            칸 어딘가에 빠지면 죽는 '함정(Pit)'이 있습니다.</strong></p>
                     </div>
 
-                    <div class="bg-white border border-amber-200 p-5 rounded-xl shadow-sm relative overflow-hidden group hover:border-amber-400 transition">
+                    <div class="bg-white border border-amber-200 p-6 rounded-xl shadow-sm relative overflow-hidden group hover:border-amber-400 transition">
                         <div class="absolute top-0 right-0 w-16 h-16 bg-amber-50 rounded-bl-full -z-10 group-hover:scale-110 transition"></div>
                         <div class="text-amber-500 text-3xl mb-3"><i class="fa-solid fa-coins"></i></div>
-                        <h5 class="font-bold text-lg text-slate-800 mb-1">반짝임 (Glitter)</h5>
-                        <p class="text-slate-600 text-sm">현재 칸에서 영롱한 반짝임을 보았다면?<br>→ <strong>바로 이 칸에 우리가 찾는 목표,
-                            '금(Gold)'이 있습니다!</strong></p>
+                        <h5 class="font-bold text-lg text-slate-800 mb-2">반짝임 (Glitter)</h5>
+                        <p class="text-slate-600 text-base leading-relaxed">현재 칸에서 영롱한 반짝임을 보았다면?<br>→ <strong>바로 이 칸에
+                            우리가 찾는 목표, '금(Gold)'이 있습니다!</strong></p>
                     </div>
                 </div>
             </div>
 
-            <div>
-                <h4 class="text-xl font-bold text-slate-800 mb-4">
-                    <i class="fa-solid fa-lightbulb text-amber-500 mr-2"></i> 에이전트는 어떻게 생각할까요?
+            <div class="mt-12">
+                <h4 class="text-xl font-bold text-slate-800 mb-8 flex items-center">
+                    <i class="fa-solid fa-microchip text-indigo-500 mr-2"></i> 에이전트의 머릿속 4단계 사고 과정
                 </h4>
-                <div class="bg-indigo-900 text-white p-6 rounded-2xl shadow-inner font-mono text-sm md:text-base">
-                    <div class="flex items-start mb-4">
-                        <i class="fa-solid fa-angle-right text-indigo-400 mt-1 mr-3"></i>
-                        <p><strong>상황:</strong> 에이전트가 [1,1]에서 [1,2]로 한 칸 이동했습니다. 여기서 서늘한 <strong>바람(Breeze)</strong>을
-                            느꼈습니다.</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6 relative">
+                        <div class="absolute -top-4 -left-4 w-10 h-10 bg-indigo-500 text-white font-black text-lg rounded-full flex items-center justify-center shadow-lg border-4 border-white">
+                            1
+                        </div>
+                        <h5 class="font-bold text-indigo-700 mb-3 mt-2 text-lg">센서 감지 (Percept)</h5>
+                        <p class="text-slate-700 text-base leading-relaxed">"[1,2] 칸으로 이동했더니,<br><strong>서늘한
+                            바람(Breeze)</strong>이 느껴진다."</p>
+                        <i class="fa-solid fa-chevron-right absolute -right-4 top-1/2 -translate-y-1/2 text-slate-300 text-2xl hidden md:block z-10 bg-white rounded-full"></i>
                     </div>
-                    <div class="flex items-start mb-4">
-                        <i class="fa-solid fa-angle-right text-indigo-400 mt-1 mr-3"></i>
-                        <p><strong>에이전트의 내부 규칙 (Rule):</strong><br>
-                            <span class="text-rose-300">IF</span> (현재 칸에 Breeze가 있다) <span
-                                    class="text-rose-300">THEN</span> (인접한 칸에 Pit이 존재한다)</p>
+
+                    <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6 relative">
+                        <div class="absolute -top-4 -left-4 w-10 h-10 bg-indigo-500 text-white font-black text-lg rounded-full flex items-center justify-center shadow-lg border-4 border-white">
+                            2
+                        </div>
+                        <h5 class="font-bold text-indigo-700 mb-3 mt-2 text-lg">규칙 적용 (Rule)</h5>
+                        <p class="text-slate-700 text-base leading-relaxed">내부 지식을 검색합니다.<br>"<span
+                                class="text-rose-500 font-bold">IF</span> 바람이 분다 <span class="text-rose-500 font-bold">THEN</span>
+                            주변에 구덩이가 있다."</p>
+                        <i class="fa-solid fa-chevron-right absolute -right-4 top-1/2 -translate-y-1/2 text-slate-300 text-2xl hidden md:block z-10 bg-white rounded-full"></i>
                     </div>
-                    <div class="flex items-start">
-                        <i class="fa-solid fa-check-double text-green-400 mt-1 mr-3"></i>
-                        <p><strong>논리적 추론 결론:</strong><br>
-                            "내가 온 [1,1]은 안전한 걸 알고 있어. 그렇다면 아직 가보지 않은 [1,3]이나 [2,2] 둘 중 하나에 <strong>반드시 구덩이(Pit)가
-                                있다!</strong> 당장 거기로 가지 말고 다른 안전한 길을 먼저 찾아야겠다."</p>
+
+                    <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6 relative">
+                        <div class="absolute -top-4 -left-4 w-10 h-10 bg-indigo-500 text-white font-black text-lg rounded-full flex items-center justify-center shadow-lg border-4 border-white">
+                            3
+                        </div>
+                        <h5 class="font-bold text-indigo-700 mb-3 mt-2 text-lg">기억(Fact) 확인</h5>
+                        <p class="text-slate-700 text-base leading-relaxed">"주변 칸 중 [1,1]은 내가 방금 지나왔으니
+                            <strong>안전(Safe)</strong>하다는 걸 알고 있어."</p>
+                        <i class="fa-solid fa-chevron-right absolute -right-4 top-1/2 -translate-y-1/2 text-indigo-300 text-2xl hidden md:block z-10 bg-white rounded-full"></i>
+                    </div>
+
+                    <div class="bg-indigo-600 text-white rounded-2xl p-6 relative shadow-md">
+                        <div class="absolute -top-4 -left-4 w-10 h-10 bg-yellow-400 text-slate-900 font-black text-lg rounded-full flex items-center justify-center shadow-lg border-4 border-white">
+                            4
+                        </div>
+                        <h5 class="font-bold text-yellow-300 mb-3 mt-2 text-lg">최종 추론 (Inference)</h5>
+                        <p class="text-indigo-50 text-base leading-relaxed">"그렇다면 남은 주변 칸인 <strong>[1,3]이나 [2,2]에 무조건
+                            구덩이가 있다!</strong> 거기로 가면 안 돼!"</p>
                     </div>
                 </div>
             </div>
 
             <div class="mt-8 bg-gradient-to-r from-rose-50 to-indigo-50 border-2 border-dashed border-indigo-200 p-8 rounded-2xl text-center">
                 <h4 class="text-2xl font-black text-slate-800 mb-2">이제 여러분이 직접 확인할 차례입니다!</h4>
-                <p class="text-slate-600 mb-6">AI 에이전트가 논리를 사용해 어떻게 안전하게 금을 찾는지 시뮬레이터를 통해 관찰해보세요.</p>
+                <p class="text-slate-600 text-base mb-6">AI 에이전트가 논리를 사용해 어떻게 안전하게 금을 찾는지 시뮬레이터를 통해 관찰해보세요.</p>
 
                 <a href="2-2-3.Wumpus-World.html" target="_blank"
                    class="inline-flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-rose-500 to-indigo-600 text-white text-lg font-bold rounded-xl hover:from-rose-600 hover:to-indigo-700 transition transform hover:-translate-y-1 shadow-lg hover:shadow-xl">
@@ -471,9 +493,8 @@
         </div>
     </section>
 
-
     <!-- 확인 퀴즈 (Interactive) -->
-    <section class="mb-10 scroll-mt-24" id="quiz">
+    <section class="mb-24 scroll-mt-24" id="quiz">
         <div class="bg-slate-900 rounded-3xl p-8 md:p-10 text-white shadow-xl relative overflow-hidden">
             <div class="relative z-10">
                 <div class="flex items-center gap-3 mb-6">
