@@ -116,7 +116,7 @@
         <div class="flex items-center space-x-2">
             <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white"><i
                     class="fa-solid fa-network-wired"></i></div>
-            <span class="font-black text-2xl tracking-tight text-slate-800">딥러닝 원리</span>
+            <span class="font-black text-2xl tracking-tight text-slate-800">딥러닝의 원리</span>
         </div>
         <div class="hidden md:flex space-x-8 font-bold text-slate-500 text-lg">
             <a href="#intro" class="hover:text-blue-600 transition">도입</a>
@@ -351,6 +351,18 @@
 </main>
 
 <script>
+    // 캔버스 해상도 보정 헬퍼 함수
+    function setupCanvasDPR(canvas, ctx) {
+        const dpr = window.devicePixelRatio || 1;
+        const rect = canvas.parentElement.getBoundingClientRect();
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+        ctx.scale(dpr, dpr);
+        canvas.style.width = `${rect.width}px`;
+        canvas.style.height = `${rect.height}px`;
+        return {w: rect.width, h: rect.height};
+    }
+
     // 탭 전환 로직
     function switchTab(index) {
         document.querySelectorAll('.tab-btn').forEach((btn, i) => {
@@ -378,10 +390,11 @@
         x: 3.5,
         y: 2.5,
         history: [],
+        logicalWidth: 0,
+        logicalHeight: 0,
 
         init() {
-            this.canvas.width = this.canvas.parentElement.clientWidth;
-            this.canvas.height = this.canvas.parentElement.clientHeight;
+            this.resize();
             this.reset();
 
             document.getElementById('lrSlider').addEventListener('input', (e) => {
@@ -395,8 +408,9 @@
         },
 
         resize() {
-            this.canvas.width = this.canvas.parentElement.clientWidth;
-            this.canvas.height = this.canvas.parentElement.clientHeight;
+            const dims = setupCanvasDPR(this.canvas, this.ctx);
+            this.logicalWidth = dims.w;
+            this.logicalHeight = dims.h;
             this.draw();
         },
 
@@ -432,20 +446,19 @@
         },
 
         toCanvas(valX, valY) {
-            let cw = this.canvas.width;
-            let ch = this.canvas.height;
-            // 좌표계: -5 ~ 5
+            let cw = this.logicalWidth;
+            let ch = this.logicalHeight;
             let cx = (valX + 5) / 10 * cw;
             let cy = ch - ((valY + 5) / 10 * ch);
             return {cx, cy};
         },
 
         draw() {
-            let w = this.canvas.width, h = this.canvas.height;
+            let w = this.logicalWidth, h = this.logicalHeight;
+            if (w === 0 || h === 0) return;
             let ctx = this.ctx;
             ctx.clearRect(0, 0, w, h);
 
-            // Draw Contours (등고선)
             let center = this.toCanvas(0, 0);
             for (let r = 1; r <= 8; r++) {
                 ctx.beginPath();
@@ -455,7 +468,6 @@
                 ctx.stroke();
             }
 
-            // Draw Grid lines (최적점 십자선)
             ctx.beginPath();
             ctx.moveTo(center.cx, 0);
             ctx.lineTo(center.cx, h);
@@ -467,7 +479,6 @@
             ctx.stroke();
             ctx.setLineDash([]);
 
-            // Draw Path
             ctx.beginPath();
             for (let i = 0; i < this.history.length; i++) {
                 let pt = this.toCanvas(this.history[i].x, this.history[i].y);
@@ -478,7 +489,6 @@
             ctx.lineWidth = 2;
             ctx.stroke();
 
-            // Draw Points
             for (let i = 0; i < this.history.length; i++) {
                 let pt = this.toCanvas(this.history[i].x, this.history[i].y);
                 ctx.beginPath();
@@ -496,7 +506,7 @@
     let nnNeurons = 4;
 
     function changeLayer(d) {
-        nnLayers = Math.max(1, Math.min(3, nnLayers + d));
+        nnLayers = Math.max(1, Math.min(5, nnLayers + d));
         document.getElementById('layerCountDisplay').innerText = nnLayers;
         nnSim.draw();
     }
@@ -512,6 +522,8 @@
         ctx: document.getElementById('nnCanvas').getContext('2d'),
         particles: [],
         animId: null,
+        logicalWidth: 0,
+        logicalHeight: 0,
 
         init() {
             this.resize();
@@ -522,18 +534,19 @@
         },
 
         resize() {
-            this.canvas.width = this.canvas.parentElement.clientWidth;
-            this.canvas.height = this.canvas.parentElement.clientHeight;
+            const dims = setupCanvasDPR(this.canvas, this.ctx);
+            this.logicalWidth = dims.w;
+            this.logicalHeight = dims.h;
             this.draw();
         },
 
         getNodes() {
-            let structure = [2]; // Input (Fixed 2)
-            for (let i = 0; i < nnLayers; i++) structure.push(nnNeurons); // Hidden
-            structure.push(1); // Output (Fixed 1)
+            let structure = [2];
+            for (let i = 0; i < nnLayers; i++) structure.push(nnNeurons);
+            structure.push(1);
 
-            let w = this.canvas.width;
-            let h = this.canvas.height;
+            let w = this.logicalWidth;
+            let h = this.logicalHeight;
             let nodes = [];
 
             let layerSpacing = w / (structure.length + 1);
@@ -555,9 +568,9 @@
         draw() {
             let {nodes} = this.getNodes();
             let ctx = this.ctx;
-            ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            if (this.logicalWidth === 0 || this.logicalHeight === 0) return;
+            ctx.clearRect(0, 0, this.logicalWidth, this.logicalHeight);
 
-            // Draw Edges
             ctx.lineWidth = 1.5;
             for (let n1 of nodes) {
                 for (let n2 of nodes) {
@@ -571,25 +584,23 @@
                 }
             }
 
-            // Draw Particles (Animation)
             for (let p of this.particles) {
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
-                ctx.fillStyle = '#a855f7'; // Purple
+                ctx.fillStyle = '#a855f7';
                 ctx.fill();
                 ctx.shadowBlur = 10;
                 ctx.shadowColor = '#a855f7';
             }
-            ctx.shadowBlur = 0; // reset
+            ctx.shadowBlur = 0;
 
-            // Draw Nodes
             for (let n of nodes) {
                 ctx.beginPath();
                 ctx.arc(n.x, n.y, 12, 0, Math.PI * 2);
 
-                if (n.layer === 0) ctx.fillStyle = '#3b82f6'; // Input: Blue
-                else if (n.layer === nnLayers + 1) ctx.fillStyle = '#10b981'; // Output: Green
-                else ctx.fillStyle = '#6366f1'; // Hidden: Indigo
+                if (n.layer === 0) ctx.fillStyle = '#3b82f6';
+                else if (n.layer === nnLayers + 1) ctx.fillStyle = '#10b981';
+                else ctx.fillStyle = '#6366f1';
 
                 ctx.fill();
                 ctx.strokeStyle = '#1e293b';
@@ -603,14 +614,13 @@
             this.particles = [];
             let {nodes} = this.getNodes();
 
-            // Create particles moving from each node to next layer nodes
             for (let n1 of nodes) {
                 for (let n2 of nodes) {
                     if (n2.layer === n1.layer + 1) {
                         this.particles.push({
                             sx: n1.x, sy: n1.y,
                             ex: n2.x, ey: n2.y,
-                            progress: -n1.layer * 0.4 // stagger animation by layer
+                            progress: -n1.layer * 0.4
                         });
                     }
                 }
@@ -623,7 +633,6 @@
                         p.progress += 0.02;
                         allDone = false;
                     }
-                    // Calculate current position
                     let prog = Math.max(0, p.progress);
                     p.x = p.sx + (p.ex - p.sx) * prog;
                     p.y = p.sy + (p.ey - p.sy) * prog;
@@ -663,6 +672,8 @@
         }
 
         sigmoid(x) {
+            // [Bug Fix] x 값이 과도하게 커지거나 작아지는 것을 클리핑하여 NaN(오버플로우) 방지
+            x = Math.max(-50, Math.min(50, x));
             return 1 / (1 + Math.exp(-x));
         }
 
@@ -670,7 +681,6 @@
             let totalLoss = 0;
             for (let i = 0; i < X.length; i++) {
                 let x = X[i], y = Y[i];
-                // Forward
                 let z1 = [], a1 = [];
                 for (let j = 0; j < this.hn; j++) {
                     z1[j] = x[0] * this.w1[0][j] + x[1] * this.w1[1][j] + this.b1[j];
@@ -681,10 +691,8 @@
                 z2 += this.b2;
                 let a2 = this.sigmoid(z2);
 
-                // Loss
                 totalLoss += -(y * Math.log(a2 + 1e-7) + (1 - y) * Math.log(1 - a2 + 1e-7));
 
-                // Backward
                 let dz2 = a2 - y;
                 let dw2 = [], db2 = dz2;
                 for (let j = 0; j < this.hn; j++) dw2[j] = dz2 * a1[j];
@@ -697,7 +705,6 @@
                     db1[j] = dz1[j];
                 }
 
-                // Update
                 for (let j = 0; j < this.hn; j++) {
                     this.w2[j] -= lr * dw2[j];
                     this.w1[0][j] -= lr * dw1[0][j];
@@ -729,22 +736,22 @@
         epoch: 0,
         isTraining: false,
         animId: null,
+        logicalWidth: 0,
+        logicalHeight: 0,
 
         generateData() {
             this.dataX = [];
             this.dataY = [];
-            // Circle Data
             for (let i = 0; i < 100; i++) {
                 let r = Math.random() * 5;
                 let angle = Math.random() * Math.PI * 2;
                 let isInner = r < 2.5;
                 let cls = isInner ? 1 : 0;
 
-                // add noise
                 let x = r * Math.cos(angle) + (Math.random() - 0.5) * 0.5;
                 let y = r * Math.sin(angle) + (Math.random() - 0.5) * 0.5;
 
-                this.dataX.push([x / 5, y / 5]); // normalize to -1 ~ 1
+                this.dataX.push([x / 5, y / 5]);
                 this.dataY.push(cls);
             }
         },
@@ -776,13 +783,20 @@
         },
 
         resize() {
-            this.canvas.width = this.canvas.parentElement.clientWidth;
-            this.canvas.height = this.canvas.parentElement.clientHeight;
+            const dims = setupCanvasDPR(this.canvas, this.ctx);
+            this.logicalWidth = dims.w;
+            this.logicalHeight = dims.h;
             this.draw();
         },
 
         resetModel() {
             this.isTraining = false;
+            // [Bug Fix] 이전 프레임 루프가 남아있을 수 있으므로 강제 취소
+            if (this.animId) {
+                cancelAnimationFrame(this.animId);
+                this.animId = null;
+            }
+
             document.getElementById('btnDbTrain').innerHTML = '<i class="fa-solid fa-play mr-2"></i>학습 실행';
             let hn = parseInt(document.getElementById('dbNeuronSlider').value);
             this.mlp = new TinyMLP(hn);
@@ -796,7 +810,6 @@
             if (!this.isTraining) return;
 
             let loss = 0;
-            // Train 10 epochs per frame for speed
             for (let i = 0; i < 10; i++) {
                 loss = this.mlp.train(this.dataX, this.dataY, 0.1);
                 this.epoch++;
@@ -810,25 +823,22 @@
         },
 
         draw() {
-            let w = this.canvas.width;
-            let h = this.canvas.height;
+            let w = this.logicalWidth;
+            let h = this.logicalHeight;
             let ctx = this.ctx;
+            if (w === 0 || h === 0) return;
 
-            // Draw Background (Decision Boundary)
-            let res = 30; // Grid resolution
+            let res = 30;
             let pw = w / res;
             let ph = h / res;
 
             for (let i = 0; i < res; i++) {
                 for (let j = 0; j < res; j++) {
-                    // Map grid to -1 ~ 1
                     let nx = (i / res) * 2 - 1;
-                    let ny = -((j / res) * 2 - 1); // Y is flipped
+                    let ny = -((j / res) * 2 - 1);
 
                     let p = this.mlp.predict(nx, ny);
 
-                    // Color blend: Orange (0) to Blue (1)
-                    // Blue: 59, 130, 246 / Orange: 249, 115, 22
                     let r = 249 + p * (59 - 249);
                     let g = 115 + p * (130 - 115);
                     let b = 22 + p * (246 - 22);
@@ -838,7 +848,6 @@
                 }
             }
 
-            // Draw Data Points
             for (let i = 0; i < this.dataX.length; i++) {
                 let x = this.dataX[i][0];
                 let y = this.dataX[i][1];
@@ -849,7 +858,7 @@
 
                 ctx.beginPath();
                 ctx.arc(cx, cy, 5, 0, Math.PI * 2);
-                ctx.fillStyle = cls === 1 ? '#2563eb' : '#ea580c'; // Dark Blue / Dark Orange
+                ctx.fillStyle = cls === 1 ? '#2563eb' : '#ea580c';
                 ctx.fill();
                 ctx.strokeStyle = 'white';
                 ctx.lineWidth = 1;
@@ -864,6 +873,7 @@
     ========================================================= */
     const ofSim = {
         chart: null,
+        animInterval: null, // [Bug Fix] 제어권 상실 방지를 위해 객체 프로퍼티로 승격
 
         init() {
             const ctx = document.getElementById('overfitChart').getContext('2d');
@@ -912,29 +922,21 @@
         runSim() {
             let complexity = parseInt(document.getElementById('ofComplexSlider').value);
 
-            // Generate synthetic loss data
             let labels = [];
             let trainData = [];
             let valData = [];
-
             let totalEpochs = 100;
 
             for (let i = 0; i <= totalEpochs; i++) {
                 labels.push(i);
-
-                // Train loss decays exponentially
                 let tLoss = 1.5 * Math.exp(-i / 20) + 0.1 + (Math.random() * 0.05);
-
-                // Val loss decays then rises if complexity is high
-                // Complexity 1: no rise, Complexity 5: sharp rise
-                let overfitFactor = (complexity - 1) * 0.0003;
+                let overfitFactor = (complexity - 1) * 0.00010;
                 let vLoss = 1.5 * Math.exp(-i / 20) + 0.15 + (overfitFactor * i * i) + (Math.random() * 0.05);
 
                 trainData.push(tLoss);
                 valData.push(vLoss);
             }
 
-            // Animate drawing
             this.chart.data.labels = [];
             this.chart.data.datasets[0].data = [];
             this.chart.data.datasets[1].data = [];
@@ -945,10 +947,16 @@
             btn.disabled = true;
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>시뮬레이션 중...';
 
-            const animInterval = setInterval(() => {
-                for (let k = 0; k < 5; k++) { // add 5 points per frame
+            // [Bug Fix] 이전 실행 중인 인터벌 초기화
+            if (this.animInterval) {
+                clearInterval(this.animInterval);
+            }
+
+            this.animInterval = setInterval(() => {
+                for (let k = 0; k < 5; k++) {
                     if (step > totalEpochs) {
-                        clearInterval(animInterval);
+                        clearInterval(this.animInterval);
+                        this.animInterval = null;
                         btn.disabled = false;
                         btn.innerHTML = '<i class="fa-solid fa-chart-line mr-2"></i>시뮬레이션 재실행';
                         return;
