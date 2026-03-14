@@ -180,6 +180,7 @@
         }
 
         .practice-link i {
+            width: 1.2em;
             margin-right: 0.5rem;
             font-size: 1.1rem;
             opacity: 0.9;
@@ -239,6 +240,46 @@
         /* 앰버 ↔ 오렌지 */
         .grad-amber {
             background: linear-gradient(135deg, #f59e0b, #f97316);
+        }
+
+        /* 바이올렛 ↔ 푸시아 (강한 대비, 시각적 강조용) */
+        .grad-violet {
+            background: linear-gradient(135deg, #7c3aed, #d946ef);
+        }
+
+        /* 시안 ↔ 인디고 (차가운 기술 느낌, AI/데이터 페이지에 적합) */
+        .grad-cyan {
+            background: linear-gradient(135deg, #06b6d4, #6366f1);
+        }
+
+        /* 옐로우 ↔ 앰버 (밝고 에너지 있는 버튼) */
+        .grad-yellow {
+            background: linear-gradient(135deg, #facc15, #f59e0b);
+        }
+
+        /* 민트 ↔ 틸 (차분하고 깔끔한 녹색 톤) */
+        .grad-mint {
+            background: linear-gradient(135deg, #2dd4bf, #0d9488);
+        }
+
+        /* 코랄 ↔ 핑크 (부드러운 따뜻한 강조색) */
+        .grad-coral {
+            background: linear-gradient(135deg, #fb7185, #ec4899);
+        }
+
+        /* 블루 ↔ 시안 (시원한 바다 느낌, 기술 콘텐츠에 적합) */
+        .grad-ocean {
+            background: linear-gradient(135deg, #2563eb, #06b6d4);
+        }
+
+        /* 플럼 ↔ 퍼플 (깊이 있는 보라 계열) */
+        .grad-plum {
+            background: linear-gradient(135deg, #7e22ce, #a855f7);
+        }
+
+        /* 라임 ↔ 옐로우 (밝고 경쾌한 학습 버튼) */
+        .grad-spring {
+            background: linear-gradient(135deg, #a3e635, #facc15);
         }
 
     </style>
@@ -369,27 +410,27 @@
                         </div>
 
                         <a class="practice-link grad-blue" href="인공지능기초(2015개정)/2-1-2.컴퓨터-비전-ml5.html">
-                            <i class="fa-solid fa-eye"></i><span>컴퓨터 비전</span>
+                            <i class="fa-solid fa-eye w-[1.2em] text-center"></i><span>컴퓨터 비전</span>
                         </a>
 
                         <a class="practice-link grad-rose" href="인공지능기초(2015개정)/2-2-3.Wumpus-World.html">
-                            <i class="fa-solid fa-compass"></i><span>Wumpus World</span>
+                            <i class="fa-solid fa-compass w-[1.2em] text-center"></i><span>Wumpus World</span>
                         </a>
 
                         <a class="practice-link grad-purple" href="인공지능기초(2015개정)/2-2-1.탐색-8-퍼즐.html">
-                            <i class="fa-solid fa-puzzle-piece"></i><span>8-퍼즐</span>
+                            <i class="fa-solid fa-puzzle-piece w-[1.2em] text-center"></i><span>8-퍼즐</span>
                         </a>
 
                         <a class="practice-link grad-emerald" href="인공지능기초(2015개정)/2-2-1.탐색-n-Queen.html">
-                            <i class="fa-solid fa-chess-queen"></i><span>N-Queen</span>
+                            <i class="fa-solid fa-chess-queen w-[1.2em] text-center"></i><span>N-Queen</span>
                         </a>
 
                         <a class="practice-link grad-teal" href="인공지능기초(2015개정)/2-2-2.트리-탐색-방법-BFS-DFS.html">
-                            <i class="fa-solid fa-diagram-project"></i><span>무정보 탐색</span>
+                            <i class="fa-solid fa-route w-[1.2em] text-center"></i><span>무정보 탐색</span>
                         </a>
 
                         <a class="practice-link grad-amber" href="인공지능기초(2015개정)/2-2-2.트리-탐색-방법-휴리스틱-탐색.html">
-                            <i class="fa-solid fa-compass"></i><span>휴리스틱 탐색</span>
+                            <i class="fa-solid fa-map w-[1.2em] text-center"></i><span>휴리스틱 탐색</span>
                         </a>
 
                         <div class="col-span-full flex items-center gap-3 mt-4 mb-2">
@@ -399,30 +440,36 @@
                         </div>
 
                         <a class="practice-link grad-sky" href="인공지능기초(2015개정)/2-3-1.기계학습-Linear-Regression.html">
-                            <i class="fa-solid fa-chart-line"></i><span>선형 회귀</span>
+                            <i class="fa-solid fa-chart-line w-[1.2em] text-center"></i><span>선형 회귀</span>
                         </a>
 
                         <a class="practice-link grad-indigo" href="인공지능기초(2015개정)/2-3-1.기계학습-Logistic-Regression.html">
-                            <i class="fa-solid fa-wave-square"></i><span>로지스틱 회귀</span>
+                            <i class="fa-solid fa-wave-square w-[1.2em] text-center"></i><span>로지스틱 회귀</span>
                         </a>
 
                         <a class="practice-link grad-orange" href="인공지능기초(2015개정)/2-3-1.기계학습-Decision-Tree.html">
-                            <i class="fa-solid fa-diagram-project"></i><span>의사결정 트리</span>
+                            <i class="fa-solid fa-diagram-project w-[1.2em] text-center"></i><span>의사결정 트리</span>
                         </a>
 
                         <a class="practice-link grad-pink" href="인공지능기초(2015개정)/2-3-1.기계학습-K-NN.html">
-                            <i class="fa-solid fa-people-arrows"></i><span>K-NN</span>
+                            <i class="fa-solid fa-people-group w-[1.2em] text-center"></i><span>K-NN</span>
                         </a>
 
                         <a class="practice-link grad-lime" href="인공지능기초(2015개정)/2-3-1.기계학습-SVM.html">
-                            <i class="fa-solid fa-sliders"></i><span>SVM</span>
+                            <i class="fa-solid fa-vector-square w-[1.2em] text-center"></i><span>SVM</span>
                         </a>
 
                         <a class="practice-link grad-purple" href="인공지능기초(2015개정)/2-3-1.기계학습-K-Means.html">
-                            <i class="fa-solid fa-circle-nodes"></i><span>K-Means</span>
+                            <i class="fa-solid fa-circle-nodes w-[1.2em] text-center"></i><span>K-Means</span>
                         </a>
+
+                        <a class="practice-link grad-violet" href="인공지능기초(2015개정)/2-3-1.강화학습-Multi-Armed-Bandit.html">
+                            <i class="fa-solid fa-dice w-[1.2em] text-center"></i><span>Multi-Armed Bandit</span>
+                        </a>
+
                     </div>
                 </div>
+
             </div>
 
             <div class="space-y-4">
