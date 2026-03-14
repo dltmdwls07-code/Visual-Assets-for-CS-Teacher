@@ -5,7 +5,7 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>AI 논리 추론 시뮬레이터 - Wumpus World</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" rel="stylesheet">
     <style>
         @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
 
@@ -141,42 +141,109 @@
         </div>
         <div class="hidden md:flex space-x-8 font-bold text-slate-500 text-lg">
             <a class="hover:text-indigo-600 transition" href="#intro">도입</a>
-            <a class="hover:text-indigo-600 transition" href="#concept">핵심개념</a>
+            <a class="hover:text-indigo-600 transition" href="#wumpus-guide">핵심개념</a>
             <a class="hover:text-indigo-600 transition" href="#activity">시뮬레이터</a>
-            <a class="hover:text-indigo-600 transition" href="#quiz">자가진단</a>
         </div>
     </div>
 </nav>
 
 <main class="max-w-6xl mx-auto px-6 py-20 space-y-24">
 
-    <section class="scroll-mt-24 space-y-12" id="concept">
-        <div class="text-center space-y-4">
-            <h2 class="text-3xl md:text-4xl font-black text-slate-900">추론의 3단계</h2>
-            <div class="w-20 h-1.5 bg-indigo-500 mx-auto rounded-full"></div>
+    <section id="wumpus-guide" class="mb-8">
+        <div class="text-center mb-8">
+            <h2 class="text-3xl font-black">Wumpus World (웜퍼스 월드)<br>
+                추론 에이전트</h2>
+            <div class="w-20 h-1.5 bg-indigo-500 mx-auto rounded-full mt-4"></div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="section-card !p-8">
-                <div class="w-14 h-14 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center mb-6">
-                    <i class="fa-solid fa-eye text-3xl"></i>
-                </div>
-                <h3 class="text-2xl font-bold mb-4">1. 지각</h3>
-                <p class="text-slate-600 text-xl">💨 바람이나 🤢 악취 같은 환경 정보를 센서로 감지합니다.</p>
-            </div>
-            <div class="section-card !p-8">
-                <div class="w-14 h-14 bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center mb-6"><i
-                        class="fa-solid fa-book-journal-whills text-3xl"></i></div>
-                <h3 class="text-2xl font-bold mb-4">2. 추론</h3>
-                <p class="text-slate-600 text-xl">
-                    <span class="not-symbol">¬</span>(not) 기호를 써서 "바람이 없으니 주변에 함정도 없다"는 결론을 냅니다.
+        <div class="bg-white rounded-3xl shadow-md border border-slate-200 overflow-hidden">
+            <div class="bg-gradient-to-r from-indigo-600 to-rose-500 p-6 text-center">
+                <h2 class="text-2xl font-black text-white mb-2 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-brain"></i> 논리 추론 관찰 가이드
+                </h2>
+                <p class="text-indigo-50 text-lg">
+                    <strong>"에이전트는 보이지 않는 위험을 주변 단서를 통해 논리적으로 추론해야 합니다."</strong>
                 </p>
             </div>
-            <div class="section-card !p-8">
-                <div class="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center mb-6">
-                    <i class="fa-solid fa-shoe-prints text-3xl"></i></div>
-                <h3 class="text-2xl font-bold mb-4">3. 행동</h3>
-                <p class="text-slate-600 text-xl">가장 안전한 칸으로 이동하며, 막히면 위험을 감수하거나 되돌아갑니다.</p>
+
+            <div class="p-6 md:p-8 space-y-8">
+                <div>
+                    <h3 class="text-lg font-bold text-slate-800 mb-4 border-b pb-2"><i
+                            class="fa-solid fa-book-journal-whills text-indigo-500 mr-2"></i> 1. 환경 단서(Percept)와 추론 규칙
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="bg-slate-50 border border-slate-200 p-4 rounded-xl flex items-start gap-3">
+                            <div class="text-2xl mt-1">💨</div>
+                            <div>
+                                <span class="font-bold text-blue-600">바람 (Breeze)</span>
+                                <p class="text-base text-slate-600 mt-1">바람이 불면 주변 상하좌우 칸 중 어딘가에 함정(🕳️)이 존재합니다.</p>
+                            </div>
+                        </div>
+                        <div class="bg-slate-50 border border-slate-200 p-4 rounded-xl flex items-start gap-3">
+                            <div class="text-2xl mt-1">🤢</div>
+                            <div>
+                                <span class="font-bold text-rose-600">냄새 (Stench)</span>
+                                <p class="text-base text-slate-600 mt-1">악취가 나면 주변 상하좌우 칸 중 어딘가에 몬스터(👹)가 존재합니다.</p>
+                            </div>
+                        </div>
+                        <div class="bg-slate-50 border border-slate-200 p-4 rounded-xl flex items-start gap-3">
+                            <div class="text-2xl mt-1">💰</div>
+                            <div>
+                                <span class="font-bold text-amber-500">반짝임 (Glitter)</span>
+                                <p class="text-base text-slate-600 mt-1">현재 칸에 목표물인 금(Gold)이 있습니다. 주워야(Grab) 합니다!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-indigo-50 border border-indigo-100 p-5 rounded-2xl">
+                    <h3 class="text-lg font-bold text-indigo-800 mb-3"><i
+                            class="fa-solid fa-lightbulb text-amber-500 mr-2"></i> 2. 논리 추론 예시 (에이전트의 생각 흐름)</h3>
+                    <ul class="space-y-2 text-slate-700 text-base md:text-base list-none pl-0">
+                        <li class="flex items-start">
+                            <i class="fa-solid fa-check text-green-500 mt-1 mr-2"></i>
+                            <span><strong>(0,0) 시작 지점:</strong> 바람과 냄새가 없다. <i
+                                    class="fa-solid fa-arrow-right mx-1 text-slate-400"></i> 인접한 (1,0)과 (0,1)은 100% <strong>안전(Safe)</strong>하다!</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa-solid fa-check text-green-500 mt-1 mr-2"></i>
+                            <span><strong>(1,0) 이동 후:</strong> 바람(💨)을 감지했다. <i
+                                    class="fa-solid fa-arrow-right mx-1 text-slate-400"></i> 방금 온 (0,0)은 안전하므로, 나머지 인접 칸인 <strong>(2,0) 또는 (1,1) 중 하나에 무조건 함정(Pit)이 있다!</strong> 일단 다른 안전한 길을 찾아야겠다.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-bold text-slate-800 mb-4 border-b pb-2"><i
+                            class="fa-solid fa-eye text-indigo-500 mr-2"></i> 3. 시뮬레이터 화면 보는 법 (에이전트의 지식베이스)</h3>
+                    <p class="text-base text-slate-600 mb-4">그리드의 색상은 정답이 아니라, <strong>에이전트가 현재까지 추론해낸 '생각(지식)'</strong>을
+                        시각화한 것입니다.</p>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-center text-base">
+                        <div class="bg-white border-2 border-indigo-500 p-3 rounded-xl shadow-sm">
+                            <span class="block font-bold text-slate-800 mb-1">방문 완료</span>
+                            <span class="text-base text-slate-500">이미 지나온 길</span>
+                        </div>
+                        <div class="bg-green-100 border-2 border-green-400 p-3 rounded-xl shadow-sm">
+                            <span class="block font-bold text-green-700 mb-1">안전 지대</span>
+                            <span class="text-base text-green-600">논리적으로 100% 안전함</span>
+                        </div>
+                        <div class="bg-yellow-50 border-2 border-yellow-300 p-3 rounded-xl shadow-sm">
+                            <span class="block font-bold text-yellow-700 mb-1">위험 의심</span>
+                            <span class="text-base text-yellow-600">위험할 가능성이 있음</span>
+                        </div>
+                        <div class="bg-rose-100 border-2 border-rose-500 p-3 rounded-xl shadow-sm">
+                            <span class="block font-bold text-rose-700 mb-1">사망</span>
+                            <span class="text-base text-rose-600">추론 실패 또는 운 나쁨</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center pt-2">
+                    <p class="font-bold text-slate-800">이제 <span
+                            class="bg-slate-200 px-2 py-1 rounded text-base">Next</span> 버튼을 하나씩 누르며 에이전트의 추론 과정을 관찰해
+                        보세요!
+                    </p>
+                </div>
             </div>
         </div>
     </section>
@@ -222,18 +289,20 @@
                 <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
 
                     <button id="btn-step"
-                            class="h-20 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-2xl shadow-xl text-2xl transition-all active:scale-95 flex items-center justify-center">
+                            class="h-20 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-2xl shadow-xl text-2xl transition-all active:scale-95 flex items-center justify-center gap-3">
+                        <i class="fa-solid fa-forward-step"></i>
                         Next
                     </button>
 
                     <button id="btn-run"
-                            class="h-20 bg-slate-800 hover:bg-slate-900 text-white font-bold rounded-2xl shadow-xl text-2xl transition-all flex items-center justify-center">
+                            class="h-20 bg-slate-800 hover:bg-slate-900 text-white font-bold rounded-2xl shadow-xl text-2xl transition-all flex items-center justify-center gap-3">
+                        <i class="fa-solid fa-play"></i>
                         Run
                     </button>
 
                     <button id="btn-reset"
-                            class="h-20 col-span-2 md:col-span-1 w-full bg-rose-50 hover:bg-rose-100 text-rose-600 border-2 border-rose-200 rounded-2xl transition-colors flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-arrow-rotate-right text-xl"></i>
+                            class="h-20 col-span-2 md:col-span-1 w-full bg-rose-50 hover:bg-rose-100 text-rose-600 border-2 border-rose-200 rounded-2xl transition-colors flex items-center justify-center gap-2 text-xl font-bold">
+                        <i class="fa-solid fa-arrow-rotate-right"></i>
                         Reset
                     </button>
 
@@ -262,28 +331,6 @@
                     </h3>
                     <div id="kb-panel"
                          class="flex-1 overflow-y-auto text-xl font-mono space-y-2 text-teal-300 pr-2"></div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="scroll-mt-24 space-y-12" id="quiz">
-        <div class="text-center">
-            <h2 class="text-3xl font-black">자가 진단</h2>
-            <div class="w-20 h-1.5 bg-indigo-500 mx-auto rounded-full mt-4"></div>
-        </div>
-        <div class="max-w-3xl mx-auto">
-            <div class="bg-white p-12 rounded-[3rem] shadow-xl border border-slate-100">
-                <p class="text-xl font-bold mb-10 text-slate-800 leading-tight text-center">
-                    논리 기호 <span class="not-symbol">¬</span>의 올바른 의미는?
-                </p>
-                <div class="grid grid-cols-1 gap-4">
-                    <button class="quiz-btn text-xl py-6 px-8 text-center justify-center"
-                            onclick="checkAnswer(this, true, '정답입니다! ¬A는 A가 아님(NOT)을 의미해요.')">부정 (NOT)
-                    </button>
-                    <button class="quiz-btn text-xl py-6 px-8 text-center justify-center"
-                            onclick="checkAnswer(this, false, '다시 한번 확인해보세요!')">긍정 (AND)
-                    </button>
                 </div>
             </div>
         </div>
@@ -724,7 +771,7 @@
     document.getElementById('btn-run').addEventListener('click', () => {
         if (runInterval) stopAutoRun();
         else {
-            document.getElementById('btn-run').innerHTML = 'Pause';
+            document.getElementById('btn-run').innerHTML = '<i class="fa-solid fa-pause"></i> Pause';
             // Run 버튼은 SENSE-INFER-MOVE 사이클을 한 번에 빠르게 진행하여 체감 속도를 높임
             runInterval = setInterval(() => {
                 if (agent.hasGold || agent.isDead) {
@@ -742,7 +789,7 @@
     function stopAutoRun() {
         if (runInterval) clearInterval(runInterval);
         runInterval = null;
-        document.getElementById('btn-run').innerHTML = 'Run';
+        document.getElementById('btn-run').innerHTML = '<i class="fa-solid fa-play"></i> Run';
     }
 
     initGame();
