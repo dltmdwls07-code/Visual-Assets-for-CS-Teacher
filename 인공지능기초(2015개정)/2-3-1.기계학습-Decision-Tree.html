@@ -279,8 +279,8 @@
                                     onclick="runCatPrediction()">
                                 예측 시작 <i class="fa-solid fa-arrow-right ml-1"></i></button>
                         </div>
-                        <div class="hidden mt-4 p-4 text-center font-bold border-2 border-emerald-500 bg-emerald-50 text-emerald-700 text-xl rounded-xl"
-                             id="predResult">
+                        <div id="predResult"
+                             class="mt-4 p-4 text-center font-bold border-2 border-emerald-500 bg-emerald-50 text-emerald-700 text-xl rounded-xl opacity-0 pointer-events-none transition-opacity duration-300 min-h-[60px]">
                         </div>
                     </div>
                 </div>
@@ -464,7 +464,9 @@
         treeCat = null;
         renderCatTable();
         renderCatTree();
-        document.getElementById('predResult').classList.add('hidden');
+        const resEl = document.getElementById('predResult');
+        resEl.classList.remove('opacity-100', 'pointer-events-auto');
+        resEl.classList.add('opacity-0', 'pointer-events-none');
     }
 
     function addCatData() {
@@ -483,7 +485,10 @@
         treeCat = null;
         renderCatTable();
         renderCatTree();
-        document.getElementById('predResult').classList.add('hidden');
+
+        const resEl = document.getElementById('predResult');
+        resEl.classList.remove('opacity-100', 'pointer-events-auto');
+        resEl.classList.add('opacity-0', 'pointer-events-none');
     }
 
     function removeCatData(id) {
@@ -492,7 +497,10 @@
         treeCat = null;
         renderCatTable();
         renderCatTree();
-        document.getElementById('predResult').classList.add('hidden');
+
+        const resEl = document.getElementById('predResult');
+        resEl.classList.remove('opacity-100', 'pointer-events-auto');
+        resEl.classList.add('opacity-0', 'pointer-events-none');
     }
 
     function renderCatTable() {
@@ -581,7 +589,10 @@
         treeCat = buildTreeCat(datasetCat, [], 0);
         renderCatTree();
         showToast('성공적으로 트리가 생성되었습니다!', 'success');
-        document.getElementById('predResult').classList.add('hidden');
+
+        const resEl = document.getElementById('predResult');
+        resEl.classList.remove('opacity-100', 'pointer-events-auto');
+        resEl.classList.add('opacity-0', 'pointer-events-none');
     }
 
     function renderCatTree() {
@@ -677,7 +688,6 @@
         isPredictingCat = true;
 
         const btn = document.getElementById('btnCatPred');
-        const resEl = document.getElementById('predResult');
 
         // [상태 오류 방지] UI 버튼들 잠금 처리
         const controls = [document.getElementById('btnCatAdd'), document.getElementById('btnCatTrain'), document.getElementById('btnCatReset')];
@@ -685,7 +695,10 @@
 
         btn.disabled = true;
         btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i>탐색 중...`;
-        resEl.classList.remove('hidden');
+
+        const resEl = document.getElementById('predResult');
+        resEl.classList.remove('opacity-0', 'pointer-events-none');
+        resEl.classList.add('opacity-100', 'pointer-events-auto');
         resEl.className = "mt-4 p-4 text-center font-bold border-2 border-emerald-500 bg-emerald-50 text-emerald-700 text-xl rounded-xl";
         resEl.innerHTML = '트리를 탐색하는 중입니다...';
 
