@@ -176,11 +176,45 @@
                 <span class="font-black text-emerald-600 bg-emerald-50 px-2 py-1 rounded">횟수 중심</span>
             </div>
 
+            <div class="bg-indigo-50 border border-indigo-100 p-6 rounded-2xl mb-6">
+                <h4 class="font-bold text-indigo-800 mb-4 flex items-center gap-2">
+                    <i class="w-5 h-5" data-lucide="microscope"></i>
+                    독학 포인트: for문은 어떤 순서로 움직일까?
+                </h4>
+                <div class="bg-white p-4 rounded-xl border border-indigo-100 mb-4 font-mono text-base md:text-base">
+                    for ( <span class="text-blue-600 font-bold">① 초기식</span> ; <span class="text-rose-600 font-bold">② 조건식</span>
+                    ; <span class="text-emerald-600 font-bold">④ 증감식</span> ) { <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-purple-600 font-bold">③ 실행문</span> ; <br>
+                    }
+                </div>
+                <ul class="space-y-3 text-base md:text-base text-indigo-900/80">
+                    <li class="flex items-start gap-2">
+                        <span class="bg-blue-600 text-white w-5 h-5 rounded-full flex items-center justify-center text-base font-bold shrink-0 mt-0.5">1</span>
+                        <p><b>초기식:</b> 반복을 시작할 때 <b>딱 한 번만</b> 실행됩니다. (예: <span
+                                class="font-bold bg-amber-200 px-1 rounded">i = 1</span>)</p>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="bg-rose-500 text-white w-5 h-5 rounded-full flex items-center justify-center text-base font-bold shrink-0 mt-0.5">2</span>
+                        <p><b>조건식:</b> 이 조건이 '참'인지 확인합니다. 참이면 안으로 들어가고, 거짓이면 반복문이 즉시 끝납니다. (예: <span
+                                class="font-bold bg-amber-200 px-1 rounded">i < 10</span>)</p>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="bg-purple-500 text-white w-5 h-5 rounded-full flex items-center justify-center text-base font-bold shrink-0 mt-0.5">3</span>
+                        <p><b>실행문:</b> 조건이 참일 때 실행되는 실제 코드입니다. 중괄호 <span
+                                class="font-bold bg-amber-200 px-1 rounded">{ }</span> 안의 내용입니다.</p>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="bg-emerald-500 text-white w-5 h-5 rounded-full flex items-center justify-center text-base font-bold shrink-0 mt-0.5">4</span>
+                        <p><b>증감식:</b> 실행문이 끝나면 <b>다시 위로 올라와서</b> 변수를 증가/감소시킵니다. 그리고 다시 <b>② 조건식</b>으로 돌아갑니다. (예: <span
+                                class="font-bold bg-amber-200 px-1 rounded">i++</span>)</p>
+                    </li>
+                </ul>
+            </div>
+
             <div class="bg-slate-50 rounded-2xl border border-slate-300 overflow-hidden">
                 <div class="px-4 py-3 bg-slate-100/60 border-b border-slate-300">
                     <h5 class="font-bold text-slate-800 flex items-center gap-2">
-                        <span class="bg-purple-500 text-white px-2 py-1 rounded-full">for문</span>
-                        횟수가 명확할 때
+                        <span class="bg-purple-500 text-white px-2 py-1 rounded-full">for문</span> 횟수가 명확할 때
                     </h5>
                 </div>
                 <div class="relative bg-[#1d1f21] h-full">
@@ -471,6 +505,19 @@ int main()
                     </div>
                 </div>
             </div>
+
+            <div class="bg-slate-50 border-l-4 border-slate-400 px-5 py-4 rounded-r-2xl md:col-span-2">
+                <h4 class="font-bold text-slate-700 flex items-center gap-2 mb-2">
+                    <i class="w-4 h-4" data-lucide="help-circle"></i>
+                    잠깐! 문자에 어떻게 숫자를 빼나요? (ch - 32)
+                </h4>
+                <p class="text-base text-slate-600 leading-relaxed">
+                    컴퓨터는 문자를 저장할 때 고유의 숫자(아스키코드)로 바꾸어 저장합니다. 소문자 'a'는 97이고, 대문자 'A'는 65입니다.
+                    소문자와 대문자는 항상 <span class="font-bold bg-slate-200 px-1 rounded">32</span>만큼 차이가 나기 때문에,
+                    <b>소문자에서 32를 빼면 대문자가 되는 마법</b>이 일어납니다! 반복문과 함께 자주 쓰이는 C언어의 특징입니다.
+                </p>
+            </div>
+
         </div>
     </section>
 
@@ -549,6 +596,23 @@ int main()
         </p>
 
         <div class="space-y-6">
+
+            <div class="mb-6 space-y-4">
+                <p class="md:text-base text-slate-600 leading-relaxed">
+                    앞선 선택 구조 단원에서 <b>"C언어는 0이 아닌 모든 수를 참(True)으로 본다"</b>고 배웠습니다.
+                    따라서 <span class="text-indigo-600 font-bold bg-indigo-50 px-1.5 py-0.5 rounded">while (1)</span>이라고
+                    적으면 조건이 "무조건 참"이 되어 <b>의도적인 무한 루프</b>가 만들어집니다.
+                </p>
+                <div class="bg-rose-50 border border-rose-100 p-4 rounded-xl flex gap-3 items-start">
+                    <i class="w-5 h-5 text-rose-500 shrink-0 mt-0.5" data-lucide="shield-alert"></i>
+                    <p class="text-base text-rose-800 leading-relaxed">
+                        무한 루프를 만들 때는 프로그램이 먹통이 되지 않도록 반드시 내부에 <b><span
+                            class="font-bold bg-amber-200 px-1 rounded">if</span> 조건문과 <span
+                            class="font-bold bg-amber-200 px-1 rounded">break;</span>를 짝꿍처럼 결합</b>하여 "탈출구"를 만들어 주어야 합니다.
+                    </p>
+                </div>
+            </div>
+
             <!-- 106.c -->
             <div class="bg-slate-50 rounded-2xl border border-slate-300 overflow-hidden flex flex-col">
                 <div class="px-4 py-3 bg-slate-100/60 border-b border-slate-300 flex-none">
@@ -674,6 +738,25 @@ int main()
                     </div>
                 </div>
             </div>
+
+            <div class="bg-amber-50 border border-amber-200 p-5 rounded-2xl mb-2 flex gap-4 items-start">
+                <div class="bg-amber-100 p-2 rounded-full text-amber-600 shrink-0 mt-1">
+                    <i class="w-5 h-5" data-lucide="alert-triangle"></i>
+                </div>
+                <div>
+                    <h4 class="font-bold text-amber-800 mb-2">초보자 단골 실수: while문에서 continue를 쓸 때 조심하세요!</h4>
+                    <p class="text-base text-amber-900/80 leading-relaxed">
+                        for문과 달리 while문은 증감식(<span class="font-bold bg-amber-200 px-1 rounded">i++</span>)을 보통 블록 맨 아래에
+                        적습니다.
+                        만약 증감식 위에 <span class="font-bold bg-amber-200 px-1 rounded">continue;</span>가 있으면 어떻게 될까요? 증감식을
+                        만나기도 전에 위로 튕겨 올라가 버리기 때문에,
+                        변수 값이 영원히 변하지 않고 <b>무한 루프</b>에 빠지게 됩니다.<br><br>
+                        이를 방지하기 위해 <b>107-2.c 예제</b>에서는 아예 조건식 안에 <span class="font-bold bg-amber-200 px-1 rounded">while (i++ < 10)</span>처럼
+                        <b>조건 검사와 증감을 하나로 합쳐서</b> 작성했습니다. 아주 영리한 코드죠!
+                    </p>
+                </div>
+            </div>
+
         </div>
     </section>
 
