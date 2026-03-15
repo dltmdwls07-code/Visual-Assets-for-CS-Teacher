@@ -210,7 +210,7 @@
                 <div class="flex gap-3 mt-auto">
                     <button id="btnRandomData"
                             class="flex-1 px-4 py-3 text-sm bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold rounded-xl border border-indigo-200 transition-colors">
-                        랜덤 데이터 추가
+                        랜덤 데이터 생성
                     </button>
                     <button id="btnClearData"
                             class="flex-1 px-4 py-3 text-sm bg-white hover:bg-rose-50 text-rose-600 font-bold rounded-xl border border-slate-200 transition-colors">
@@ -661,10 +661,10 @@
             });
 
             document.getElementById('btnRandomData').addEventListener('click', () => {
-                const count = 20;
+                this.dataManager.clear(); // 기존 데이터 초기화
+                const count = 50;
                 for (let i = 0; i < count; i++) {
                     let y = Math.random() > 0.5 ? 1 : 0;
-                    // 현재 바운드 범위를 참조하여 자연스럽게 난수 생성
                     let b = this.dataManager.getBounds();
                     let range = b.maxX - b.minX;
                     if (range === 0) range = 100;
@@ -675,7 +675,7 @@
                 }
                 this.enableTraining();
                 this.updateUI();
-                document.getElementById('exampleDesc').innerText = "랜덤 두 그룹 데이터가 추가되었습니다.";
+                document.getElementById('exampleDesc').innerText = "새로운 랜덤 두 그룹 데이터가 생성되었습니다.";
             });
 
             // 예측 실행 이벤트 (클릭 및 엔터 키)
