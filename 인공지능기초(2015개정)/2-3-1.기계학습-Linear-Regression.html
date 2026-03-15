@@ -606,11 +606,19 @@
             });
 
             document.getElementById('btnAddCoord').addEventListener('click', () => {
-                const x = document.getElementById('inputX').value, y = document.getElementById('inputY').value;
+                const xInput = document.getElementById('inputX');
+                const yInput = document.getElementById('inputY');
+                const x = xInput.value;
+                const y = yInput.value;
+
                 if (x && y) {
                     this.dataManager.addPoint(x, y);
                     this.enableTraining();
                     this.updateUI();
+
+                    // 입력값 초기화
+                    xInput.value = '';
+                    yInput.value = '';
                 }
             });
 
