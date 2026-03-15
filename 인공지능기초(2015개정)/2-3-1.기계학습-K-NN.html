@@ -80,12 +80,15 @@
             pointer-events: none;
         }
 
+        /* 커스텀 스크롤바 */
         ::-webkit-scrollbar {
             width: 8px;
+            height: 8px;
         }
 
         ::-webkit-scrollbar-track {
             background: #f1f5f9;
+            border-radius: 10px;
         }
 
         ::-webkit-scrollbar-thumb {
@@ -199,7 +202,7 @@
                                 정도
                             </label>
                             <span class="text-base font-bold text-slate-400"><span id="spreadLabel"
-                                                                                 class="text-purple-600">적당함</span> (응집 ↔ 분산)</span>
+                                                                                   class="text-purple-600">적당함</span> (응집 ↔ 분산)</span>
                         </div>
                         <input type="range" id="spreadSlider" min="50" max="450" value="250"
                                class="w-full accent-purple-500 cursor-pointer">
