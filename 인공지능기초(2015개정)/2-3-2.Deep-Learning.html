@@ -430,6 +430,14 @@
                             </div>
                         </div>
 
+                        <div class="mb-4">
+                            <label class="text-base font-bold text-slate-300 block mb-2">데이터 노이즈 (난이도)</label>
+                            <input type="range" id="dbNoiseSlider" min="0.5" max="2.0" step="0.1" value="1.1"
+                                   class="w-full">
+                            <div class="text-center text-teal-400 font-bold mt-1"><span id="dbNoiseValue">1.1</span>
+                            </div>
+                        </div>
+
                         <div class="bg-slate-900 rounded-lg p-3 text-center border border-slate-600 mb-4 flex justify-between px-6">
                             <div>
                                 <span class="text-slate-400 text-base block mb-1">Epoch</span>
@@ -1348,13 +1356,18 @@
         generateData() {
             this.dataX = [];
             this.dataY = [];
+
+            // 슬라이더에서 현재 노이즈 값을 가져옵니다. (없으면 기본값 1.1)
+            let noiseLevel = parseFloat(document.getElementById('dbNoiseSlider')?.value || 1.1);
+
             for (let i = 0; i < 100; i++) {
                 let r = Math.random() * 5;
                 let angle = Math.random() * Math.PI * 2;
                 let isInner = r < 2.5;
                 let cls = isInner ? 1 : 0;
-                let x = r * Math.cos(angle) + (Math.random() - 0.5) * 0.5;
-                let y = r * Math.sin(angle) + (Math.random() - 0.5) * 0.5;
+                // ✨ 가져온 noiseLevel을 곱해줍니다. ✨
+                let x = r * Math.cos(angle) + (Math.random() - 0.5) * noiseLevel;
+                let y = r * Math.sin(angle) + (Math.random() - 0.5) * noiseLevel;
                 this.dataX.push([x / 5, y / 5]);
                 this.dataY.push(cls);
             }
@@ -1367,6 +1380,12 @@
             document.getElementById('dbNeuronSlider').addEventListener('input', (e) => {
                 document.getElementById('dbNeuronValue').innerText = e.target.value;
                 this.resetModel();
+            });
+
+            // ✨ 노이즈 슬라이더 이벤트 리스너 추가 ✨
+            document.getElementById('dbNoiseSlider').addEventListener('input', (e) => {
+                document.getElementById('dbNoiseValue').innerText = e.target.value;
+                this.resetModel(); // 노이즈가 바뀌면 데이터도 새로 생성하고 모델도 리셋해야 합니다.
             });
 
             document.getElementById('btnDbTrain').addEventListener('click', () => {
@@ -1399,6 +1418,8 @@
                 cancelAnimationFrame(this.animId);
                 this.animId = null;
             }
+
+            this.generateData();
 
             document.getElementById('btnDbTrain').innerHTML = '<i class="fa-solid fa-play mr-2"></i>학습 실행';
             let hn = parseInt(document.getElementById('dbNeuronSlider').value);
