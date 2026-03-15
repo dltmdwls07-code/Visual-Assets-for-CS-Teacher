@@ -1403,7 +1403,7 @@
 
             document.getElementById('dbNeuronSlider').addEventListener('input', (e) => {
                 document.getElementById('dbNeuronValue').innerText = e.target.value;
-                this.resetModel();
+                this.resetModel(false);
             });
 
             // ✨ 노이즈 슬라이더 이벤트 리스너 추가 ✨
@@ -1436,14 +1436,16 @@
             this.draw();
         },
 
-        resetModel() {
+        resetModel(isClear = true) {
             this.isTraining = false;
             if (this.animId) {
                 cancelAnimationFrame(this.animId);
                 this.animId = null;
             }
 
-            this.generateData();
+            if (isClear) {
+                this.generateData();
+            }
 
             document.getElementById('btnDbTrain').innerHTML = '<i class="fa-solid fa-play mr-2"></i>학습 실행';
             let hn = parseInt(document.getElementById('dbNeuronSlider').value);
