@@ -199,13 +199,13 @@
             아래 코드는 외부 반복문(i)이 2번, 내부 반복문(j)이 3번 도는 중첩 for문의 예시입니다. 컴퓨터가 실제로 어떤 순서로 코드를 실행하는지 표를 통해 확인해 보세요.
         </p>
 
-        <div class="grid lg:grid-cols-2 gap-8 items-start">
-            <div>
+        <div class="grid lg:grid-cols-5 gap-8 items-start">
+            <div class="lg:col-span-2">
                 <div class="bg-[#1e1e1e] rounded-xl overflow-hidden shadow-lg border border-slate-700">
                     <div class="bg-slate-800 px-4 py-3 flex items-center justify-between border-b border-slate-700/50">
-                    <span class="text-slate-300 font-mono text-base font-semibold">
-                        nested_loop.c
-                    </span>
+                <span class="text-slate-300 font-mono text-base font-semibold">
+                    nested_loop.c
+                </span>
                     </div>
                     <pre class="!bg-transparent !m-0 !p-6"><code class="language-c">// 외부 반복문 (시침)
 for (int i = 1; i <= 2; i++) {
@@ -219,20 +219,19 @@ for (int i = 1; i <= 2; i++) {
                     <p class="text-base text-blue-900 font-medium">
                         <span class="font-bold">핵심 포인트:</span> 외부 반복문이 한 번 실행될 때마다 내부 반복문은 <b>처음부터 끝까지(새로 초기화되어)</b> 완전히
                         실행됩니다.
-                        따라서 <span
-                            class="font-bold bg-amber-200 px-1 rounded">printf()문</span>의 총 실행 횟수는 <span
-                            class="font-bold bg-amber-200 px-1 rounded">외부 반복 횟수(2) × 내부 반복 횟수(3) = 6번</span>이
-                        됩니다.
+                        따라서 <span class="font-bold bg-amber-200 px-1 rounded">printf()문</span>의 총 실행 횟수는 <span
+                            class="font-bold bg-amber-200 px-1 rounded">외부 반복 횟수(2) × 내부 반복 횟수(3) = 6번</span>이 됩니다.
                     </p>
                 </div>
             </div>
-            <div class="overflow-x-auto border border-slate-200 rounded-xl">
+
+            <div class="lg:col-span-3 overflow-x-auto border border-slate-200 rounded-xl">
                 <table class="w-full text-left text-base text-slate-600">
                     <thead class="bg-slate-50 border-b border-slate-200">
                     <tr>
-                        <th class="p-4 font-bold text-indigo-600">외부 (i)</th>
-                        <th class="p-4 font-bold text-purple-600">내부 (j)</th>
-                        <th class="p-4 font-bold text-slate-800">실행 및 출력 결과</th>
+                        <th class="p-4 font-bold text-indigo-600 w-1/4">외부 (i)</th>
+                        <th class="p-4 font-bold text-purple-600 w-1/4">내부 (j)</th>
+                        <th class="p-4 font-bold text-slate-800 w-2/4">실행 및 출력 결과</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -403,12 +402,128 @@ int main() {
         </div>
     </section>
 
+    <section id="control-3-gugudan" class="concept-card bg-white border border-slate-300 p-8 shadow-sm mt-12">
+        <div class="flex items-center gap-4 mb-6 border-b border-slate-100 pb-4">
+            <div class="bg-cyan-100 p-3 rounded-2xl text-cyan-600 flex-shrink-0">
+                <i class="w-8 h-8" data-lucide="calculator"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-slate-800 tracking-tight">실생활 대표 예제: 구구단 전체 출력</h2>
+        </div>
+
+        <p class="text-base text-slate-700 mb-6 leading-relaxed">
+            중첩 반복문을 가장 직관적으로 이해할 수 있는 또 다른 예제는 <b>구구단</b>입니다. <br>
+            <span class="text-cyan-700 font-bold">'단(2단~9단)'</span>이 한 번 바뀔 때마다, <span
+                class="text-indigo-700 font-bold">'곱하는 수(1~9)'</span>는 처음부터 끝까지 전부 돌아야 완성된 구구단이 나옵니다.
+        </p>
+
+        <div class="grid lg:grid-cols-2 gap-8 items-start">
+            <div class="bg-[#1e1e1e] rounded-xl overflow-hidden shadow-lg border border-slate-700">
+                <div class="bg-slate-800 px-4 py-3 flex items-center justify-between border-b border-slate-700/50">
+                    <span class="text-slate-300 font-mono text-base font-semibold">gugudan.c</span>
+                    <button class="text-slate-400 hover:text-white transition-colors flex items-center gap-2 text-base font-medium px-3 py-1.5 bg-slate-700/50 rounded-lg hover:bg-slate-700"
+                            onclick="copyCode('code-gugudan')">
+                        <i class="w-4 h-4" data-lucide="copy"></i>
+                        복사
+                    </button>
+                </div>
+                <pre class="!bg-transparent !m-0 !p-6"><code id="code-gugudan" class="language-c">#include &lt;stdio.h&gt;
+
+int main() {
+    // 외부 반복문: 2단부터 9단까지
+    for (int dan = 2; dan <= 9; dan++) {
+        printf("--- %d단 ---\n", dan);
+
+        // 내부 반복문: 1부터 9까지 곱하기
+        for (int i = 1; i <= 9; i++) {
+            printf("%d x %d = %d\n", dan, i, dan * i);
+        }
+        printf("\n"); // 한 단이 끝나면 줄바꿈
+    }
+    return 0;
+}</code></pre>
+            </div>
+
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-6">
+                <h4 class="font-bold text-slate-800 mb-4 text-lg">💡 실행 흐름 포인트</h4>
+                <ul class="space-y-4 text-base text-slate-700">
+                    <li class="bg-white p-4 rounded-lg border border-slate-200 shadow-sm">
+                        <span class="block font-bold text-cyan-700 mb-1">1. 외부 반복문 시작 (dan = 2)</span>
+                        <span class="font-bold bg-amber-200 px-1 rounded">--- 2단 ---</span>이 먼저 출력됩니다.
+                    </li>
+                    <li class="bg-white p-4 rounded-lg border border-slate-200 shadow-sm">
+                        <span class="block font-bold text-indigo-700 mb-1">2. 내부 반복문 전체 실행 (i = 1 ~ 9)</span>
+                        2x1=2 부터 2x9=18 까지 9번의 출력이 연달아 발생합니다. 내부 반복문이 끝나야만 비로소 외부 반복문의 다음 단계로 넘어갈 수 있습니다.
+                    </li>
+                    <li class="bg-white p-4 rounded-lg border border-slate-200 shadow-sm">
+                        <span class="block font-bold text-cyan-700 mb-1">3. 외부 반복문 증가 (dan = 3)</span>
+                        이제 3단이 시작되고, 내부 반복문 <span class="font-bold bg-amber-200 px-1 rounded">i</span>는 다시 1부터 새롭게
+                        시작됩니다.
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section id="control-3-break"
+             class="concept-card bg-slate-800 text-white border border-slate-700 p-8 shadow-lg mt-12 relative overflow-hidden">
+        <div class="absolute -right-10 -bottom-10 w-48 h-48 bg-rose-500/20 blur-3xl rounded-full pointer-events-none"></div>
+
+        <div class="flex items-center gap-4 mb-6 border-b border-slate-600 pb-4 relative z-10">
+            <div class="bg-rose-500/20 p-3 rounded-2xl text-rose-400 flex-shrink-0">
+                <i class="w-8 h-8" data-lucide="stop-circle"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-white tracking-tight">개념 미싱링크: 중첩 반복문에서 break를 만나면?</h2>
+        </div>
+
+        <p class="text-base text-slate-300 mb-6 relative z-10">
+            반복문을 강제로 탈출하는 <span class="font-bold bg-amber-200 px-1 rounded text-black">break</span> 문. 그렇다면
+            반복문이 두 개 겹쳐 있는 중첩 제어 구조에서 <span class="font-bold bg-amber-200 px-1 rounded text-black">break</span>를 사용하면
+            <b>두 개의 반복문을 한 번에 모두 빠져나갈까요?</b> 정답은 <b>"아니오"</b>입니다.
+        </p>
+
+        <div class="bg-slate-900/50 border border-slate-700 rounded-xl p-6 mb-6 relative z-10">
+            <p class="text-lg text-emerald-400 font-bold mb-2 flex items-center gap-2">
+                <i class="w-5 h-5" data-lucide="info"></i> 절대 규칙
+            </p>
+            <p class="text-base text-slate-300">
+                <span class="font-bold text-rose-500 bg-amber-200 px-1 rounded">break</span> 문은 오직 자신이 속해 있는 <b><span
+                    class="font-bold bg-amber-200 text-black px-1 rounded">가장 안쪽의 반복문 하나만</span></b> 탈출합니다. 바깥쪽 반복문은
+                영향을 받지 않고 계속 돌아갑니다.
+            </p>
+        </div>
+
+        <div class="bg-[#1e1e1e] rounded-xl overflow-hidden shadow-2xl border border-slate-600 relative z-10">
+            <pre class="!bg-transparent !m-0 !p-6"><code class="language-c">for (int i = 1; i <= 3; i++) {
+    printf("외부 반복문 %d회차 시작\n", i);
+
+    for (int j = 1; j <= 5; j++) {
+        if (j == 3) {
+            printf("  -> j가 3이 되어 내부 반복문만 탈출!\n");
+            break; // 내부 반복문(j)만 강제 종료됨. 외부(i)는 안 꺼짐!
+        }
+        printf("  내부 반복문 j = %d\n", j);
+    }
+}</code></pre>
+        </div>
+
+        <div class="mt-6 flex flex-col md:flex-row gap-4 items-center bg-slate-700/30 p-4 rounded-xl border border-slate-600 relative z-10">
+            <div class="text-slate-300 text-base font-mono leading-loose">
+                외부 반복문 1회차 시작<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;내부 반복문 j = 1<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;내부 반복문 j = 2<br>
+                <span class="text-rose-400 font-bold">&nbsp;&nbsp;&nbsp;&nbsp;-> j가 3이 되어 내부 반복문만 탈출!</span><br>
+                외부 반복문 2회차 시작 <span class="text-emerald-400 text-sm">(정상적으로 다음 사이클 진입)</span><br>
+                ...
+            </div>
+        </div>
+    </section>
+
     <section id="control-3-pitfalls" class="concept-card bg-red-50 border border-red-200 p-8 shadow-sm">
         <div class="flex items-center gap-4 mb-6 border-b border-red-200 pb-4">
             <div class="bg-red-100 p-3 rounded-2xl text-red-600 flex-shrink-0">
                 <i class="w-8 h-8" data-lucide="alert-triangle"></i>
             </div>
-            <h2 class="text-2xl font-bold text-red-900 tracking-tight">잠깐! 흔히 발생하는 실수들</h2>
+            <h2 class="text-2xl font-bold text-red-900 tracking-tight">잠깐! 중첩 반복문에서 흔히 발생하는 실수들</h2>
         </div>
 
         <div class="grid md:grid-cols-2 gap-6">
