@@ -249,18 +249,22 @@
                 <div class="bg-white p-4 rounded-2xl border-2 border-slate-200 shadow-sm flex flex-col md:flex-row gap-4">
                     <div class="flex-1 flex flex-col gap-2">
                         <label class="font-bold text-slate-600 text-xs">좌표 직접 입력 (x₁, x₂, y)</label>
-                        <div class="flex gap-2">
+
+                        <form id="formAddCoord" class="flex gap-2">
                             <input type="number" id="inputX1" placeholder="x₁"
-                                   class="form-control w-full px-2 py-2 border rounded-lg bg-slate-50 outline-none focus:border-blue-400 text-sm">
+                                   class="form-control w-full px-2 py-2 border rounded-lg bg-slate-50 outline-none focus:border-blue-400 text-sm"
+                                   required>
                             <input type="number" id="inputX2" placeholder="x₂"
-                                   class="form-control w-full px-2 py-2 border rounded-lg bg-slate-50 outline-none focus:border-blue-400 text-sm">
+                                   class="form-control w-full px-2 py-2 border rounded-lg bg-slate-50 outline-none focus:border-blue-400 text-sm"
+                                   required>
                             <input type="number" id="inputY" placeholder="y"
-                                   class="form-control w-full px-2 py-2 border rounded-lg bg-slate-50 outline-none focus:border-blue-400 text-sm">
-                            <button id="btnAddCoord"
+                                   class="form-control w-full px-2 py-2 border rounded-lg bg-slate-50 outline-none focus:border-blue-400 text-sm"
+                                   required>
+                            <button type="submit" id="btnAddCoord"
                                     class="action-btn px-3 py-2 bg-blue-600 text-white rounded-lg font-bold hover:bg-blue-700 whitespace-nowrap text-sm">
                                 추가
                             </button>
-                        </div>
+                        </form>
                     </div>
                     <div class="flex-1 flex flex-col gap-2">
                         <label class="font-bold text-slate-600 text-xs">일괄 데이터 입력</label>
@@ -728,15 +732,23 @@
                 this.updateUI();
             });
 
-            document.getElementById('btnAddCoord').addEventListener('click', () => {
+            // 💡 수정된 부분: btnAddCoord의 click 이벤트 대신 formAddCoord의 submit 이벤트 사용
+            document.getElementById('formAddCoord').addEventListener('submit', (e) => {
+                e.preventDefault(); // 💡 중요: 폼 제출로 인한 페이지 새로고침 방지
+
                 const x1 = document.getElementById('inputX1').value;
                 const x2 = document.getElementById('inputX2').value;
                 const y = document.getElementById('inputY').value;
+
                 if (x1 && x2 && y) {
                     this.dataManager.addPoint(x1, x2, y);
                     document.getElementById('inputX1').value = '';
                     document.getElementById('inputX2').value = '';
                     document.getElementById('inputY').value = '';
+
+                    // 💡 UX 개선: 엔터 쳐서 추가한 뒤, 곧바로 다음 좌표를 입력할 수 있게 x1 칸으로 포커스 이동
+                    document.getElementById('inputX1').focus();
+
                     this.enableTraining();
                     this.updateUI();
                 } else {
