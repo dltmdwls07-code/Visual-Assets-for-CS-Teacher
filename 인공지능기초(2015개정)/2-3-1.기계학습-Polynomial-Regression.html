@@ -619,7 +619,7 @@
             this.examples = {
                 1: {desc: "공부 시간(x₁)과 수면 시간(x₂)이 길수록 시험 점수(y)가 높습니다.", data: this.generateData(1)},
                 2: {desc: "기온(x₁)과 광고 예산(x₂)이 오를수록 아이스크림 판매량(y)이 증가합니다.", data: this.generateData(2)},
-                3: {desc: "방 갯수(x₁)가 많을수록 집값(y) 오르지만, 거리가 멀어지면 떨어집니다.", data: this.generateData(3)}
+                3: {desc: "방 갯수(x₁)가 많을수록 집값(y)이 오르지만, 지하철과의 거리(x₂)가 멀어지면 집값(y)이 떨어집니다.", data: this.generateData(3)}
             };
 
             this.bindEvents();
@@ -627,26 +627,104 @@
 
         generateData(type, count = 40) {
             const data = [];
+
+            // 💡 [핵심] 현실의 데이터처럼 평균에 몰려있는 '정규 분포(Normal Distribution)' 형태의 난수를 생성하는 헬퍼 함수
+            // 단순히 Math.random()을 쓰면 사각형에 골고루 퍼지지만, 3번 더해 나누면 종 모양(Bell Curve)으로 중앙에 군집화됩니다.
+            const randNormal = () => (Math.random() + Math.random() + Math.random()) / 3;
+
+            let config = {};
+
+            if (type === 0) {
+                // 1. 특성 스케일과 이산형(그룹) 여부 결정
+                const x1IsDiscrete = Math.random() < 0.3; // 30% 확률로 그룹/정수형 데이터
+                const x2IsDiscrete = Math.random() < 0.3;
+
+                // 스케일 차이 부여 (예: x1은 0~10 단위, x2는 0~100 단위 등)
+                const x1Scale = x1IsDiscrete ? (Math.floor(Math.random() * 5) + 3) : (Math.random() * 90 + 10);
+                const x2Scale = x2IsDiscrete ? (Math.floor(Math.random() * 5) + 3) : (Math.random() * 90 + 10);
+
+                // 2. 주원인과 부원인의 가중치(영향력) 비대칭성 설정
+                let w1Mag = Math.random() * 10 + 2;
+                let w2Mag = Math.random() * 10 + 2;
+
+                // 현실처럼 50% 확률로 한쪽 원인의 영향력을 다른 쪽의 1/3 수준(보조 요인)으로 낮춤
+                if (Math.random() < 0.5) w1Mag *= 0.3;
+                else w2Mag *= 0.3;
+
+                // 70% 확률로 정비례(+), 30% 확률로 반비례(-) 설정
+                const w1 = w1Mag * (Math.random() < 0.7 ? 1 : -1);
+                const w2 = w2Mag * (Math.random() < 0.7 ? 1 : -1);
+
+                // 3. 현실적인 기본값(Baseline)과 오차(Noise) 수준 계산
+                // 데이터의 기본 스케일(예: 수십 단위 vs 수천 단위)을 랜덤 결정
+                const baseMultiplier = Math.random() < 0.5 ? 50 : 1000;
+                const b = Math.random() * baseMultiplier;
+
+                // X의 변화량에 맞춰 오차 범위를 지능적으로 조절 (Y 변동폭의 약 15%~30% 수준의 노이즈)
+                const expectedYDiff = Math.abs(w1 * x1Scale) + Math.abs(w2 * x2Scale);
+                const noiseAmp = expectedYDiff * (Math.random() * 0.15 + 0.15);
+
+                config = {x1IsDiscrete, x2IsDiscrete, x1Scale, x2Scale, w1, w2, b, noiseAmp, baseMultiplier};
+            }
+
             for (let i = 0; i < count; i++) {
                 let x1 = 0, x2 = 0, y = 0;
+
                 switch (type) {
-                    case 1:
+                    case 0: // 현실을 모사한 스마트 랜덤
+                        // 정규 분포 기반의 X 데이터 생성 (중앙에 밀집되도록)
+                        let rawX1 = config.x1IsDiscrete
+                            ? Math.floor(Math.random() * config.x1Scale) + 1
+                            : randNormal() * config.x1Scale;
+
+                        let rawX2 = config.x2IsDiscrete
+                            ? Math.floor(Math.random() * config.x2Scale) + 1
+                            : randNormal() * config.x2Scale;
+
+                        // 선형 결합 수식
+                        let rawY = (rawX1 * config.w1) + (rawX2 * config.w2) + config.b;
+
+                        // 정규 분포 노이즈(오차) 추가 (+, - 양방향)
+                        let noise = (randNormal() - 0.5) * 2 * config.noiseAmp;
+                        rawY += noise;
+
+                        // 현실 세계 보정: 결과값이 비정상적으로 음수가 되는 것을 방지 (최소 하한선 설정)
+                        if (config.baseMultiplier >= 50 && rawY < 0) {
+                            rawY = Math.random() * (config.baseMultiplier * 0.1);
+                        }
+
+                        x1 = rawX1;
+                        x2 = rawX2;
+                        y = rawY;
+                        break;
+
+                    case 1: // 공부 & 수면 vs 성적
                         x1 = Math.random() * 10;
                         x2 = Math.random() * 8 + 4;
-                        y = (x1 * 5) + (x2 * 3) + 20 + (Math.random() * 10 - 5);
+                        y = (x1 * 4.5) + (x2 * 3.5) + 10 + ((randNormal() - 0.5) * 20); // 오차도 정규분포로 개선
+                        y = Math.max(0, Math.min(100, y));
                         break;
-                    case 2:
-                        x1 = Math.random() * 30 + 5;
+
+                    case 2: // 기온 & 광고 vs 아이스크림 판매량
+                        x1 = randNormal() * 30 + 5; // 기온도 평균 기온에 몰리게
                         x2 = Math.random() * 100;
-                        y = (x1 * 10) + (x2 * 0.5) + (Math.random() * 50 - 25);
+                        y = (x1 * 10) + (x2 * 0.5) + ((randNormal() - 0.5) * 60);
+                        y = Math.max(0, y);
                         break;
-                    case 3:
-                        x1 = Math.floor(Math.random() * 4) + 1;
-                        x2 = Math.random() * 15;
-                        y = (x1 * 100) - (x2 * 20) + 300 + (Math.random() * 40 - 20);
+
+                    case 3: // 방 갯수 & 거리 vs 집값
+                        x1 = Math.floor(Math.random() * 5) + 1;
+                        x2 = randNormal() * 15;
+                        y = (x1 * 100) - (x2 * 20) + 300 + ((randNormal() - 0.5) * 80);
+                        y = Math.max(50, y);
                         break;
                 }
-                data.push({x1: Number(x1.toFixed(2)), x2: Number(x2.toFixed(2)), y: Number(y.toFixed(2))});
+
+                data.push({
+                    x1: Number(x1.toFixed(2)),
+                    x2: Number(x2.toFixed(2)),
+                    y: Number(y.toFixed(2))
+                });
             }
             return data;
         }
@@ -726,7 +804,7 @@
             });
 
             document.getElementById('btnRandomData').addEventListener('click', () => {
-                this.dataManager.setPoints(this.generateData(1, 40));
+                this.dataManager.setPoints(this.generateData(0, 60));
                 document.getElementById('exampleDesc').innerText = "임의의 다중선형 데이터가 생성되었습니다.";
                 this.enableTraining();
                 this.updateUI();
