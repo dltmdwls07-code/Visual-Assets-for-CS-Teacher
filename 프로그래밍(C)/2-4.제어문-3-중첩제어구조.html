@@ -187,6 +187,243 @@
         </div>
     </section>
 
+    <section id="control-3-super-easy"
+             class="concept-card bg-orange-50 border border-orange-200 p-8 md:p-10 shadow-sm mb-12">
+        <div class="flex items-center gap-4 mb-6 border-b border-orange-200 pb-4">
+            <div class="bg-orange-100 p-3 rounded-2xl text-orange-600 flex-shrink-0">
+                <i class="w-8 h-8" data-lucide="smile"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-orange-900 tracking-tight">잠깐! 시작하기 전에: 너무 어렵게 느껴지나요?</h2>
+        </div>
+
+        <p class="text-lg text-orange-800 mb-6 font-medium leading-relaxed">
+            코드를 보기 전에, 우리가 학교 체육 시간에 흔히 겪었던 상황을 상상해 볼까요? 중첩 반복문은 사실 아주 단순한 지시사항일 뿐입니다.
+        </p>
+
+        <div class="grid md:grid-cols-2 gap-6 items-center">
+            <div class="bg-white p-6 rounded-xl border border-orange-100 shadow-sm h-full flex flex-col justify-center">
+                <h4 class="font-bold text-slate-800 text-lg mb-4 flex items-center gap-2">
+                    <i class="w-6 h-6 text-orange-500" data-lucide="megaphone"></i>
+                    체육 선생님의 지시
+                </h4>
+                <div class="text-xl font-bold text-slate-700 bg-orange-50 p-5 rounded-lg leading-relaxed border border-orange-100">
+                    "모두 운동장 <span class="text-indigo-600">3바퀴</span> 돌아!<br><br>
+                    단, <span class="text-indigo-600">1바퀴</span> 돌 때마다 멈춰서<br>
+                    팔벌려뛰기 <span class="text-purple-600">5번씩</span> 하고 다시 출발해!"
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl border border-orange-100 shadow-sm h-full">
+                <h4 class="font-bold text-slate-800 text-lg mb-4 flex items-center gap-2">
+                    <i class="w-6 h-6 text-emerald-500" data-lucide="person-standing"></i>
+                    우리의 행동 (컴퓨터의 행동)
+                </h4>
+                <ul class="space-y-4 text-base text-slate-700">
+                    <li class="flex gap-3 items-center bg-slate-50 p-2 rounded">
+                        <span class="font-bold text-indigo-600 bg-indigo-100 px-2 py-1 rounded">1바퀴째</span>
+                        <span>팔벌려뛰기 <span class="font-semibold text-purple-600">1, 2, 3, 4, 5</span> 번 수행</span>
+                    </li>
+                    <li class="flex gap-3 items-center bg-slate-50 p-2 rounded">
+                        <span class="font-bold text-indigo-600 bg-indigo-100 px-2 py-1 rounded">2바퀴째</span>
+                        <span>팔벌려뛰기 <span class="font-semibold text-purple-600">1, 2, 3, 4, 5</span> 번 수행</span>
+                    </li>
+                    <li class="flex gap-3 items-center bg-slate-50 p-2 rounded">
+                        <span class="font-bold text-indigo-600 bg-indigo-100 px-2 py-1 rounded">3바퀴째</span>
+                        <span>팔벌려뛰기 <span class="font-semibold text-purple-600">1, 2, 3, 4, 5</span> 번 수행</span>
+                    </li>
+                </ul>
+                <div class="mt-5 pt-4 border-t border-slate-200 font-bold text-slate-800 text-lg text-center bg-orange-50 rounded-lg py-3">
+                    총 팔벌려뛰기 횟수 = <span class="text-orange-600 text-xl">15번 (3 × 5)</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-6 flex gap-4 items-start bg-white p-5 rounded-xl border border-orange-200">
+            <div class="bg-orange-100 text-orange-600 p-2 rounded-full shrink-0">
+                <i class="w-6 h-6" data-lucide="lightbulb"></i>
+            </div>
+            <p class="text-base text-orange-900 leading-relaxed font-medium">
+                이것이 전부입니다! <b>"운동장 도는 것(외부 반복문)"</b> 안에 <b>"팔벌려뛰기(내부 반복문)"</b>가 들어있는 형태. 이게 바로 <strong
+                    class="bg-orange-200 px-1 rounded">중첩 반복문</strong>입니다. 자, 이제 이 느낌을 머릿속에 기억한 채로 실제 코드가 어떻게 생겼는지 구경하러
+                가볼까요?
+            </p>
+        </div>
+    </section>
+
+    <section id="control-3-side-by-side" class="concept-card bg-white border border-slate-300 p-8 shadow-sm mt-12">
+        <div class="flex items-center gap-4 mb-6 border-b border-slate-100 pb-4">
+            <div class="bg-indigo-100 p-3 rounded-2xl text-indigo-600 flex-shrink-0">
+                <i class="w-8 h-8" data-lucide="search-code"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-slate-800 tracking-tight">현미경 관찰: 코드 1줄과 변수 상태표 1:1 매칭</h2>
+        </div>
+
+        <p class="text-base text-slate-700 leading-relaxed mb-6">
+            코드를 눈으로만 읽으면 머릿속에서 숫자가 엉키기 쉽습니다. 코딩 고수들은 에러가 날 때 반드시 종이를 꺼내 <b>'변수 상태표(Trace Table)'</b>를 그립니다. <br>
+            아래에 가장 단순한 형태의 중첩 반복문(외부 2번 × 내부 3번)을 준비했습니다. 왼쪽의 코드와 오른쪽의 표를 <b>같은 색상끼리 번갈아 가며</b> 확인해 보세요.
+        </p>
+
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-6 mb-8">
+            <h4 class="font-bold text-slate-800 text-lg mb-4 flex items-center gap-2">
+                <i class="w-6 h-6 text-indigo-500" data-lucide="pen-tool"></i>
+                변수 상태표 그리는 3단계 공식
+            </h4>
+            <div class="grid md:grid-cols-3 gap-6 text-base">
+                <div class="bg-white p-4 rounded-lg border border-slate-100 shadow-sm">
+                    <span class="block text-indigo-600 font-extrabold mb-1">STEP 1. 기둥 세우기</span>
+                    <span class="text-slate-600">바깥쪽 반복문 변수(<span class="font-bold bg-amber-200 px-1 rounded">i</span>)와 안쪽 반복문 변수(<span
+                            class="font-bold bg-amber-200 px-1 rounded">j</span>)를 표의 맨 위에 적습니다.</span>
+                </div>
+                <div class="bg-white p-4 rounded-lg border border-slate-100 shadow-sm">
+                    <span class="block text-purple-600 font-extrabold mb-1">STEP 2. 내부 꽉 채우기</span>
+                    <span class="text-slate-600">외부 변수 <span class="font-bold bg-amber-200 px-1 rounded">i</span>가 하나 고정되어 있을 때, 내부 변수 <span
+                            class="font-bold bg-amber-200 px-1 rounded">j</span>를 끝까지 1씩 늘려가며 빈칸을 적습니다.</span>
+                </div>
+                <div class="bg-white p-4 rounded-lg border border-slate-100 shadow-sm">
+                    <span class="block text-emerald-600 font-extrabold mb-1">STEP 3. 결과 기록하기</span>
+                    <span class="text-slate-600">조건이 '참'일 때 화면에 무엇이 <span
+                            class="font-bold bg-amber-200 px-1 rounded">출력</span>되는지, <span
+                            class="font-bold bg-amber-200 px-1 rounded">언제 '거짓'이 되어 종료</span>되는지 씁니다.</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid lg:grid-cols-12 gap-8 items-start">
+
+            <div class="lg:col-span-5 sticky top-6">
+                <div class="bg-[#1e1e1e] rounded-xl overflow-hidden shadow-lg border border-slate-700">
+                    <div class="bg-slate-800 px-4 py-3 flex items-center justify-between border-b border-slate-700/50">
+                        <span class="text-slate-300 font-mono text-base font-semibold">trace_test.c</span>
+                    </div>
+                    <pre class="!bg-transparent !m-0 !p-5"><code class="language-c text-base leading-loose">// 1. 외부 반복문 (파란색 i)
+for (<span class="text-indigo-400 font-bold">int i = 1; i <= 2; i++</span>) {
+
+    // 2. 내부 반복문 (보라색 j)
+    for (<span class="text-purple-400 font-bold">int j = 1; j <= 3; j++</span>) {
+
+        // 3. 출력 (초록색)
+        <span class="text-emerald-400 font-bold">printf("i=%d, j=%d | ", i, j);</span>
+    }
+
+    // 4. 내부 반복문이 끝나면 줄바꿈
+    <span class="text-amber-400 font-bold">printf("\n");</span>
+}</code></pre>
+                </div>
+
+                <div class="mt-6 bg-indigo-50 border-l-4 border-indigo-500 p-5 rounded-r-lg shadow-sm">
+                    <p class="text-base text-indigo-900 font-medium">
+                        <i class="w-5 h-5 inline-block align-middle mr-1 text-indigo-600" data-lucide="eye"></i>
+                        <b>관전 포인트:</b> 오른쪽 표를 보면, <span class="font-bold bg-amber-200 px-1 rounded">i</span>가 1일 때,
+                        <span
+                                class="font-bold bg-amber-200 px-1 rounded">j</span>가 1, 2, 3까지 전부 돌고 나서야 비로소 <span
+                            class="font-bold bg-amber-200 px-1 rounded">i</span>가 2로 넘어가는 것을 명확히 볼 수 있습니다!
+                    </p>
+                </div>
+            </div>
+
+            <div class="lg:col-span-7 overflow-hidden border border-slate-300 rounded-xl shadow-md bg-white">
+                <table class="w-full text-center text-base text-slate-700 border-collapse">
+                    <thead class="bg-slate-100 border-b-2 border-slate-300">
+                    <tr>
+                        <th class="p-4 font-extrabold text-indigo-700 w-1/4 border-r border-slate-200">외부 <br><span
+                                class="font-bold bg-amber-200 px-1 rounded text-indigo-900">i <= 2</span></th>
+                        <th class="p-4 font-extrabold text-purple-700 w-1/4 border-r border-slate-200">내부 <br><span
+                                class="font-bold bg-amber-200 px-1 rounded text-purple-900">j <= 3</span></th>
+                        <th class="p-4 font-extrabold text-slate-800 w-2/4">조건 판별 &amp; 실행 결과</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                        <td class="p-4 font-black text-indigo-600 bg-indigo-50/50 text-lg" rowspan="4"
+                            style="vertical-align: middle; border-right: 1px solid #e2e8f0;">
+                            i = 1<br>
+                            <span class="text-base font-normal text-indigo-400 mt-1 block">(1회차 시작)</span>
+                        </td>
+                        <td class="p-4 font-bold text-purple-600 border-r border-slate-100">j = 1</td>
+                        <td class="p-4 text-left pl-6">
+                            <span class="inline-block bg-emerald-100 text-emerald-700 font-bold px-2 py-0.5 rounded mr-2">참(O)</span>
+                            <span class="font-mono text-emerald-600 font-bold">출력: i=1, j=1 |</span>
+                        </td>
+                    </tr>
+                    <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                        <td class="p-4 font-bold text-purple-600 border-r border-slate-100">j = 2</td>
+                        <td class="p-4 text-left pl-6">
+                            <span class="inline-block bg-emerald-100 text-emerald-700 font-bold px-2 py-0.5 rounded mr-2">참(O)</span>
+                            <span class="font-mono text-emerald-600 font-bold">출력: i=1, j=2 |</span>
+                        </td>
+                    </tr>
+                    <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                        <td class="p-4 font-bold text-purple-600 border-r border-slate-100">j = 3</td>
+                        <td class="p-4 text-left pl-6">
+                            <span class="inline-block bg-emerald-100 text-emerald-700 font-bold px-2 py-0.5 rounded mr-2">참(O)</span>
+                            <span class="font-mono text-emerald-600 font-bold">출력: i=1, j=3 |</span>
+                        </td>
+                    </tr>
+                    <tr class="border-b-2 border-slate-300 bg-slate-50/80">
+                        <td class="p-4 font-bold text-slate-400 border-r border-slate-100 line-through">j = 4</td>
+                        <td class="p-4 text-left pl-6">
+                            <span class="inline-block bg-rose-100 text-rose-700 font-bold px-2 py-0.5 rounded mr-2">거짓(X)</span>
+                            <span class="text-slate-600 font-medium">내부 반복문 종료 ➜ <span
+                                    class="text-amber-500 font-bold border-b-2 border-amber-300">줄바꿈(\n) 실행</span></span>
+                        </td>
+                    </tr>
+
+                    <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                        <td class="p-4 font-black text-indigo-600 bg-indigo-50/50 text-lg" rowspan="4"
+                            style="vertical-align: middle; border-right: 1px solid #e2e8f0;">
+                            i = 2<br>
+                            <span class="text-base font-normal text-indigo-400 mt-1 block">(2회차 시작)</span>
+                        </td>
+                        <td class="p-4 font-bold text-purple-600 border-r border-slate-100 relative">
+                            j = 1
+                            <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-rose-500 text-white text-base font-bold px-2 py-0.5 rounded shadow whitespace-nowrap z-10 animate-bounce">j는 다시 1로 초기화!</span>
+                        </td>
+                        <td class="p-4 text-left pl-6">
+                            <span class="inline-block bg-emerald-100 text-emerald-700 font-bold px-2 py-0.5 rounded mr-2">참(O)</span>
+                            <span class="font-mono text-emerald-600 font-bold">출력: i=2, j=1 |</span>
+                        </td>
+                    </tr>
+                    <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                        <td class="p-4 font-bold text-purple-600 border-r border-slate-100">j = 2</td>
+                        <td class="p-4 text-left pl-6">
+                            <span class="inline-block bg-emerald-100 text-emerald-700 font-bold px-2 py-0.5 rounded mr-2">참(O)</span>
+                            <span class="font-mono text-emerald-600 font-bold">출력: i=2, j=2 |</span>
+                        </td>
+                    </tr>
+                    <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                        <td class="p-4 font-bold text-purple-600 border-r border-slate-100">j = 3</td>
+                        <td class="p-4 text-left pl-6">
+                            <span class="inline-block bg-emerald-100 text-emerald-700 font-bold px-2 py-0.5 rounded mr-2">참(O)</span>
+                            <span class="font-mono text-emerald-600 font-bold">출력: i=2, j=3 |</span>
+                        </td>
+                    </tr>
+                    <tr class="border-b-2 border-slate-300 bg-slate-50/80">
+                        <td class="p-4 font-bold text-slate-400 border-r border-slate-100 line-through">j = 4</td>
+                        <td class="p-4 text-left pl-6">
+                            <span class="inline-block bg-rose-100 text-rose-700 font-bold px-2 py-0.5 rounded mr-2">거짓(X)</span>
+                            <span class="text-slate-600 font-medium">내부 반복문 종료 ➜ <span
+                                    class="text-amber-500 font-bold border-b-2 border-amber-300">줄바꿈(\n) 실행</span></span>
+                        </td>
+                    </tr>
+
+                    <tr class="bg-slate-100 transition-colors">
+                        <td class="p-4 font-bold text-slate-400 line-through text-lg"
+                            style="vertical-align: middle; border-right: 1px solid #e2e8f0;">
+                            i = 3
+                        </td>
+                        <td class="p-4 font-bold text-slate-400 border-r border-slate-100">-</td>
+                        <td class="p-4 text-left pl-6">
+                            <span class="inline-block bg-rose-100 text-rose-700 font-bold px-2 py-0.5 rounded mr-2">거짓(X)</span>
+                            <span class="text-indigo-700 font-bold text-base">조건(i<=2) 불만족 ➜ <b>외부 반복문 포함 모든 루프 최종 종료!</b></span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </section>
+
     <section id="control-3-visualization" class="concept-card bg-white border border-slate-300 p-8 shadow-sm">
         <div class="flex items-center gap-4 mb-6 border-b border-slate-100 pb-4">
             <div class="bg-emerald-100 p-3 rounded-2xl text-emerald-600 flex-shrink-0">
@@ -196,11 +433,11 @@
         </div>
 
         <p class="text-base text-slate-700 mb-6">
-            아래 코드는 외부 반복문(i)이 2번, 내부 반복문(j)이 3번 도는 중첩 for문의 예시입니다. 컴퓨터가 실제로 어떤 순서로 코드를 실행하는지 표를 통해 확인해 보세요.
+            아래 코드는 외부 반복문(i)이 3번, 내부 반복문(j)이 2번 도는 중첩 for문의 예시입니다. 컴퓨터가 실제로 어떤 순서로 코드를 실행하는지 표를 통해 확인해 보세요.
         </p>
 
         <div class="grid lg:grid-cols-5 gap-8 items-start">
-            <div class="lg:col-span-2">
+            <div class="sticky top-6 z-10 lg:col-span-2">
                 <div class="bg-[#1e1e1e] rounded-xl overflow-hidden shadow-lg border border-slate-700">
                     <div class="bg-slate-800 px-4 py-3 flex items-center justify-between border-b border-slate-700/50">
                 <span class="text-slate-300 font-mono text-base font-semibold">
@@ -208,9 +445,9 @@
                 </span>
                     </div>
                     <pre class="!bg-transparent !m-0 !p-6"><code class="language-c">// 외부 반복문 (시침)
-for (int i = 1; i <= 2; i++) {
+for (int i = 2; i <= 7; i+=2) {
     // 내부 반복문 (분침)
-    for (int j = 1; j <= 3; j++) {
+    for (int j = 1; j <= 2; j++) {
         printf("i=%d, j=%d\n", i, j);
     }
 }</code></pre>
@@ -219,62 +456,135 @@ for (int i = 1; i <= 2; i++) {
                     <p class="text-base text-blue-900 font-medium">
                         <span class="font-bold">핵심 포인트:</span> 외부 반복문이 한 번 실행될 때마다 내부 반복문은 <b>처음부터 끝까지(새로 초기화되어)</b> 완전히
                         실행됩니다.
-                        따라서 <span class="font-bold bg-amber-200 px-1 rounded">printf()문</span>의 총 실행 횟수는 <span
-                            class="font-bold bg-amber-200 px-1 rounded">외부 반복 횟수(2) × 내부 반복 횟수(3) = 6번</span>이 됩니다.
+                        따라서 <span class="font-bold bg-amber-200 px-1 rounded">printf()문의 총 실행 횟수는 외부 반복 횟수(3) × 내부 반복 횟수(2) = 6번</span>이
+                        됩니다.
                     </p>
                 </div>
             </div>
 
-            <div class="lg:col-span-3 overflow-x-auto border border-slate-200 rounded-xl">
-                <table class="w-full text-left text-base text-slate-600">
-                    <thead class="bg-slate-50 border-b border-slate-200">
+
+            <div class="lg:col-span-3 overflow-hidden border border-slate-300 rounded-xl shadow-md bg-white">
+                <table class="w-full text-center text-base text-slate-700 border-collapse">
+                    <thead class="bg-slate-100 border-b-2 border-slate-300">
                     <tr>
-                        <th class="p-4 font-bold text-indigo-600 w-1/4">외부 (i)</th>
-                        <th class="p-4 font-bold text-purple-600 w-1/4">내부 (j)</th>
-                        <th class="p-4 font-bold text-slate-800 w-2/4">실행 및 출력 결과</th>
+                        <th class="p-4 font-extrabold text-indigo-700 w-1/4 border-r border-slate-200">
+                            외부 <br>
+                            <span class="font-bold bg-amber-200 px-1 rounded text-indigo-900">i <= 7</span><br>
+                            <span class="text-base font-normal text-indigo-500 mt-1 block">(2씩 증가: i+=2)</span>
+                        </th>
+                        <th class="p-4 font-extrabold text-purple-700 w-1/4 border-r border-slate-200">
+                            내부 <br>
+                            <span class="font-bold bg-amber-200 px-1 rounded text-purple-900">j <= 2</span>
+                        </th>
+                        <th class="p-4 font-extrabold text-slate-800 w-2/4">조건 판별 &amp; 실행 결과</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr class="step-row border-b border-slate-100">
-                        <td class="p-4 font-bold text-indigo-600" rowspan="3"
-                            style="vertical-align: top; border-right: 1px solid #e2e8f0;">i = 1<br><span
-                                class="text-base font-normal text-slate-400">(첫 번째 사이클)</span></td>
-                        <td class="p-4">j = 1</td>
-                        <td class="p-4 font-mono">i=1, j=1</td>
+                    <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                        <td class="p-4 font-black text-indigo-600 bg-indigo-50/50 text-lg" rowspan="3"
+                            style="vertical-align: middle; border-right: 1px solid #e2e8f0;">
+                            i = 2<br>
+                            <span class="text-base font-normal text-indigo-400 mt-1 block">(1회차 시작)</span>
+                        </td>
+                        <td class="p-4 font-bold text-purple-600 border-r border-slate-100">j = 1</td>
+                        <td class="p-4 text-left pl-6">
+                            <span class="inline-block bg-emerald-100 text-emerald-700 font-bold px-2 py-0.5 rounded mr-2">참(O)</span>
+                            <span class="font-mono text-emerald-600 font-bold">출력: i=2, j=1</span>
+                        </td>
                     </tr>
-                    <tr class="step-row border-b border-slate-100">
-                        <td class="p-4">j = 2</td>
-                        <td class="p-4 font-mono">i=1, j=2</td>
+                    <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                        <td class="p-4 font-bold text-purple-600 border-r border-slate-100">j = 2</td>
+                        <td class="p-4 text-left pl-6">
+                            <span class="inline-block bg-emerald-100 text-emerald-700 font-bold px-2 py-0.5 rounded mr-2">참(O)</span>
+                            <span class="font-mono text-emerald-600 font-bold">출력: i=2, j=2</span>
+                        </td>
                     </tr>
-                    <tr class="step-row border-b border-slate-200 bg-slate-50/50">
-                        <td class="p-4">j = 3</td>
-                        <td class="p-4 font-mono">i=1, j=3 <br><span
-                                class="text-purple-500 font-semibold text-base mt-1 inline-block">내부 반복문 종료 (j가 3까지 도달)</span>
+                    <tr class="border-b-2 border-slate-300 bg-slate-50/80">
+                        <td class="p-4 font-bold text-slate-400 border-r border-slate-100 line-through">j = 3</td>
+                        <td class="p-4 text-left pl-6">
+                            <span class="inline-block bg-rose-100 text-rose-700 font-bold px-2 py-0.5 rounded mr-2">거짓(X)</span>
+                            <span class="text-slate-600 font-medium">내부 반복문 종료 ➜ <span
+                                    class="text-amber-500 font-bold border-b-2 border-amber-300">줄바꿈(\n) 실행</span></span>
                         </td>
                     </tr>
 
-                    <tr class="step-row border-b border-slate-100">
-                        <td class="p-4 font-bold text-indigo-600" rowspan="3"
-                            style="vertical-align: top; border-right: 1px solid #e2e8f0;">i = 2<br><span
-                                class="text-base font-normal text-slate-400">(두 번째 사이클)</span></td>
-                        <td class="p-4">j = 1</td>
-                        <td class="p-4 font-mono">i=2, j=1 <br><span
-                                class="text-emerald-500 font-semibold text-base mt-1 inline-block">내부 반복문 변수 j가 1로 초기화됨!</span>
+                    <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                        <td class="p-4 font-black text-indigo-600 bg-indigo-50/50 text-lg" rowspan="3"
+                            style="vertical-align: middle; border-right: 1px solid #e2e8f0;">
+                            i = 4<br>
+                            <span class="text-base font-normal text-indigo-400 mt-1 block">(2회차 시작)</span>
+                        </td>
+                        <td class="p-4 font-bold text-purple-600 border-r border-slate-100 relative">
+                            j = 1
+                            <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-rose-500 text-white text-base font-bold px-2 py-0.5 rounded shadow whitespace-nowrap z-10 animate-bounce">j는 다시 1로 초기화!</span>
+                        </td>
+                        <td class="p-4 text-left pl-6">
+                            <span class="inline-block bg-emerald-100 text-emerald-700 font-bold px-2 py-0.5 rounded mr-2">참(O)</span>
+                            <span class="font-mono text-emerald-600 font-bold">출력: i=4, j=1</span>
                         </td>
                     </tr>
-                    <tr class="step-row border-b border-slate-100">
-                        <td class="p-4">j = 2</td>
-                        <td class="p-4 font-mono">i=2, j=2</td>
+                    <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                        <td class="p-4 font-bold text-purple-600 border-r border-slate-100">j = 2</td>
+                        <td class="p-4 text-left pl-6">
+                            <span class="inline-block bg-emerald-100 text-emerald-700 font-bold px-2 py-0.5 rounded mr-2">참(O)</span>
+                            <span class="font-mono text-emerald-600 font-bold">출력: i=4, j=2</span>
+                        </td>
                     </tr>
-                    <tr class="step-row">
-                        <td class="p-4">j = 3</td>
-                        <td class="p-4 font-mono">i=2, j=3 <br><span
-                                class="text-indigo-500 font-semibold text-base mt-1 inline-block">외부 반복문 종료 (i가 2까지 도달)</span>
+                    <tr class="border-b-2 border-slate-300 bg-slate-50/80">
+                        <td class="p-4 font-bold text-slate-400 border-r border-slate-100 line-through">j = 3</td>
+                        <td class="p-4 text-left pl-6">
+                            <span class="inline-block bg-rose-100 text-rose-700 font-bold px-2 py-0.5 rounded mr-2">거짓(X)</span>
+                            <span class="text-slate-600 font-medium">내부 반복문 종료 ➜ <span
+                                    class="text-amber-500 font-bold border-b-2 border-amber-300">줄바꿈(\n) 실행</span></span>
+                        </td>
+                    </tr>
+
+                    <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                        <td class="p-4 font-black text-indigo-600 bg-indigo-50/50 text-lg" rowspan="3"
+                            style="vertical-align: middle; border-right: 1px solid #e2e8f0;">
+                            i = 6<br>
+                            <span class="text-base font-normal text-indigo-400 mt-1 block">(3회차 시작)</span>
+                        </td>
+                        <td class="p-4 font-bold text-purple-600 border-r border-slate-100 relative">
+                            j = 1
+                            <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-rose-500 text-white text-base font-bold px-2 py-0.5 rounded shadow whitespace-nowrap z-10 animate-bounce">j는 다시 1로 초기화!</span>
+                        </td>
+                        <td class="p-4 text-left pl-6">
+                            <span class="inline-block bg-emerald-100 text-emerald-700 font-bold px-2 py-0.5 rounded mr-2">참(O)</span>
+                            <span class="font-mono text-emerald-600 font-bold">출력: i=6, j=1</span>
+                        </td>
+                    </tr>
+                    <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                        <td class="p-4 font-bold text-purple-600 border-r border-slate-100">j = 2</td>
+                        <td class="p-4 text-left pl-6">
+                            <span class="inline-block bg-emerald-100 text-emerald-700 font-bold px-2 py-0.5 rounded mr-2">참(O)</span>
+                            <span class="font-mono text-emerald-600 font-bold">출력: i=6, j=2</span>
+                        </td>
+                    </tr>
+                    <tr class="border-b-2 border-slate-300 bg-slate-50/80">
+                        <td class="p-4 font-bold text-slate-400 border-r border-slate-100 line-through">j = 3</td>
+                        <td class="p-4 text-left pl-6">
+                            <span class="inline-block bg-rose-100 text-rose-700 font-bold px-2 py-0.5 rounded mr-2">거짓(X)</span>
+                            <span class="text-slate-600 font-medium">내부 종료 ➜ <span class="text-amber-500 font-bold">줄바꿈(\n)</span></span>
+                        </td>
+                    </tr>
+
+                    <tr class="bg-slate-100 transition-colors">
+                        <td class="p-4 font-bold text-slate-400 line-through text-lg"
+                            style="vertical-align: middle; border-right: 1px solid #e2e8f0;">
+                            i = 8
+                        </td>
+                        <td class="p-4 font-bold text-slate-400 border-r border-slate-100">-</td>
+                        <td class="p-4 text-left pl-6">
+                            <span class="inline-block bg-rose-100 text-rose-700 font-bold px-2 py-0.5 rounded mr-2">거짓(X)</span>
+                            <span class="text-indigo-700 font-bold text-base">조건(i<=7) 불만족 ➜ <b>외부 반복문 포함 모든 루프 최종 종료!</b></span>
                         </td>
                     </tr>
                     </tbody>
                 </table>
             </div>
+
+
         </div>
     </section>
 
@@ -512,7 +822,7 @@ int main() {
                 &nbsp;&nbsp;&nbsp;&nbsp;내부 반복문 j = 1<br>
                 &nbsp;&nbsp;&nbsp;&nbsp;내부 반복문 j = 2<br>
                 <span class="text-rose-400 font-bold">&nbsp;&nbsp;&nbsp;&nbsp;-> j가 3이 되어 내부 반복문만 탈출!</span><br>
-                외부 반복문 2회차 시작 <span class="text-emerald-400 text-sm">(정상적으로 다음 사이클 진입)</span><br>
+                외부 반복문 2회차 시작 <span class="text-emerald-400 text-base">(정상적으로 다음 사이클 진입)</span><br>
                 ...
             </div>
         </div>
@@ -561,6 +871,161 @@ int main() {
                 </div>
             </div>
         </div>
+    </section>
+
+    <section id="control-3-challenge" class="concept-card bg-emerald-50 border border-emerald-200 p-8 shadow-sm mt-12">
+        <div class="flex items-center gap-4 mb-6 border-b border-emerald-200 pb-4">
+            <div class="bg-emerald-100 p-3 rounded-2xl text-emerald-600 flex-shrink-0">
+                <i class="w-8 h-8" data-lucide="dumbbell"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-emerald-900 tracking-tight">스스로 해보기 (도전 과제)</h2>
+        </div>
+
+        <p class="text-base text-emerald-800 mb-6">
+            눈으로 보는 것과 직접 코드를 작성하는 것은 다릅니다. 아래의 두 가지 미션을 스스로 해결해 보며 중첩 제어문의 마스터가 되어 보세요!
+        </p>
+
+        <div class="grid md:grid-cols-2 gap-6 items-start">
+            <div class="bg-white p-6 rounded-xl border border-emerald-100 shadow-sm flex flex-col h-full">
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="bg-emerald-500 text-white text-base font-bold px-3 py-1 rounded-full">Mission 1</span>
+                    <h4 class="font-bold text-slate-800 text-lg">역삼각형 별 찍기</h4>
+                </div>
+                <p class="text-base text-slate-600 mb-4">
+                    기존 별 찍기 예제를 수정하여, 5개부터 1개까지 <b>거꾸로 줄어드는 역삼각형</b>을 출력해 보세요. <br>
+                    <span class="text-emerald-600 font-semibold mt-2 inline-block">💡 힌트: 처음부터 5줄로 시작해서 1줄로 줄어들게 하려면, <b>외부 반복문의 시작과 끝, 증감식(i--)</b>을 어떻게 바꿔야 할까요?</span>
+                </p>
+                <div class="bg-slate-50 p-4 rounded-lg font-mono text-base text-slate-600 tracking-[0.2em] mb-4">
+                    *****<br>
+                    ****<br>
+                    ***<br>
+                    **<br>
+                    *
+                </div>
+
+                <details class="group">
+                    <summary
+                            class="cursor-pointer bg-emerald-50 border border-emerald-200 text-emerald-700 font-bold px-4 py-2.5 rounded-lg list-none flex items-center justify-between hover:bg-emerald-100 transition-colors">
+                        <span class="flex items-center gap-2"><i class="w-4 h-4"
+                                                                 data-lucide="code"></i> 예제 코드 보기</span>
+                        <i class="w-5 h-5 transition-transform group-open:rotate-180" data-lucide="chevron-down"></i>
+                    </summary>
+                    <div class="mt-3 bg-[#1e1e1e] rounded-xl overflow-hidden shadow-lg border border-slate-700 text-left">
+                        <div class="bg-slate-800 px-4 py-2 flex items-center justify-between border-b border-slate-700/50">
+                            <span class="text-slate-300 font-mono text-sm font-semibold">solution_star.c</span>
+                            <button onclick="copyCode('code-sol-star'); showToast();"
+                                    class="flex items-center gap-1.5 text-slate-400 hover:text-emerald-400 transition-colors group/btn">
+                                <i class="w-4 h-4" data-lucide="copy"></i>
+                                <span class="text-xs font-medium">Copy</span>
+                            </button>
+                        </div>
+                        <pre class="!bg-transparent !m-0 !p-5"><code id="code-sol-star" class="language-c text-sm">#include &lt;stdio.h&gt;
+
+int main() {
+    // 외부 반복문을 5부터 1까지 1씩 감소(i--) 시킵니다.
+    for (int i = 5; i >= 1; i--) {
+
+        // 내부 반복문은 현재 줄 번호(i)만큼만 별을 찍습니다.
+        for (int j = 1; j <= i; j++) {
+            printf("*");
+        }
+        printf("\n");
+    }
+    return 0;
+}</code></pre>
+                    </div>
+                </details>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl border border-emerald-100 shadow-sm flex flex-col h-full">
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="bg-emerald-500 text-white text-base font-bold px-3 py-1 rounded-full">Mission 2</span>
+                    <h4 class="font-bold text-slate-800 text-lg">소수 (Prime Number) 찾기</h4>
+                </div>
+                <p class="text-base text-slate-600 mb-4">
+                    2부터 50까지의 숫자 중에서 <b>소수(1과 자기 자신으로만 나누어떨어지는 수)</b>만 골라서 출력해 보세요. 반복문과 조건문의 완벽한 결합이 필요합니다. <br>
+                    <span class="text-emerald-600 font-semibold mt-2 inline-block">💡 힌트: 나누어떨어지는 횟수(약수의 개수)를 세는 변수를 활용해 보세요. 약수가 딱 2개인 수가 소수입니다.</span>
+                </p>
+
+                <details class="group">
+                    <summary
+                            class="cursor-pointer bg-emerald-50 border border-emerald-200 text-emerald-700 font-bold px-4 py-2.5 rounded-lg list-none flex items-center justify-between hover:bg-emerald-100 transition-colors">
+                        <span class="flex items-center gap-2"><i class="w-4 h-4"
+                                                                 data-lucide="code"></i> 예제 코드 보기</span>
+                        <i class="w-5 h-5 transition-transform group-open:rotate-180" data-lucide="chevron-down"></i>
+                    </summary>
+                    <div class="mt-3 bg-[#1e1e1e] rounded-xl overflow-hidden shadow-lg border border-slate-700 text-left">
+                        <div class="bg-slate-800 px-4 py-2 flex items-center justify-between border-b border-slate-700/50">
+                            <span class="text-slate-300 font-mono text-sm font-semibold">solution_prime.c</span>
+                            <button onclick="copyCode('code-sol-prime'); showToast();"
+                                    class="flex items-center gap-1.5 text-slate-400 hover:text-emerald-400 transition-colors group/btn">
+                                <i class="w-4 h-4" data-lucide="copy"></i>
+                                <span class="text-xs font-medium">Copy</span>
+                            </button>
+                        </div>
+                        <pre class="!bg-transparent !m-0 !p-5"><code id="code-sol-prime" class="language-c text-sm">#include &lt;stdio.h&gt;
+
+int main() {
+    // 2부터 50까지의 숫자를 하나씩 검사합니다.
+    for (int i = 2; i <= 50; i++) {
+        int count = 0; // 약수의 개수를 셀 변수 초기화
+
+        // 1부터 현재 숫자(i)까지 나누어 봅니다.
+        for (int j = 1; j <= i; j++) {
+            if (i % j == 0) { // 나누어 떨어지면
+                count++;      // 약수 개수 1 증가
+            }
+        }
+
+        // 약수가 1과 자기 자신, 딱 2개뿐이면 소수!
+        if (count == 2) {
+            printf("%d ", i);
+        }
+    }
+    printf("\n");
+    return 0;
+}</code></pre>
+                    </div>
+                </details>
+            </div>
+        </div>
+    </section>
+
+    <section id="control-3-summary"
+             class="mt-12 bg-gradient-to-r from-slate-800 to-slate-900 rounded-2xl p-8 shadow-xl text-white relative overflow-hidden">
+        <div class="absolute -right-10 -top-10 w-40 h-40 bg-blue-500/20 blur-3xl rounded-full pointer-events-none"></div>
+
+        <h3 class="text-2xl font-bold mb-6 flex items-center gap-3">
+            <i class="w-7 h-7 text-blue-400" data-lucide="flag"></i>
+            Chapter 4. 중첩 제어구조 핵심 요약
+        </h3>
+
+        <ul class="space-y-4 text-base text-slate-200">
+            <li class="flex items-start gap-3 bg-slate-800/50 p-4 rounded-xl border border-slate-700">
+                <i class="w-6 h-6 text-emerald-400 flex-shrink-0 mt-0.5" data-lucide="check-circle-2"></i>
+                <div>
+                    <strong class="text-white block mb-1">시계열의 원칙 (외부 1회 = 내부 전체)</strong>
+                    외부 반복문이 1번 실행될 때, 내부 반복문은 처음부터 끝까지 새롭게 초기화되어 완벽히 1사이클을 회전합니다.
+                </div>
+            </li>
+            <li class="flex items-start gap-3 bg-slate-800/50 p-4 rounded-xl border border-slate-700">
+                <i class="w-6 h-6 text-emerald-400 flex-shrink-0 mt-0.5" data-lucide="check-circle-2"></i>
+                <div>
+                    <strong class="text-white block mb-1">독립적인 제어 변수 사용</strong>
+                    논리적 오류와 무한 루프를 방지하기 위해, 외부와 내부 반복문은 반드시 서로 다른 제어 변수(예: i, j, k)를 사용해야 합니다.
+                </div>
+            </li>
+            <li class="flex items-start gap-3 bg-slate-800/50 p-4 rounded-xl border border-slate-700">
+                <i class="w-6 h-6 text-emerald-400 flex-shrink-0 mt-0.5" data-lucide="check-circle-2"></i>
+                <div>
+                    <strong class="text-white block mb-1">부분적 탈출 (Break의 한계)</strong>
+                    <span class="text-black font-bold bg-amber-200 px-1 rounded">break</span> 문은 자신이 속한 가장 안쪽의 반복문 하나만
+                    탈출시킵니다. 중첩된
+                    모든 반복문을
+                    한 번에 종료하지 않습니다.
+                </div>
+            </li>
+        </ul>
     </section>
 
 </main>
