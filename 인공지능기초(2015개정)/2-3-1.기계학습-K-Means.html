@@ -190,20 +190,12 @@
         <div class="flex flex-col lg:flex-row gap-6 items-stretch">
 
             <div class="w-full lg:w-[65%] flex flex-col gap-4">
-                <div class="w-full bg-slate-100 border-2 border-slate-200 text-slate-700 px-6 py-4 rounded-xl font-bold flex items-center shadow-sm transition-all duration-300 min-h-[104px]"
-                     id="statusMessageBar">
-                    <i class="fa-solid fa-hand-pointer mr-3 text-2xl" id="statusMessageIcon"></i>
-                    <span class="text-xl" id="statusMessageText">
-                        하단의 캔버스를 클릭하여 데이터를 생성하세요.
-                    </span>
-                </div>
 
-                <div class="relative w-full bg-slate-100 rounded-2xl overflow-hidden border-2 border-slate-300 shadow-inner"
-                     style="aspect-ratio: 4/3;">
+                <div class="relative w-full bg-slate-100 rounded-2xl overflow-hidden border-2 border-slate-300 shadow-inner flex-1 min-h-[400px]">
                     <canvas class="absolute top-0 left-0 w-full h-full cursor-crosshair" id="kmeansCanvas"></canvas>
                 </div>
 
-                <div class="bg-white p-4 rounded-2xl border-2 border-slate-200 shadow-sm flex flex-col lg:flex-row gap-5 items-center justify-between mt-1">
+                <div class="bg-white p-4 rounded-2xl border-2 border-slate-200 shadow-sm flex flex-col lg:flex-row gap-5 items-center justify-between mt-1 shrink-0">
                     <div class="flex-1 w-full flex flex-col gap-2 px-2">
                         <div class="flex justify-between items-center">
                             <label class="font-bold text-slate-600 text-base flex items-center">
@@ -217,27 +209,27 @@
                     </div>
 
                     <div class="flex gap-3 w-full lg:w-auto shrink-0">
-                        <button
-                                class="flex-1 px-6 py-3 text-lg bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold rounded-xl transition-all border-2 border-blue-200 shadow-sm flex items-center justify-center lg:whitespace-nowrap text-center"
+                        <button class="flex-1 px-6 py-3 text-lg bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold rounded-xl transition-all border-2 border-blue-200 shadow-sm flex items-center justify-center lg:whitespace-nowrap text-center"
                                 id="btnRandomData">
-                            <i class="fa-solid fa-braille mr-2"></i>
-                            랜덤 생성
+                            <i class="fa-solid fa-braille mr-2"></i> 랜덤 생성
                         </button>
-
-                        <button
-                                class="flex-1 px-6 py-3 text-lg bg-white hover:bg-rose-50 text-rose-600 font-bold rounded-xl transition-all border-2 border-slate-200 shadow-sm flex items-center justify-center lg:whitespace-nowrap text-center"
+                        <button class="flex-1 px-6 py-3 text-lg bg-white hover:bg-rose-50 text-rose-600 font-bold rounded-xl transition-all border-2 border-slate-200 shadow-sm flex items-center justify-center lg:whitespace-nowrap text-center"
                                 id="btnClearData">
-                            <i class="fa-solid fa-eraser mr-2"></i>
-                            지우기
+                            <i class="fa-solid fa-eraser mr-2"></i> 지우기
                         </button>
                     </div>
                 </div>
-            </div>
 
-            <div class="w-full lg:w-[35%] flex flex-col gap-6">
+                <div class="w-full bg-slate-100 border-2 border-slate-200 text-slate-700 px-6 py-4 rounded-xl font-bold flex items-center shadow-sm transition-all duration-300 min-h-[104px] shrink-0"
+                     id="statusMessageBar">
+                    <i class="fa-solid fa-hand-pointer mr-3 text-2xl" id="statusMessageIcon"></i>
+                    <span class="text-xl" id="statusMessageText">
+                    하단의 캔버스를 클릭하여 데이터를 생성하세요.
+                </span>
+                </div>
 
-                <div class="bg-blue-50/80 p-5 rounded-2xl border-2 border-blue-100 shadow-sm flex flex-col gap-4">
-                    <div class="bg-white p-4 rounded-xl border border-blue-100 shadow-sm">
+                <div class="bg-blue-50/80 p-5 rounded-2xl border-2 border-blue-100 shadow-sm flex flex-col lg:flex-row gap-4 shrink-0">
+                    <div class="bg-white p-4 rounded-xl border border-blue-100 shadow-sm flex-1 flex flex-col justify-center">
                         <div class="flex justify-between items-center mb-2">
                             <label class="font-bold text-slate-700 text-base">K (클러스터 개수)</label>
                             <span class="font-black text-blue-600 text-3xl" id="kValueDisplay">3</span>
@@ -250,56 +242,67 @@
                         </button>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-3">
-                        <button class="py-4 bg-blue-600 hover:bg-blue-700 text-white font-black text-xl rounded-xl transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none transform hover:scale-105 flex items-center justify-center"
-                                disabled id="btnStep">
-                            <i class="fa-solid fa-shoe-prints mr-2"></i> Step
-                        </button>
-                        <button class="py-4 bg-emerald-500 hover:bg-emerald-600 text-white font-black text-xl rounded-xl transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none transform hover:scale-105 flex items-center justify-center"
-                                disabled id="btnRun">
-                            <i class="fa-solid fa-play mr-2"></i> Run
+                    <div class="flex flex-col gap-3 flex-1 lg:w-auto justify-center">
+                        <div class="flex flex-col sm:flex-row gap-3">
+                            <button class="flex-1 py-4 bg-blue-600 hover:bg-blue-700 text-white font-black text-xl rounded-xl transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 flex items-center justify-center"
+                                    disabled id="btnStep">
+                                <i class="fa-solid fa-shoe-prints mr-2"></i> Step
+                            </button>
+                            <button class="flex-1 py-4 bg-emerald-500 hover:bg-emerald-600 text-white font-black text-xl rounded-xl transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 flex items-center justify-center"
+                                    disabled id="btnRun">
+                                <i class="fa-solid fa-play mr-2"></i> Run
+                            </button>
+                        </div>
+                        <button class="w-full py-3 bg-white text-slate-700 border-2 border-slate-300 hover:bg-slate-100 hover:border-slate-400 text-lg font-bold rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                                disabled id="btnResetAlg">
+                            <i class="fa-solid fa-rotate-left mr-2"></i> 알고리즘 진행 초기화
                         </button>
                     </div>
-
-                    <button class="w-full py-3 bg-white text-slate-700 border-2 border-slate-300 hover:bg-slate-100 hover:border-slate-400 text-lg font-bold rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
-                            disabled id="btnResetAlg">
-                        <i class="fa-solid fa-rotate-left mr-2"></i> 알고리즘 진행 초기화
-                    </button>
                 </div>
 
-                <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 flex-1">
-                    <h3 class="font-black text-slate-800 mb-4 flex items-center text-xl">
+            </div>
+
+            <div class="w-full lg:w-[35%] flex flex-col gap-6">
+
+                <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 flex-1 flex flex-col">
+                    <h3 class="font-black text-slate-800 mb-4 flex items-center text-xl shrink-0">
                         <i class="fa-solid fa-list-check text-blue-600 mr-2"></i>진행 상황 파악하기
                     </h3>
-                    <div class="flex flex-col gap-3 relative">
-                        <div class="absolute left-6 top-8 bottom-8 w-1 bg-slate-200 z-0 rounded"></div>
 
-                        <div class="flow-box relative z-10 bg-white border-2 border-slate-300 rounded-xl p-4 shadow-sm transition-all duration-300 transform scale-[1.02]"
-                             id="flow-IDLE">
-                            <span class="step-badge inline-block px-2.5 py-1 rounded-md text-sm font-black mb-1 bg-slate-100 text-slate-600">Step 0</span>
-                            <div class="step-title font-bold text-slate-800 text-lg flex items-center"><i
-                                    class="fa-solid fa-seedling w-6"></i>데이터 및 중심점 준비
+                    <div class="flex-1 flex flex-col justify-center">
+                        <div class="flex flex-col gap-4 relative">
+                            <div class="absolute left-6 top-8 bottom-8 w-1 bg-slate-200 z-0 rounded"></div>
+
+                            <div class="flow-box relative z-10 bg-white border-2 border-slate-300 rounded-xl p-4 shadow-sm transition-all duration-300 transform scale-[1.02]"
+                                 id="flow-IDLE">
+                                <span class="step-badge inline-block px-2.5 py-1 rounded-md text-sm font-black mb-1 bg-slate-100 text-slate-600">Step 0</span>
+                                <div class="step-title font-bold text-slate-800 text-lg flex items-center">
+                                    <i class="fa-solid fa-seedling w-6"></i>데이터 및 중심점 준비
+                                </div>
                             </div>
-                        </div>
-                        <div class="flow-box relative z-10 opacity-50 grayscale-[30%] bg-slate-50 border-2 border-slate-200 rounded-xl p-4 transition-all duration-300"
-                             id="flow-ASSIGN">
-                            <span class="step-badge inline-block px-2.5 py-1 rounded-md text-sm font-bold mb-1 bg-slate-200 text-slate-500">Step 1</span>
-                            <div class="step-title font-bold text-slate-500 text-lg flex items-center"><i
-                                    class="fa-solid fa-people-arrows w-6"></i>가장 가까운 그룹에 할당
+
+                            <div class="flow-box relative z-10 opacity-50 grayscale-[30%] bg-slate-50 border-2 border-slate-200 rounded-xl p-4 transition-all duration-300"
+                                 id="flow-ASSIGN">
+                                <span class="step-badge inline-block px-2.5 py-1 rounded-md text-sm font-bold mb-1 bg-slate-200 text-slate-500">Step 1</span>
+                                <div class="step-title font-bold text-slate-500 text-lg flex items-center">
+                                    <i class="fa-solid fa-people-arrows w-6"></i>가장 가까운 그룹에 할당
+                                </div>
                             </div>
-                        </div>
-                        <div class="flow-box relative z-10 opacity-50 grayscale-[30%] bg-slate-50 border-2 border-slate-200 rounded-xl p-4 transition-all duration-300"
-                             id="flow-UPDATE">
-                            <span class="step-badge inline-block px-2.5 py-1 rounded-md text-sm font-bold mb-1 bg-slate-200 text-slate-500">Step 2</span>
-                            <div class="step-title font-bold text-slate-500 text-lg flex items-center"><i
-                                    class="fa-solid fa-route w-6"></i>그룹의 평균 위치로 이동
+
+                            <div class="flow-box relative z-10 opacity-50 grayscale-[30%] bg-slate-50 border-2 border-slate-200 rounded-xl p-4 transition-all duration-300"
+                                 id="flow-UPDATE">
+                                <span class="step-badge inline-block px-2.5 py-1 rounded-md text-sm font-bold mb-1 bg-slate-200 text-slate-500">Step 2</span>
+                                <div class="step-title font-bold text-slate-500 text-lg flex items-center">
+                                    <i class="fa-solid fa-route w-6"></i>그룹의 평균 위치로 이동
+                                </div>
                             </div>
-                        </div>
-                        <div class="flow-box relative z-10 opacity-50 grayscale-[30%] bg-slate-50 border-2 border-slate-200 rounded-xl p-4 transition-all duration-300"
-                             id="flow-DONE">
-                            <span class="step-badge inline-block px-2.5 py-1 rounded-md text-sm font-bold mb-1 bg-slate-200 text-slate-500">Step 3</span>
-                            <div class="step-title font-bold text-slate-500 text-lg flex items-center"><i
-                                    class="fa-solid fa-flag-checkered w-6"></i>알고리즘 수렴 (완료)
+
+                            <div class="flow-box relative z-10 opacity-50 grayscale-[30%] bg-slate-50 border-2 border-slate-200 rounded-xl p-4 transition-all duration-300"
+                                 id="flow-DONE">
+                                <span class="step-badge inline-block px-2.5 py-1 rounded-md text-sm font-bold mb-1 bg-slate-200 text-slate-500">Step 3</span>
+                                <div class="step-title font-bold text-slate-500 text-lg flex items-center">
+                                    <i class="fa-solid fa-flag-checkered w-6"></i>알고리즘 수렴 (완료)
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -633,7 +636,7 @@
         const msgBar = document.getElementById('statusMessageBar');
         document.getElementById('statusMessageText').innerText = message;
         document.getElementById('statusMessageIcon').className = `fa-solid ${icon} mr-3 text-2xl`;
-        msgBar.className = `w-full px-6 py-4 rounded-xl font-bold flex items-center shadow-sm transition-all duration-300 border-2 ${theme.barBg} ${theme.barBorder} ${theme.barText}`;
+        msgBar.className = `w-full px-6 py-4 rounded-xl font-bold flex items-center shadow-sm transition-all duration-300 border-2 min-h-[104px] ${theme.barBg} ${theme.barBorder} ${theme.barText}`;
 
         ['IDLE', 'ASSIGN', 'UPDATE', 'DONE'].forEach(p => {
             const box = document.getElementById(`flow-${p}`);
