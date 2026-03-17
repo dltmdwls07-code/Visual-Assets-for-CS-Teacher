@@ -323,7 +323,7 @@
                             <label class="font-bold text-slate-700 flex items-center gap-2">
                                 <i class="fa-solid fa-chess-board text-purple-600"></i> 크기
                             </label>
-                            <select class="border-2 border-slate-200 rounded-lg px-2 py-1 bg-white text-purple-700 font-black cursor-pointer focus:outline-none focus:border-purple-500"
+                            <select class="border-2 border-slate-200 rounded-lg px-1 py-1 bg-white text-purple-700 font-black cursor-pointer focus:outline-none focus:border-purple-500"
                                     id="boardSize" onchange="initGame()">
                                 <option value="4">4 x 4 (추천)</option>
                                 <option value="5">5 x 5 (보통)</option>
@@ -389,25 +389,31 @@
 
                 <div class="w-full lg:w-[60%] flex flex-col bg-slate-900 rounded-2xl overflow-hidden shadow-xl border-4 border-slate-800 min-h-[450px] flex-1 relative">
 
-                    <div class="bg-slate-800 px-5 py-3 flex justify-between items-center border-b border-slate-700 z-10 relative shadow-md">
-                        <h4 class="text-white font-bold flex items-center gap-2 md:text-base">
-                            <i class="fa-solid fa-diagram-project text-indigo-400"></i> 상태 공간 트리
+                    <div class="bg-slate-800 px-5 py-3 flex flex-col md:flex-row md:justify-between md:items-center gap-2 border-b border-slate-700 z-10 relative shadow-md">
+
+                        <h4 class="text-white font-bold flex items-center gap-2 text-base">
+                            <i class="fa-solid fa-diagram-project text-indigo-400"></i>
+                            상태 공간 트리
                         </h4>
-                        <div class="flex items-center gap-2">
+
+                        <div class="flex flex-wrap items-center gap-2">
                             <select id="treeViewMode" onchange="applyViewMode()"
                                     class="bg-slate-700 hover:bg-slate-600 text-slate-200 text-sm font-bold rounded border border-slate-500 px-2 py-1 outline-none cursor-pointer transition">
                                 <option value="track" selected>🎯 노드 추적 (추천)</option>
                                 <option value="fit">🔍 전체 맞춤</option>
                                 <option value="free">✋ 자유 이동</option>
                             </select>
+
                             <button class="bg-slate-700 hover:bg-slate-600 text-white px-2 py-1 rounded border border-slate-600 transition"
                                     onclick="resetZoom(500)" title="현재 화면에 꽉 차게 정렬">
                                 <i class="fa-solid fa-compress"></i>
                             </button>
+
                             <div class="text-slate-400 md:font-mono bg-slate-900 px-3 py-1 rounded-full border border-slate-700 text-sm">
                                 방문: <span class="text-indigo-400 font-bold" id="nodeCount">0</span>
                             </div>
                         </div>
+
                     </div>
 
                     <div class="flex-1 min-h-[350px] w-full h-full relative overflow-hidden bg-[#0f172a]"
