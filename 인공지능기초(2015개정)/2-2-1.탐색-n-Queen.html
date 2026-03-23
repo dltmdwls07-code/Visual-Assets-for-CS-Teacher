@@ -173,7 +173,214 @@
             font-weight: 700;
         }
 
-        /* 커스텀 스크롤바 */
+        /* ===========================
+           직접 해보기 섹션 스타일 (iq-)
+        =========================== */
+        .iq-chess-board {
+            display: grid;
+            gap: 0;
+            border: 4px solid #1e293b;
+            border-radius: 8px;
+            overflow: hidden;
+            width: fit-content;
+            margin: 0 auto;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.15), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        .iq-cell {
+            width: 3.5rem;
+            height: 3.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.15s ease, transform 0.1s ease;
+            position: relative;
+            user-select: none;
+        }
+
+        @media (max-width: 640px) {
+            .iq-cell {
+                width: 2.5rem;
+                height: 2.5rem;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .iq-cell {
+                width: 2.1rem;
+                height: 2.1rem;
+            }
+        }
+
+        .iq-cell-light {
+            background-color: #f1f5f9;
+        }
+
+        .iq-cell-dark {
+            background-color: #94a3b8;
+        }
+
+        .iq-cell-conflict {
+            background-color: #fecdd3 !important;
+            box-shadow: inset 0 0 12px rgba(225, 29, 72, 0.4);
+        }
+
+        .iq-cell-attacked {
+            background-color: #fef9c3 !important;
+        }
+
+        .iq-cell-light.iq-cell-hover {
+            background-color: #d1fae5 !important;
+        }
+
+        .iq-cell-dark.iq-cell-hover {
+            background-color: #6ee7b7 !important;
+        }
+
+        .iq-cell:active {
+            transform: scale(0.92);
+        }
+
+        .iq-queen {
+            font-size: 2rem;
+            color: #4f46e5;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.25));
+            animation: iqPopIn 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            pointer-events: none;
+        }
+
+        @media (max-width: 640px) {
+            .iq-queen {
+                font-size: 1.4rem;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .iq-queen {
+                font-size: 1.2rem;
+            }
+        }
+
+        .iq-queen-conflict {
+            color: #e11d48 !important;
+            animation: iqShake 0.35s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+        }
+
+        .iq-queen-ghost {
+            font-size: 2rem;
+            color: #4f46e5;
+            opacity: 0.28;
+            pointer-events: none;
+            transition: opacity 0.15s;
+        }
+
+        @media (max-width: 640px) {
+            .iq-queen-ghost {
+                font-size: 1.4rem;
+            }
+        }
+
+        @keyframes iqPopIn {
+            0% {
+                transform: scale(0) rotate(-20deg);
+                opacity: 0;
+            }
+            80% {
+                transform: scale(1.15) rotate(3deg);
+            }
+            100% {
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+            }
+        }
+
+        @keyframes iqShake {
+            10%, 90% {
+                transform: translate3d(-1px, 0, 0);
+            }
+            20%, 80% {
+                transform: translate3d(2px, 0, 0);
+            }
+            30%, 50%, 70% {
+                transform: translate3d(-3px, 0, 0);
+            }
+            40%, 60% {
+                transform: translate3d(3px, 0, 0);
+            }
+        }
+
+        .iq-status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            border-radius: 0.75rem;
+            border-width: 1px;
+            border-style: solid;
+            padding: 0.5rem 1rem;
+            min-height: 2.5rem;
+            width: 100%;
+            font-size: 0.9rem;
+            transition: all 0.25s ease;
+        }
+
+        .iq-status-idle {
+            color: #475569;
+            background: #f1f5f9;
+            border-color: #e2e8f0;
+        }
+
+        .iq-status-ok {
+            color: #065f46;
+            background: #d1fae5;
+            border-color: #a7f3d0;
+        }
+
+        .iq-status-conflict {
+            color: #9f1239;
+            background: #fff1f2;
+            border-color: #fecdd3;
+        }
+
+        .iq-status-success {
+            color: #065f46;
+            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+            border-color: #34d399;
+            animation: iqPulseGreen 1.2s ease-in-out infinite alternate;
+        }
+
+        @keyframes iqPulseGreen {
+            from {
+                box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.4);
+            }
+            to {
+                box-shadow: 0 0 0 8px rgba(52, 211, 153, 0);
+            }
+        }
+
+        .iq-progress-fill {
+            transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .iq-success-banner {
+            animation: iqBounceIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        @keyframes iqBounceIn {
+            0% {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+            70% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
         ::-webkit-scrollbar {
             width: 8px;
             height: 8px;
@@ -219,6 +426,7 @@
         <div class="hidden md:flex space-x-8 font-bold text-slate-500">
             <a class="hover:text-indigo-600 transition" href="#concept">개념 이해</a>
             <a class="hover:text-purple-600 transition" href="#rules">퍼즐 규칙</a>
+            <a class="hover:text-emerald-600 transition" href="#practice">직접 해보기</a>
             <a class="hover:text-purple-700 transition" href="#simulation">N-Queen 실습</a>
             <a class="hover:text-purple-700 transition" href="#summary">코드 원리</a>
         </div>
@@ -303,6 +511,151 @@
                     <p class="text-slate-600 leading-relaxed">어떤 퀸들도 서로 공격할 수 없도록, 즉 <strong>같은 행, 열, 대각선에 겹치지
                         않게</strong> 안전하게 배치하세요.</p>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================================================================
+         직접 해보기 섹션 — 학생이 직접 퀸을 배치하는 인터랙티브 영역
+    ================================================================ -->
+    <section class="scroll-mt-24 mb-16 mx-auto" id="practice">
+        <div class="text-center space-y-4 mb-10">
+            <h2 class="text-3xl font-black text-slate-900">직접 해보기: 퀸을 배치해보세요!</h2>
+            <div class="w-16 h-1.5 bg-emerald-500 mx-auto rounded-full"></div>
+        </div>
+
+        <div class="section-card">
+
+            <!-- 안내 배너 -->
+            <div class="bg-emerald-50 border border-emerald-100 rounded-2xl p-5 flex flex-col sm:flex-row gap-4 items-start sm:items-center mb-8">
+                <div class="shrink-0 w-12 h-12 bg-emerald-200 text-emerald-700 rounded-2xl flex items-center justify-center text-2xl shadow-sm">
+                    <i class="fa-solid fa-hand-pointer"></i>
+                </div>
+                <div>
+                    <p class="font-bold text-emerald-900 mb-1">체스판을 직접 클릭해서 퀸을 배치해보세요!</p>
+                    <p class="text-emerald-700 text-sm leading-relaxed">
+                        셀을 클릭하면 퀸이 <strong>배치/제거</strong>됩니다. 같은 행·열·대각선에 퀸이 겹치면 <span class="text-rose-600 font-bold">빨간색</span>으로
+                        충돌을 알려줍니다.
+                        N개의 퀸을 충돌 없이 배치하면 성공입니다!
+                    </p>
+                </div>
+            </div>
+
+            <div class="flex flex-col lg:flex-row gap-8 items-start">
+
+                <!-- ── 왼쪽: 체스판 영역 ── -->
+                <div class="flex flex-col items-center flex-1 min-w-0">
+
+                    <!-- 컨트롤 바 -->
+                    <div class="flex flex-wrap justify-center items-center gap-4 bg-slate-50 px-5 py-3 rounded-2xl shadow-inner mb-6 border border-slate-200 w-full">
+                        <div class="flex items-center gap-2">
+                            <label class="font-bold text-slate-700 flex items-center gap-1.5 text-sm">
+                                <i class="fa-solid fa-chess-board text-emerald-600"></i> 크기
+                            </label>
+                            <select id="iq-size-select"
+                                    onchange="iqChangeSize(this.value)"
+                                    class="border-2 border-slate-200 rounded-lg px-2 py-1 bg-white text-emerald-700 font-black cursor-pointer focus:outline-none focus:border-emerald-500 text-sm">
+                                <option value="4">4 × 4 (쉬움)</option>
+                                <option value="5">5 × 5 (보통)</option>
+                                <option value="6">6 × 6 (어려움)</option>
+                                <option value="8" selected>8 × 8 (도전!)</option>
+                            </select>
+                        </div>
+                        <button onclick="iqReset()"
+                                class="flex items-center gap-2 px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold rounded-xl transition-all text-sm">
+                            <i class="fa-solid fa-rotate-right"></i> 초기화
+                        </button>
+                        <button onclick="iqShowHint()"
+                                class="flex items-center gap-2 px-4 py-2 bg-emerald-100 hover:bg-emerald-200 text-emerald-700 font-bold rounded-xl transition-all text-sm">
+                            <i class="fa-solid fa-lightbulb"></i> 힌트
+                        </button>
+                    </div>
+
+                    <!-- 체스판 -->
+                    <div class="mb-5 relative">
+                        <!-- 성공 오버레이 -->
+                        <div id="iq-success-banner"
+                             class="hidden iq-success-banner absolute inset-0 flex flex-col items-center justify-center z-20 bg-emerald-500/90 rounded-lg pointer-events-none">
+                            <div class="text-5xl mb-2">🎉</div>
+                            <div class="text-white font-black text-xl drop-shadow">완벽한 배치!</div>
+                            <div class="text-emerald-100 font-bold text-sm mt-1">N-Queen 문제 해결!</div>
+                        </div>
+                        <div id="iq-chess-board" class="iq-chess-board"></div>
+                    </div>
+
+                    <!-- 상태 메시지 -->
+                    <div id="iq-status" class="iq-status iq-status-idle mb-3">
+                        <i class="fa-solid fa-hand-pointer mr-2"></i>체스판을 클릭하여 퀸을 배치해보세요!
+                    </div>
+
+                    <!-- 힌트 메시지 (토글) -->
+                    <div id="iq-hint-box"
+                         class="hidden w-full bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 text-amber-800 text-sm font-medium">
+                        <i class="fa-solid fa-lightbulb text-amber-500 mr-1.5"></i>
+                        <span id="iq-hint-text"></span>
+                    </div>
+                </div>
+
+                <!-- ── 오른쪽: 정보 패널 ── -->
+                <div class="w-full lg:w-64 flex flex-col gap-4 shrink-0">
+
+                    <!-- 퀸 배치 현황 카드 -->
+                    <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+                        <h4 class="font-bold text-slate-700 mb-3 flex items-center gap-2 text-sm">
+                            <i class="fa-solid fa-chess-queen text-indigo-500"></i> 배치 현황
+                        </h4>
+                        <div class="flex items-end gap-2 mb-3">
+                            <span class="text-4xl font-black text-indigo-600" id="iq-queen-count">0</span>
+                            <span class="text-slate-400 font-bold mb-1" id="iq-queen-goal">/ 8 개</span>
+                        </div>
+                        <!-- 진행 바 -->
+                        <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden">
+                            <div id="iq-progress-bar"
+                                 class="iq-progress-fill h-3 rounded-full bg-indigo-400"
+                                 style="width: 0%"></div>
+                        </div>
+                        <p class="text-slate-400 text-xs mt-2">목표: <span class="font-bold" id="iq-goal-text">8개 모두 배치 + 충돌 없음</span>
+                        </p>
+                    </div>
+
+                    <!-- 충돌 상세 카드 -->
+                    <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+                        <h4 class="font-bold text-slate-700 mb-3 flex items-center gap-2 text-sm">
+                            <i class="fa-solid fa-triangle-exclamation text-rose-400"></i> 충돌 위치
+                        </h4>
+                        <div id="iq-conflict-details" class="flex flex-wrap gap-1.5 min-h-[32px]">
+                            <span class="text-slate-400 text-xs">충돌 없음 ✓</span>
+                        </div>
+                    </div>
+
+                    <!-- 규칙 요약 카드 -->
+                    <div class="bg-slate-50 rounded-2xl border border-slate-200 p-5">
+                        <h4 class="font-bold text-slate-700 mb-3 flex items-center gap-2 text-sm">
+                            <i class="fa-solid fa-circle-info text-blue-400"></i> 충돌 조건
+                        </h4>
+                        <ul class="space-y-2 text-sm text-slate-600">
+                            <li class="flex items-center gap-2">
+                                <span class="w-6 h-6 rounded-lg bg-rose-100 text-rose-600 flex items-center justify-center font-bold text-xs shrink-0">↔</span>
+                                <span>같은 <strong>행(가로)</strong>에 2개 이상</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <span class="w-6 h-6 rounded-lg bg-rose-100 text-rose-600 flex items-center justify-center font-bold text-xs shrink-0">↕</span>
+                                <span>같은 <strong>열(세로)</strong>에 2개 이상</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <span class="w-6 h-6 rounded-lg bg-rose-100 text-rose-600 flex items-center justify-center font-bold text-xs shrink-0">✕</span>
+                                <span>같은 <strong>대각선</strong>에 2개 이상</span>
+                            </li>
+                        </ul>
+                        <div class="mt-3 pt-3 border-t border-slate-200">
+                            <p class="text-xs text-slate-400">
+                                <i class="fa-solid fa-circle text-amber-300 mr-1 text-[8px]"></i>
+                                셀에 마우스를 올리면 공격 범위가 표시됩니다.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </section>
@@ -1002,9 +1355,268 @@ def solve_n_queens(row, n, state):
 
     window.onload = () => {
         initGame();
+        iqInit(8); // 직접 해보기 섹션 초기화
     };
 
-    window.addEventListener('resize', applyViewMode);
+    /* =========================================
+       직접 해보기 섹션 — 인터랙티브 퀸 배치기 (iq_ 네임스페이스)
+       독립 IIFE로 기존 변수와 완전히 격리
+    ========================================= */
+    (function () {
+        'use strict';
+
+        /* ── 상태 ── */
+        let iqN = 8;
+        let iqBoard = [];        // boolean[N][N] — true = 퀸 있음
+        let iqConflicts = new Set();  // "r,c" 형식의 충돌 좌표 집합
+        let iqHoverCell = null;  // { r, c } 현재 호버 셀
+
+        /* ── 힌트용 솔루션 캐시 ── */
+        const iqSolutions = {
+            4: [[1, 3, 0, 2]],
+            5: [[0, 2, 4, 1, 3]],
+            6: [[1, 3, 5, 0, 2, 4]],
+            8: [[0, 4, 7, 5, 2, 6, 1, 3]]
+        };
+
+        /* ── 초기화 ── */
+        function iqInit(n) {
+            iqN = (n && [4, 5, 6, 8].includes(parseInt(n))) ? parseInt(n) : 8;
+            iqBoard = Array.from({length: iqN}, () => Array(iqN).fill(false));
+            iqConflicts = new Set();
+            iqHoverCell = null;
+
+            const sel = document.getElementById('iq-size-select');
+            if (sel) sel.value = String(iqN);
+
+            document.getElementById('iq-hint-box')?.classList.add('hidden');
+
+            iqBuildDOM();
+            iqValidate();
+            iqRenderAll();
+        }
+
+        /* ── DOM 생성 ── */
+        function iqBuildDOM() {
+            const board = document.getElementById('iq-chess-board');
+            if (!board) return;
+            board.innerHTML = '';
+            board.style.gridTemplateColumns = `repeat(${iqN}, 1fr)`;
+
+            for (let r = 0; r < iqN; r++) {
+                for (let c = 0; c < iqN; c++) {
+                    const cell = document.createElement('div');
+                    cell.id = `iq-cell-${r}-${c}`;
+                    const isLight = (r + c) % 2 === 0;
+                    cell.className = `iq-cell ${isLight ? 'iq-cell-light' : 'iq-cell-dark'}`;
+                    cell.setAttribute('aria-label', `${r + 1}행 ${c + 1}열`);
+                    cell.addEventListener('click', () => iqToggleQueen(r, c));
+                    cell.addEventListener('mouseenter', () => {
+                        iqHoverCell = {r, c};
+                        iqRenderAll();
+                    });
+                    cell.addEventListener('mouseleave', () => {
+                        iqHoverCell = null;
+                        iqRenderAll();
+                    });
+                    // 터치 디바이스 지원
+                    cell.addEventListener('touchstart', (e) => {
+                        e.preventDefault();
+                        iqToggleQueen(r, c);
+                    }, {passive: false});
+                    board.appendChild(cell);
+                }
+            }
+        }
+
+        /* ── 퀸 토글 ── */
+        function iqToggleQueen(r, c) {
+            iqBoard[r][c] = !iqBoard[r][c];
+            iqValidate();
+            iqRenderAll();
+        }
+
+        /* ── 검증 로직: 충돌 좌표 집합 계산 ── */
+        function iqValidate() {
+            iqConflicts = new Set();
+            const queens = [];
+            for (let r = 0; r < iqN; r++)
+                for (let c = 0; c < iqN; c++)
+                    if (iqBoard[r][c]) queens.push([r, c]);
+
+            for (let i = 0; i < queens.length; i++) {
+                for (let j = i + 1; j < queens.length; j++) {
+                    const [r1, c1] = queens[i];
+                    const [r2, c2] = queens[j];
+                    const sameRow = r1 === r2;
+                    const sameCol = c1 === c2;
+                    const sameDiag = Math.abs(r1 - r2) === Math.abs(c1 - c2);
+                    if (sameRow || sameCol || sameDiag) {
+                        iqConflicts.add(`${r1},${c1}`);
+                        iqConflicts.add(`${r2},${c2}`);
+                    }
+                }
+            }
+        }
+
+        /* ── 호버 공격 범위 계산 ── */
+        function iqGetAttackRange(r, c) {
+            const attacked = new Set();
+            for (let i = 0; i < iqN; i++) {
+                if (i !== c) attacked.add(`${r},${i}`);   // 같은 행
+                if (i !== r) attacked.add(`${i},${c}`);   // 같은 열
+            }
+            for (let d = 1; d < iqN; d++) {
+                const dirs = [[1, 1], [1, -1], [-1, 1], [-1, -1]];
+                dirs.forEach(([dr, dc]) => {
+                    const nr = r + dr * d, nc = c + dc * d;
+                    if (nr >= 0 && nr < iqN && nc >= 0 && nc < iqN)
+                        attacked.add(`${nr},${nc}`);
+                });
+            }
+            return attacked;
+        }
+
+        /* ── 전체 렌더링 ── */
+        function iqRenderAll() {
+            let queenCount = 0;
+            for (let r = 0; r < iqN; r++)
+                for (let c = 0; c < iqN; c++)
+                    if (iqBoard[r][c]) queenCount++;
+
+            // 호버 공격 범위
+            let hoverRange = new Set();
+            if (iqHoverCell) hoverRange = iqGetAttackRange(iqHoverCell.r, iqHoverCell.c);
+
+            for (let r = 0; r < iqN; r++) {
+                for (let c = 0; c < iqN; c++) {
+                    const cell = document.getElementById(`iq-cell-${r}-${c}`);
+                    if (!cell) continue;
+
+                    const isLight = (r + c) % 2 === 0;
+                    const hasQueen = iqBoard[r][c];
+                    const isConflict = iqConflicts.has(`${r},${c}`);
+                    const isHover = iqHoverCell && iqHoverCell.r === r && iqHoverCell.c === c;
+                    const isAttacked = hoverRange.has(`${r},${c}`);
+
+                    // 배경 결정 (우선순위: conflict > hover > attacked > 기본)
+                    let bgClass = isLight ? 'iq-cell-light' : 'iq-cell-dark';
+                    if (isConflict) bgClass = 'iq-cell-conflict';
+                    else if (isHover) bgClass = `${isLight ? 'iq-cell-light' : 'iq-cell-dark'} iq-cell-hover`;
+                    else if (isAttacked && !hasQueen) bgClass = 'iq-cell-attacked';
+
+                    cell.className = `iq-cell ${bgClass}`;
+                    cell.innerHTML = '';
+
+                    if (hasQueen) {
+                        const icon = document.createElement('i');
+                        icon.className = `fa-solid fa-chess-queen iq-queen${isConflict ? ' iq-queen-conflict' : ''}`;
+                        cell.appendChild(icon);
+                    } else if (isHover) {
+                        const ghost = document.createElement('i');
+                        ghost.className = 'fa-solid fa-chess-queen iq-queen-ghost';
+                        cell.appendChild(ghost);
+                    }
+                }
+            }
+
+            iqUpdatePanel(queenCount);
+        }
+
+        /* ── 사이드 패널 & 상태바 업데이트 ── */
+        function iqUpdatePanel(queenCount) {
+            const statusEl = document.getElementById('iq-status');
+            const countEl = document.getElementById('iq-queen-count');
+            const goalEl = document.getElementById('iq-queen-goal');
+            const progressEl = document.getElementById('iq-progress-bar');
+            const conflictListEl = document.getElementById('iq-conflict-details');
+            const goalTextEl = document.getElementById('iq-goal-text');
+            const successEl = document.getElementById('iq-success-banner');
+
+            if (countEl) countEl.textContent = queenCount;
+            if (goalEl) goalEl.textContent = `/ ${iqN} 개`;
+            if (goalTextEl) goalTextEl.textContent = `${iqN}개 배치 + 충돌 없음`;
+
+            // 진행 바
+            if (progressEl) {
+                const pct = Math.round((queenCount / iqN) * 100);
+                progressEl.style.width = `${pct}%`;
+                const hasConflictsForBar = iqConflicts.size > 0;
+                progressEl.className = `iq-progress-fill h-3 rounded-full ${
+                    hasConflictsForBar ? 'bg-rose-400' :
+                        queenCount === iqN ? 'bg-emerald-400' : 'bg-indigo-400'
+                }`;
+            }
+
+            // 충돌 목록
+            if (conflictListEl) {
+                if (iqConflicts.size > 0) {
+                    const items = [...iqConflicts].map(k => {
+                        const [rr, cc] = k.split(',').map(Number);
+                        return `<span class="inline-flex items-center bg-rose-100 text-rose-700 text-xs font-bold px-2 py-0.5 rounded-full">${rr + 1}행 ${cc + 1}열</span>`;
+                    });
+                    conflictListEl.innerHTML = items.join(' ');
+                } else {
+                    conflictListEl.innerHTML = '<span class="text-slate-400 text-xs">충돌 없음 ✓</span>';
+                }
+            }
+
+            // 상태 메시지
+            if (!statusEl) return;
+            const hasConflicts = iqConflicts.size > 0;
+            const isComplete = queenCount === iqN && !hasConflicts;
+
+            if (isComplete) {
+                statusEl.className = 'iq-status iq-status-success';
+                statusEl.innerHTML = '<i class="fa-solid fa-trophy mr-2"></i>🎉 완벽합니다! N-Queen 문제를 해결했습니다!';
+                if (successEl) successEl.classList.remove('hidden');
+            } else if (hasConflicts) {
+                const pairs = iqConflicts.size / 2;
+                statusEl.className = 'iq-status iq-status-conflict';
+                statusEl.innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-2"></i>충돌 발생! 빨간 퀸 ${iqConflicts.size}개가 서로 공격 중입니다.`;
+                if (successEl) successEl.classList.add('hidden');
+            } else if (queenCount === 0) {
+                statusEl.className = 'iq-status iq-status-idle';
+                statusEl.innerHTML = '<i class="fa-solid fa-hand-pointer mr-2"></i>체스판을 클릭하여 퀸을 배치해보세요!';
+                if (successEl) successEl.classList.add('hidden');
+            } else {
+                statusEl.className = 'iq-status iq-status-ok';
+                statusEl.innerHTML = `<i class="fa-solid fa-circle-check mr-2"></i>${queenCount}개 배치됨 — 충돌 없음! (목표: ${iqN}개)`;
+                if (successEl) successEl.classList.add('hidden');
+            }
+        }
+
+        /* ── 힌트 표시 ── */
+        function iqShowHint() {
+            const hintBox = document.getElementById('iq-hint-box');
+            const hintText = document.getElementById('iq-hint-text');
+            if (!hintBox || !hintText) return;
+
+            // 이미 열려있으면 닫기
+            if (!hintBox.classList.contains('hidden')) {
+                hintBox.classList.add('hidden');
+                return;
+            }
+
+            const sol = iqSolutions[iqN];
+            if (sol) {
+                const colLetters = Array.from({length: iqN}, (_, i) => String.fromCharCode(65 + i));
+                const desc = sol[0].map((c, r) => `${r + 1}행→${colLetters[c]}열`).join(', ');
+                hintText.textContent = `정답 예시: ${desc}`;
+            } else {
+                hintText.textContent = '이 크기에 대한 힌트는 준비 중입니다.';
+            }
+            hintBox.classList.remove('hidden');
+        }
+
+        /* ── 전역 노출 (HTML onchange/onclick 연결용) ── */
+        window.iqInit = iqInit;
+        window.iqReset = () => iqInit(iqN);
+        window.iqChangeSize = (n) => iqInit(parseInt(n));
+        window.iqShowHint = iqShowHint;
+
+    })();
+
 
 </script>
 </body>
