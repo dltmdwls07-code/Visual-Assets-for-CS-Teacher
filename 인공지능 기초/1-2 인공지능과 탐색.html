@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>Chapter 02. 인공지능과 탐색 - 학생 주도형 심화 강의노트</title>
+    <title>Chapter 02. 인공지능과 탐색 - 초정밀 심화 강의노트</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -16,29 +16,30 @@
         body {
             font-family: 'Pretendard', sans-serif;
             background-color: #f8fafc;
+            line-height: 1.7;
         }
 
-        /* Hero 배경 그라데이션 - 탐색에 맞게 톤 변경 (Blue to Emerald) */
+        /* Hero 배경 그라데이션 - 탐색 테마 (Deep Blue to Teal) */
         .hero-gradient {
-            background: linear-gradient(135deg, #2563eb 0%, #10b981 100%);
+            background: linear-gradient(135deg, #0f172a 0%, #1e40af 50%, #0d9488 100%);
         }
 
-        /* 스크롤 시 특정 위치부터 상단 고정되는 네비게이션 */
+        /* 상단 고정 네비게이션 */
         .sticky-nav {
             position: sticky;
             top: 0;
             z-index: 100;
             backdrop-filter: blur(12px);
-            background-color: rgba(255, 255, 255, 0.9);
+            background-color: rgba(255, 255, 255, 0.95);
             border-bottom: 1px solid rgba(226, 232, 240, 0.8);
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
         }
 
         .section-card {
             background: white;
-            padding: 2.5rem;
+            padding: 3.5rem;
             border-radius: 2rem;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05);
+            box-shadow: 0 10px 25px -5px rgb(0 0 0 / 0.05), 0 8px 10px -6px rgb(0 0 0 / 0.01);
             border: 1px solid #f1f5f9;
             transition: all 0.3s ease;
         }
@@ -87,108 +88,177 @@
         ::-webkit-scrollbar {
             width: 8px;
         }
-
         ::-webkit-scrollbar-track {
             background: #f1f5f9;
         }
-
         ::-webkit-scrollbar-thumb {
             background: #cbd5e1;
             border-radius: 10px;
         }
-
         ::-webkit-scrollbar-thumb:hover {
             background: #94a3b8;
         }
+
+        /* 하이라이트 박스 */
+        .info-box {
+            background: linear-gradient(145deg, #f8fafc, #f1f5f9);
+            border-left: 5px solid #3b82f6;
+        }
+        
+        .warn-box {
+            background: linear-gradient(145deg, #fff1f2, #ffe4e6);
+            border-left: 5px solid #f43f5e;
+        }
+
+        .table-custom th {
+            background-color: #f8fafc;
+            font-weight: 700;
+            color: #475569;
+        }
     </style>
 </head>
-<body class="text-slate-900">
+<body class="text-slate-900 tracking-tight">
 
 <header class="hero-gradient text-white py-32 px-6" id="intro">
-    <div class="max-w-4xl mx-auto text-center">
-            <span class="inline-block px-4 py-1.5 bg-white/20 rounded-full font-bold mb-6 backdrop-blur-md shadow-sm">
-                Chapter 02. 인공지능과 탐색
+    <div class="max-w-5xl mx-auto text-center">
+            <span class="inline-block px-5 py-2 bg-white/10 rounded-full font-bold mb-8 backdrop-blur-md border border-white/20 text-sm tracking-widest shadow-sm">
+                Chapter 02. 인공지능과 탐색 (Search in AI)
             </span>
-        <h1 class="text-5xl md:text-7xl font-black mb-6 leading-tight">
-            AI는 어떻게<br>최적의 길을 찾아낼까?
+        <h1 class="text-5xl md:text-7xl font-black mb-8 leading-tight drop-shadow-xl">
+            수십억 개의 경우의 수,<br>인공지능은 어떻게 정답을 찾을까?
         </h1>
-        <p class="text-xl md:text-2xl opacity-90 font-medium max-w-2xl mx-auto leading-relaxed">
-            미로 찾기, 체스 게임, 내비게이션 길 안내까지.<br>수많은 경우의 수 중에서 정답을 향해 나아가는 인공지능의 핵심 문제 해결 원리인 <strong>'탐색(Search)'</strong>을 마스터해 봅시다.
+        <p class="text-xl md:text-2xl opacity-90 font-medium max-w-3xl mx-auto leading-relaxed drop-shadow-md">
+            복잡한 미로, 체스 게임, 전 세계를 잇는 내비게이션 길 찾기까지.<br>
+            인공지능이 무수한 선택지 속에서 스스로 '최적의 경로'를 발견해 내는 가장 핵심적인 문제 해결 원리, <strong>'탐색(Search)'</strong>의 모든 것을 완벽하게 파헤쳐 봅니다.
         </p>
     </div>
 </header>
 
 <nav class="sticky-nav px-6 py-4">
-    <div class="max-w-6xl mx-auto flex justify-between items-center">
-        <div class="flex items-center space-x-2">
-            <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white">
-                <i class="fa-solid fa-map-location-dot"></i>
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-md">
+                <i class="fa-solid fa-route text-xl"></i>
             </div>
-            <span class="font-black text-2xl tracking-tight text-slate-800">인공지능 기초</span>
+            <span class="font-black text-2xl text-slate-800">AI 문제 해결의 핵심, 탐색</span>
         </div>
-        <div class="hidden md:flex space-x-8 font-bold text-slate-500 overflow-x-auto">
-            <a class="hover:text-blue-600 transition whitespace-nowrap" href="#intro">도입</a>
-            <a class="hover:text-blue-600 transition whitespace-nowrap" href="#concept1">상태 공간</a>
-            <a class="hover:text-blue-600 transition whitespace-nowrap" href="#concept2">무작정 탐색</a>
-            <a class="hover:text-blue-600 transition whitespace-nowrap" href="#activity">휴리스틱 탐색</a>
-            <a class="hover:text-blue-600 transition whitespace-nowrap" href="#quiz">스스로 점검</a>
+        <div class="hidden lg:flex space-x-8 font-bold text-slate-500 text-sm">
+            <a class="hover:text-blue-600 transition" href="#intro">도입</a>
+            <a class="hover:text-blue-600 transition" href="#concept1">1. 상태 공간 트리의 이해</a>
+            <a class="hover:text-blue-600 transition" href="#concept2">2. 무정보(맹목적) 탐색</a>
+            <a class="hover:text-blue-600 transition" href="#concept3">3. 휴리스틱(A*) 탐색</a>
+            <a class="hover:text-blue-600 transition" href="#concept4">4. 실생활 적용 사례</a>
+            <a class="hover:text-blue-600 transition" href="#quiz">실력 점검</a>
         </div>
     </div>
 </nav>
 
-<main class="max-w-5xl mx-auto px-6 py-20 space-y-28">
+<main class="max-w-5xl mx-auto px-6 py-24 space-y-32">
 
     <section class="scroll-mt-24 space-y-12" id="concept1">
         <div class="text-center space-y-4">
-            <span class="text-blue-600 font-bold tracking-widest uppercase">Step 01</span>
-            <h2 class="text-4xl font-black text-slate-900">문제를 풀려면 '지도'가 필요하다</h2>
-            <div class="w-20 h-1.5 bg-blue-500 mx-auto rounded-full"></div>
-            <p class="text-lg text-slate-600 max-w-2xl mx-auto">인공지능이 문제를 풀기 위해서는 현실의 문제를 컴퓨터가 이해할 수 있는 형태(상태 공간)로 바꾸어 주어야 합니다.</p>
+            <span class="text-blue-600 font-bold tracking-widest uppercase text-sm">Step 01. Problem Formulation</span>
+            <h2 class="text-4xl md:text-5xl font-black text-slate-900">현실의 문제를 컴퓨터의 언어로 바꾸기</h2>
+            <div class="w-24 h-1.5 bg-blue-500 mx-auto rounded-full"></div>
+            <p class="text-lg text-slate-600 max-w-3xl mx-auto leading-relaxed mt-6">
+                인공지능은 인간처럼 직관적으로 상황을 이해하지 못합니다. 따라서 문제를 풀게 하려면, 현실의 문제를 컴퓨터가 계산할 수 있는 수학적 형태인 <strong>'상태 공간(State Space)'</strong>으로 변환해주어야 합니다.
+            </p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div class="section-card !p-8 border-t-4 border-t-blue-500 hover:-translate-y-1 transition-transform">
-                <h3 class="text-2xl font-bold mb-6 text-slate-800 flex items-center">
-                    <i class="fa-solid fa-flag-checkered text-blue-500 mr-3 text-2xl"></i> 탐색의 3가지 핵심 요소
-                </h3>
-                <ul class="space-y-5 text-slate-700 leading-relaxed">
-                    <li class="bg-blue-50 p-4 rounded-xl">
-                        <strong class="text-blue-800 block text-lg mb-1">1. 초기 상태 (Initial State)</strong>
-                        문제가 시작되는 출발점입니다. <br><em>(예: 미로의 입구, 체스판의 처음 말 배치)</em>
-                    </li>
-                    <li class="bg-emerald-50 p-4 rounded-xl">
-                        <strong class="text-emerald-800 block text-lg mb-1">2. 목표 상태 (Goal State)</strong>
-                        문제가 해결된 도착점입니다. <br><em>(예: 미로의 출구, 체크메이트로 승리한 상태)</em>
-                    </li>
-                    <li class="bg-amber-50 p-4 rounded-xl">
-                        <strong class="text-amber-800 block text-lg mb-1">3. 조작자 / 규칙 (Operator)</strong>
-                        한 상태에서 다음 상태로 넘어가기 위한 행동 규칙입니다. <br><em>(예: 미로에서 상, 하, 좌, 우로 한 칸씩 이동)</em>
-                    </li>
-                </ul>
-            </div>
-
-            <div class="section-card !p-8 border-t-4 border-t-indigo-500 hover:-translate-y-1 transition-transform flex flex-col justify-center">
-                <h3 class="text-2xl font-bold mb-6 text-slate-800 flex items-center">
-                    <i class="fa-solid fa-network-wired text-indigo-500 mr-3 text-2xl"></i> 상태 공간 (State Space)
-                </h3>
-                <p class="text-slate-600 mb-6 leading-relaxed">
-                    초기 상태에서 목표 상태로 가는 동안 <span class="font-bold bg-amber-200 px-1 rounded">발생할 수 있는 모든 경우의 수(상태)를 모아놓은 집합</span>입니다. 주로 나무 가지처럼 뻗어나가는 형태인 <strong>'상태 공간 트리(Tree)'</strong>로 표현합니다.
-                </p>
+        <div class="section-card border-t-8 border-t-blue-500">
+            <div class="space-y-12">
                 
-                <div class="bg-slate-800 p-6 rounded-2xl text-center text-white relative">
-                    <div class="text-sm font-bold text-slate-400 mb-2">상태 공간 트리 예시</div>
-                    <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-2 shadow-lg">출발</div>
-                    <div class="flex justify-center space-x-12 relative mb-2">
-                        <div class="w-0.5 h-6 bg-slate-500 absolute left-1/2 -ml-6 -top-2 transform -rotate-45"></div>
-                        <div class="w-0.5 h-6 bg-slate-500 absolute left-1/2 ml-6 -top-2 transform rotate-45"></div>
+                <div>
+                    <h3 class="text-3xl font-bold text-slate-800 flex items-center mb-8 pb-4 border-b border-slate-100">
+                        <i class="fa-solid fa-cubes-stacked text-blue-500 mr-4 text-3xl"></i> 탐색 문제를 정의하는 3가지 필수 요소
+                    </h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+                            <div class="flex items-center space-x-3 mb-4">
+                                <span class="w-10 h-10 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center font-black text-xl">1</span>
+                                <h4 class="text-xl font-bold text-slate-800">초기 상태<br><span class="text-sm font-medium text-slate-500">Initial State</span></h4>
+                            </div>
+                            <p class="text-slate-600 leading-relaxed text-sm mb-4">
+                                탐색이 처음 시작되는 <strong>출발점</strong>입니다. 현재 어떤 상황에 놓여있는지를 구체적인 데이터(좌표, 배열 등)로 표현합니다.
+                            </p>
+                            <div class="bg-slate-50 p-3 rounded-lg text-sm text-slate-700 border border-slate-100">
+                                <strong>예시 (8-퍼즐):</strong> 조각들이 무작위로 섞여 있는 현재의 퍼즐 판 배열
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+                            <div class="flex items-center space-x-3 mb-4">
+                                <span class="w-10 h-10 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center font-black text-xl">2</span>
+                                <h4 class="text-xl font-bold text-slate-800">목표 상태<br><span class="text-sm font-medium text-slate-500">Goal State</span></h4>
+                            </div>
+                            <p class="text-slate-600 leading-relaxed text-sm mb-4">
+                                문제가 완전히 해결된 <strong>도착점</strong>입니다. 인공지능은 현재 상태가 이 목표 상태와 일치하는지 끊임없이 검사합니다.
+                            </p>
+                            <div class="bg-slate-50 p-3 rounded-lg text-sm text-slate-700 border border-slate-100">
+                                <strong>예시 (8-퍼즐):</strong> 1부터 8까지의 숫자가 순서대로 예쁘게 맞춰진 배열
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+                            <div class="flex items-center space-x-3 mb-4">
+                                <span class="w-10 h-10 bg-amber-100 text-amber-600 rounded-xl flex items-center justify-center font-black text-xl">3</span>
+                                <h4 class="text-xl font-bold text-slate-800">조작자 (규칙)<br><span class="text-sm font-medium text-slate-500">Operator</span></h4>
+                            </div>
+                            <p class="text-slate-600 leading-relaxed text-sm mb-4">
+                                한 상태에서 다음 상태로 넘어가기 위해 할 수 있는 <strong>합법적인 행동 규칙</strong>입니다. 이 규칙에 따라 새로운 상태가 만들어집니다.
+                            </p>
+                            <div class="bg-slate-50 p-3 rounded-lg text-sm text-slate-700 border border-slate-100">
+                                <strong>예시 (8-퍼즐):</strong> 빈칸을 상, 하, 좌, 우로 한 칸씩 이동시킨다.
+                            </div>
+                        </div>
                     </div>
-                    <div class="flex justify-center space-x-8 mb-2">
-                        <div class="w-12 h-12 bg-slate-600 rounded-full flex items-center justify-center border-2 border-slate-500 text-sm">A 경로</div>
-                        <div class="w-12 h-12 bg-slate-600 rounded-full flex items-center justify-center border-2 border-slate-500 text-sm">B 경로</div>
+                </div>
+
+                <div class="info-box p-8 rounded-3xl">
+                    <h4 class="text-2xl font-bold text-slate-800 mb-6 flex items-center">
+                        <i class="fa-solid fa-sitemap text-blue-500 mr-3"></i> 꼬리에 꼬리를 무는 '상태 공간 트리(Tree)'
+                    </h4>
+                    <p class="text-slate-700 leading-relaxed mb-8">
+                        초기 상태에서 출발해, 적용 가능한 모든 조작자(규칙)를 반복해서 적용하다 보면 수많은 '새로운 상태'들이 나뭇가지처럼 뻗어 나갑니다. 이렇게 발생할 수 있는 <strong>모든 경우의 수를 모아놓은 구조를 상태 공간 트리</strong>라고 부릅니다.
+                    </p>
+
+                    <div class="w-full bg-white rounded-2xl p-6 shadow-sm border border-slate-200 overflow-x-auto flex justify-center">
+                        <svg viewBox="0 0 800 350" class="w-full max-w-2xl h-auto drop-shadow-sm" style="min-width: 600px;">
+                            <path d="M 400 60 L 200 150" stroke="#cbd5e1" stroke-width="4" fill="none" />
+                            <path d="M 400 60 L 600 150" stroke="#cbd5e1" stroke-width="4" fill="none" />
+                            
+                            <path d="M 200 160 L 100 270" stroke="#cbd5e1" stroke-width="4" fill="none" />
+                            <path d="M 200 160 L 300 270" stroke="#cbd5e1" stroke-width="4" fill="none" />
+                            
+                            <path d="M 600 160 L 500 270" stroke="#cbd5e1" stroke-width="4" fill="none" stroke-dasharray="8,6" />
+                            <path d="M 600 160 L 700 270" stroke="#10b981" stroke-width="5" fill="none" />
+
+                            <circle cx="400" cy="50" r="35" fill="#3b82f6" stroke="#ffffff" stroke-width="4" filter="drop-shadow(0 4px 3px rgb(0 0 0 / 0.1))"/>
+                            <text x="400" y="55" fill="white" font-size="16" font-family="sans-serif" font-weight="bold" text-anchor="middle">초기 상태</text>
+
+                            <circle cx="200" cy="150" r="30" fill="#64748b" stroke="#ffffff" stroke-width="3" filter="drop-shadow(0 4px 3px rgb(0 0 0 / 0.1))"/>
+                            <text x="200" y="155" fill="white" font-size="14" font-family="sans-serif" font-weight="bold" text-anchor="middle">상태 A</text>
+                            
+                            <circle cx="600" cy="150" r="30" fill="#3b82f6" stroke="#ffffff" stroke-width="3" filter="drop-shadow(0 4px 3px rgb(0 0 0 / 0.1))"/>
+                            <text x="600" y="155" fill="white" font-size="14" font-family="sans-serif" font-weight="bold" text-anchor="middle">상태 B</text>
+
+                            <circle cx="100" cy="270" r="25" fill="#94a3b8" />
+                            <circle cx="300" cy="270" r="25" fill="#94a3b8" />
+                            <circle cx="500" cy="270" r="25" fill="#94a3b8" />
+                            
+                            <circle cx="700" cy="270" r="35" fill="#10b981" stroke="#ffffff" stroke-width="4" filter="drop-shadow(0 0 10px rgba(16, 185, 129, 0.5))" />
+                            <text x="700" y="275" fill="white" font-size="16" font-family="sans-serif" font-weight="bold" text-anchor="middle">목표!</text>
+
+                            <rect x="250" y="80" width="100" height="24" fill="#ffffff" rx="12" border="1" stroke="#e2e8f0" />
+                            <text x="300" y="96" fill="#475569" font-size="12" font-family="sans-serif" font-weight="bold" text-anchor="middle">조작자 적용</text>
+                            
+                            <rect x="450" y="80" width="100" height="24" fill="#ffffff" rx="12" stroke="#e2e8f0" />
+                            <text x="500" y="96" fill="#475569" font-size="12" font-family="sans-serif" font-weight="bold" text-anchor="middle">조작자 적용</text>
+                        </svg>
                     </div>
-                    <div class="flex justify-center space-x-8 text-xs text-slate-400 mt-2">
-                        <span>(규칙 적용)</span>
-                        <span>(규칙 적용)</span>
+                    <div class="mt-4 text-center text-sm text-slate-500">
+                        <i class="fa-solid fa-circle-info mr-1"></i> 컴퓨터는 위에서 아래로, 상태를 하나씩 <strong>생성(Expand)</strong>하며 목표를 찾을 때까지 트리를 그려나갑니다.
                     </div>
                 </div>
             </div>
@@ -197,158 +267,358 @@
 
     <section class="scroll-mt-24 space-y-12" id="concept2">
         <div class="text-center space-y-4">
-            <span class="text-emerald-600 font-bold tracking-widest uppercase">Step 02</span>
-            <h2 class="text-4xl font-black text-slate-900">모든 곳을 무작정 뒤지기: 맹목적 탐색</h2>
-            <div class="w-20 h-1.5 bg-emerald-500 mx-auto rounded-full"></div>
-            <p class="text-lg text-slate-600 max-w-2xl mx-auto">힌트가 없을 때는 원칙을 정해서 모든 가능성을 확인해야 합니다. 가장 대표적인 두 가지 전략을 비교해 봅시다.</p>
+            <span class="text-emerald-600 font-bold tracking-widest uppercase text-sm">Step 02. Blind Search (Uninformed Search)</span>
+            <h2 class="text-4xl md:text-5xl font-black text-slate-900">힌트 없이 무작정 뒤지기: 맹목적 탐색</h2>
+            <div class="w-24 h-1.5 bg-emerald-500 mx-auto rounded-full"></div>
+            <p class="text-lg text-slate-600 max-w-3xl mx-auto leading-relaxed mt-6">
+                목표가 어디에 있는지 알려주는 '힌트(거리 정보 등)'가 전혀 없을 때 사용하는 방법입니다. 
+                오로지 초기 상태와 규칙만 가지고 <strong>모든 경우의 수를 무식하지만 꼼꼼하게 뒤지는 전략</strong>입니다.
+            </p>
         </div>
 
-        <div class="section-card bg-slate-50 border-slate-200">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+        <div class="space-y-10">
+            <div class="section-card border-l-8 border-l-rose-500 hover:shadow-xl transition-shadow relative overflow-hidden">
+                <i class="fa-solid fa-arrow-down-long absolute -bottom-10 -right-10 text-[12rem] text-rose-50 opacity-50 rotate-[-15deg]"></i>
                 
-                <div class="space-y-5 bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
-                    <div class="flex justify-between items-start">
-                        <h3 class="text-2xl font-bold text-slate-800">깊이 우선 탐색<br><span class="text-lg text-rose-500">(DFS, Depth-First Search)</span></h3>
-                        <div class="w-12 h-12 bg-rose-100 text-rose-600 rounded-xl flex items-center justify-center">
-                            <i class="fa-solid fa-arrow-down-long text-2xl"></i>
+                <div class="relative z-10 flex flex-col md:flex-row gap-10">
+                    <div class="flex-1 space-y-6">
+                        <div class="flex items-center space-x-4 mb-2">
+                            <div class="w-14 h-14 bg-rose-100 text-rose-600 rounded-2xl flex items-center justify-center font-black text-2xl shadow-inner">
+                                DFS
+                            </div>
+                            <div>
+                                <h3 class="text-3xl font-black text-slate-800">깊이 우선 탐색</h3>
+                                <p class="text-rose-500 font-bold">Depth-First Search</p>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-rose-50 p-4 rounded-xl border border-rose-100 text-slate-800 font-medium text-lg">
+                            "한 우물만 끝까지 판다! 막히면 그제야 한 칸 뒤로 물러선다."
+                        </div>
+
+                        <ul class="space-y-4 text-slate-600 leading-relaxed text-sm md:text-base">
+                            <li class="flex items-start">
+                                <i class="fa-solid fa-check-circle text-rose-500 mt-1 mr-3 text-lg"></i>
+                                <div>
+                                    <strong class="text-slate-800 block">동작 원리 (백트래킹)</strong>
+                                    갈림길이 나오면 일단 무조건 한 방향으로 갈 수 없을 때까지 깊게 들어갑니다. 벽에 막히면 가장 최근의 갈림길로 돌아와(Backtracking) 다른 길을 찾습니다. 마치 미로에서 '오른손만 벽에 짚고 계속 나아가기'와 같습니다.
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa-solid fa-check-circle text-rose-500 mt-1 mr-3 text-lg"></i>
+                                <div>
+                                    <strong class="text-slate-800 block">장점: 극강의 메모리 절약</strong>
+                                    지금 파고들고 있는 '현재의 경로' 하나만 기억하면 되므로, 컴퓨터의 메모리(RAM)를 매우 적게 사용합니다.
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa-solid fa-check-circle text-rose-500 mt-1 mr-3 text-lg"></i>
+                                <div>
+                                    <strong class="text-slate-800 block">단점: 무한 구덩이와 비효율성</strong>
+                                    운이 나쁘면 정답이 없는 무한히 깊은 구덩이에 빠져 프로그램이 끝나지 않을 수 있습니다. 또한, 우연히 목표를 찾았더라도 그 길이 '가장 짧은 지름길'이라는 보장이 절대 없습니다.
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="w-full md:w-1/3 bg-slate-900 rounded-2xl p-6 text-white font-mono text-sm shadow-inner flex flex-col justify-center">
+                        <p class="text-rose-400 font-bold mb-4 border-b border-slate-700 pb-2">탐색 순서 시뮬레이션</p>
+                        <p class="text-slate-300 mb-2">상태 트리 방문 순서:</p>
+                        <div class="flex flex-wrap gap-2 text-rose-300 font-bold">
+                            <span>1(Root)</span> ➔ <span>2(Left)</span> ➔ <span>3(Left-Left)</span> ➔ <span class="text-slate-500">(막힘, 돌아감)</span> ➔ <span>4(Left-Right)</span> ...
                         </div>
                     </div>
-                    <p class="text-slate-600 font-medium">"한 우물만 끝까지 판다!"</p>
-                    <ul class="space-y-3 text-sm text-slate-700 leading-relaxed">
-                        <li><i class="fa-solid fa-check text-rose-500 mr-2"></i><strong>작동 방식:</strong> 갈 수 있는 한 방향으로 끝까지 파고들어 탐색합니다. 막다른 길에 다다르면 가장 최근의 갈림길로 돌아와 다른 길을 찾습니다.</li>
-                        <li><i class="fa-solid fa-check text-rose-500 mr-2"></i><strong>특징:</strong> 운이 좋으면 정답을 매우 빨리 찾지만, 자칫하면 무한히 깊은 구덩이에 빠질 수도 있습니다.</li>
-                        <li><i class="fa-solid fa-check text-rose-500 mr-2"></i><strong>비유:</strong> 미로에서 오른손만 벽에 짚고 계속 나아가기.</li>
-                    </ul>
-                    <div class="mt-4 text-xs font-mono bg-slate-800 text-green-400 p-3 rounded-lg overflow-x-auto">
-<pre><code>// DFS 핵심 논리 (의사코드)
-만약 (현재 위치 == 목표) { 성공! }
-그렇지 않으면 {
-  연결된 첫 번째 길로 무조건 끝까지 가본다;
-  막히면 돌아온다;
-}</code></pre>
+                </div>
+            </div>
+
+            <div class="section-card border-l-8 border-l-sky-500 hover:shadow-xl transition-shadow relative overflow-hidden">
+                <i class="fa-solid fa-water absolute -bottom-10 -right-10 text-[12rem] text-sky-50 opacity-50 rotate-[15deg]"></i>
+                
+                <div class="relative z-10 flex flex-col md:flex-row gap-10">
+                    <div class="flex-1 space-y-6">
+                        <div class="flex items-center space-x-4 mb-2">
+                            <div class="w-14 h-14 bg-sky-100 text-sky-600 rounded-2xl flex items-center justify-center font-black text-2xl shadow-inner">
+                                BFS
+                            </div>
+                            <div>
+                                <h3 class="text-3xl font-black text-slate-800">너비 우선 탐색</h3>
+                                <p class="text-sky-500 font-bold">Breadth-First Search</p>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-sky-50 p-4 rounded-xl border border-sky-100 text-slate-800 font-medium text-lg">
+                            "얕은 곳부터 같은 거리에 있는 모든 길을 꼼꼼하게 다 확인한다!"
+                        </div>
+
+                        <ul class="space-y-4 text-slate-600 leading-relaxed text-sm md:text-base">
+                            <li class="flex items-start">
+                                <i class="fa-solid fa-check-circle text-sky-500 mt-1 mr-3 text-lg"></i>
+                                <div>
+                                    <strong class="text-slate-800 block">동작 원리 (동심원 탐색)</strong>
+                                    출발점에서 딱 1칸 떨어진 곳을 모두 확인하고, 그 다음 2칸 떨어진 곳을 모두 확인합니다. 호수에 돌을 던졌을 때 물결이 동심원을 그리며 퍼져나가는 것과 똑같습니다.
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa-solid fa-check-circle text-sky-500 mt-1 mr-3 text-lg"></i>
+                                <div>
+                                    <strong class="text-slate-800 block">장점: 100% 최단 경로 보장</strong>
+                                    가까운 곳부터 샅샅이 뒤지기 때문에, 목표를 발견하는 순간 그 경로가 무조건 '가장 짧은 최단 경로'임을 수학적으로 완벽하게 보장합니다.
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa-solid fa-check-circle text-sky-500 mt-1 mr-3 text-lg"></i>
+                                <div>
+                                    <strong class="text-slate-800 block">단점: 심각한 메모리 폭발</strong>
+                                    찾아야 할 목표가 깊은 곳에 있을수록, 확인해야 할 둘레(너비)가 기하급수적으로 커집니다. 수백만 개의 상태를 한 번에 다 기억해야 하므로 컴퓨터 메모리가 터져버릴 수 있습니다.
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="w-full md:w-1/3 bg-slate-900 rounded-2xl p-6 text-white font-mono text-sm shadow-inner flex flex-col justify-center">
+                        <p class="text-sky-400 font-bold mb-4 border-b border-slate-700 pb-2">탐색 순서 시뮬레이션</p>
+                        <p class="text-slate-300 mb-2">상태 트리 방문 순서:</p>
+                        <div class="flex flex-wrap gap-2 text-sky-300 font-bold">
+                            <span>1(Root)</span> ➔ <span>2(Level 1-L)</span> ➔ <span>3(Level 1-R)</span> ➔ <span>4(Level 2-LL)</span> ➔ <span>5(Level 2-LR)</span> ➔ <span>6(Level 2-RL)</span> ...
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto rounded-2xl border border-slate-200 shadow-sm">
+                <table class="w-full text-left border-collapse table-custom">
+                    <thead>
+                        <tr>
+                            <th class="p-4 border-b border-slate-200 text-center w-1/4">구분</th>
+                            <th class="p-4 border-b border-slate-200 border-l text-center w-3/8 text-rose-600">DFS (깊이 우선)</th>
+                            <th class="p-4 border-b border-slate-200 border-l text-center w-3/8 text-sky-600">BFS (너비 우선)</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm md:text-base text-slate-600 bg-white">
+                        <tr>
+                            <td class="p-4 border-b border-slate-200 font-bold text-slate-800 text-center bg-slate-50">탐색 방향</td>
+                            <td class="p-4 border-b border-slate-200 border-l">아래로 깊게 먼저 (세로형)</td>
+                            <td class="p-4 border-b border-slate-200 border-l">옆으로 넓게 먼저 (가로형)</td>
+                        </tr>
+                        <tr>
+                            <td class="p-4 border-b border-slate-200 font-bold text-slate-800 text-center bg-slate-50">메모리 사용량</td>
+                            <td class="p-4 border-b border-slate-200 border-l font-bold text-emerald-600">매우 적음 (효율적)</td>
+                            <td class="p-4 border-b border-slate-200 border-l font-bold text-rose-500">매우 많음 (위험함)</td>
+                        </tr>
+                        <tr>
+                            <td class="p-4 font-bold text-slate-800 text-center bg-slate-50">최단 경로 보장</td>
+                            <td class="p-4 border-l border-slate-200 text-rose-500 font-bold">보장하지 않음</td>
+                            <td class="p-4 border-l border-slate-200 text-emerald-600 font-bold">항상 100% 보장함</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="scroll-mt-24 space-y-12" id="concept3">
+        <div class="text-center space-y-4">
+            <span class="text-amber-600 font-bold tracking-widest uppercase text-sm">Step 03. Heuristic Search & A* Algorithm</span>
+            <h2 class="text-4xl md:text-5xl font-black text-slate-900">똑똑하게 힌트를 활용하기: 휴리스틱</h2>
+            <div class="w-24 h-1.5 bg-amber-500 mx-auto rounded-full"></div>
+            <p class="text-lg text-slate-600 max-w-3xl mx-auto leading-relaxed mt-6">
+                바둑의 경우의 수는 우주의 원자 수보다 많은 $10^{170}$개입니다. 이렇게 경우의 수가 기하급수적으로 늘어나는 현상을 <strong>'조합적 폭발(Combinatorial Explosion)'</strong>이라고 합니다. 맹목적 탐색으로는 지구 수명이 다할 때까지 바둑을 이길 수 없습니다. 그래서 AI는 <strong>'힌트'</strong>를 씁니다.
+            </p>
+        </div>
+
+        <div class="section-card bg-slate-900 text-white !p-0 overflow-hidden shadow-2xl border-none">
+            <div class="grid grid-cols-1 lg:grid-cols-5">
+                
+                <div class="lg:col-span-2 p-10 md:p-14 bg-gradient-to-br from-slate-900 to-indigo-950 relative border-r border-slate-700">
+                    <i class="fa-solid fa-lightbulb absolute top-10 right-10 text-8xl text-amber-400/10"></i>
+                    <h3 class="text-3xl font-black mb-6 text-amber-400 border-b border-slate-700 pb-4">휴리스틱(Heuristic) 이란?</h3>
+                    <p class="text-lg text-indigo-100 leading-relaxed mb-8">
+                        그리스어 'Heutiskein(찾아내다)'에서 유래한 말로, 시간이나 정보가 부족할 때 합리적인 판단을 내리기 위해 사용하는 <strong>'어림짐작, 경험 법칙, 직관적인 힌트'</strong>를 뜻합니다.
+                    </p>
+                    <div class="bg-indigo-900/50 p-6 rounded-2xl border border-indigo-500/30">
+                        <p class="font-bold text-amber-300 mb-2"><i class="fa-solid fa-map-pin mr-2"></i> AI 탐색에서의 의미</p>
+                        <p class="text-sm text-slate-300 leading-relaxed">
+                            현재 상태에서 <strong>목표까지 얼마나 남았는지 어림잡아 계산한 값</strong>을 의미합니다. <br>예를 들어, 지도에서 실제 도로가 꼬불꼬불하더라도, 일단 목적지까지의 '직선거리'가 짧은 쪽을 먼저 탐색해보는 것이 훌륭한 휴리스틱입니다.
+                        </p>
                     </div>
                 </div>
 
-                <div class="space-y-5 bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
-                    <div class="flex justify-between items-start">
-                        <h3 class="text-2xl font-bold text-slate-800">너비 우선 탐색<br><span class="text-lg text-sky-500">(BFS, Breadth-First Search)</span></h3>
-                        <div class="w-12 h-12 bg-sky-100 text-sky-600 rounded-xl flex items-center justify-center">
-                            <i class="fa-solid fa-water text-2xl"></i>
+                <div class="lg:col-span-3 p-10 md:p-14 bg-slate-800">
+                    <h4 class="text-3xl font-bold text-white mb-8 flex items-center">
+                        <i class="fa-solid fa-star text-amber-400 mr-4"></i> 궁극의 탐색법: A* (에이스타) 알고리즘
+                    </h4>
+                    <p class="text-slate-300 mb-8 leading-relaxed text-lg">
+                        게임 캐릭터가 장애물을 피해 최단 거리로 이동하거나, 내비게이션이 막히지 않는 길을 찾을 때 사용하는 가장 유명한 알고리즘입니다. A*는 무작정 얕은 곳부터 찾는 BFS와 달리, <strong>'지금까지 온 거리'</strong>와 <strong>'앞으로 남은 예상 거리(휴리스틱)'</strong>를 모두 고려하여 가장 빠를 것 같은 길을 우선적으로 탐색합니다.
+                    </p>
+
+                    <div class="bg-slate-900 p-8 rounded-3xl border border-indigo-500/50 flex flex-col items-center justify-center mb-8 shadow-inner relative overflow-hidden">
+                        <div class="absolute inset-0 bg-blue-500/5 backdrop-blur-3xl"></div>
+                        <p class="text-amber-400 font-bold mb-6 tracking-widest text-sm relative z-10">A* 알고리즘의 핵심 판단 공식</p>
+                        
+                        <div class="text-5xl md:text-6xl font-black font-mono flex items-center flex-wrap justify-center gap-4 text-center relative z-10">
+                            <span class="text-white drop-shadow-md">f(n)</span> 
+                            <span class="text-slate-500">=</span> 
+                            <span class="text-blue-400 drop-shadow-md">g(n)</span> 
+                            <span class="text-slate-500">+</span> 
+                            <span class="text-amber-400 drop-shadow-md">h(n)</span>
                         </div>
                     </div>
-                    <p class="text-slate-600 font-medium">"얕은 곳부터 꼼꼼하게 다 확인한다!"</p>
-                    <ul class="space-y-3 text-sm text-slate-700 leading-relaxed">
-                        <li><i class="fa-solid fa-check text-sky-500 mr-2"></i><strong>작동 방식:</strong> 출발점에서 가까운 모든 이웃 상태를 먼저 확인한 뒤, 그 다음으로 가까운 상태들을 확인하며 물결 퍼지듯 탐색합니다.</li>
-                        <li><i class="fa-solid fa-check text-sky-500 mr-2"></i><strong>특징:</strong> 반드시 <span class="font-bold bg-amber-200 px-1 rounded">최단 경로(가장 짧은 길)</span>를 찾아낸다는 강력한 장점이 있지만, 기억해야 할 경로가 많아 컴퓨터 메모리가 많이 필요합니다.</li>
-                        <li><i class="fa-solid fa-check text-sky-500 mr-2"></i><strong>비유:</strong> 호수에 돌을 던졌을 때 물결이 동심원을 그리며 퍼져나가는 모습.</li>
-                    </ul>
-                    <div class="mt-4 text-xs font-mono bg-slate-800 text-sky-400 p-3 rounded-lg overflow-x-auto">
-<pre><code>// BFS 핵심 논리 (의사코드)
-현재 위치에서 1칸 거리인 곳을 모두 확인한다;
-없으면 2칸 거리인 곳을 모두 확인한다;
-없으면 3칸 거리인 곳을... (목표를 찾을 때까지)</code></pre>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
+                        <div class="bg-slate-700 p-6 rounded-2xl border border-slate-600 hover:-translate-y-1 transition-transform">
+                            <div class="text-blue-400 font-black text-2xl mb-2 font-mono border-b border-slate-600 pb-2">g(n)<br><span class="text-sm font-normal text-slate-400 tracking-tight">과거 (실제 비용)</span></div>
+                            <p class="text-slate-300 mt-3 leading-relaxed">출발점에서 현재 위치(n)까지 <strong>실제로 이동하는 데 걸린 비용(거리)</strong>입니다.</p>
+                        </div>
+                        <div class="bg-slate-700 p-6 rounded-2xl border border-slate-600 hover:-translate-y-1 transition-transform">
+                            <div class="text-amber-400 font-black text-2xl mb-2 font-mono border-b border-slate-600 pb-2">h(n)<br><span class="text-sm font-normal text-slate-400 tracking-tight">미래 (휴리스틱)</span></div>
+                            <p class="text-slate-300 mt-3 leading-relaxed">현재 위치(n)에서 목표까지 <strong>앞으로 얼마나 남았는지 예측한 예상 비용</strong>입니다. (예: 직선거리)</p>
+                        </div>
+                        <div class="bg-indigo-600 p-6 rounded-2xl border border-indigo-400 shadow-lg hover:-translate-y-1 transition-transform">
+                            <div class="text-white font-black text-2xl mb-2 font-mono border-b border-indigo-400/50 pb-2">f(n)<br><span class="text-sm font-normal text-indigo-200 tracking-tight">최종 판단 (우선순위)</span></div>
+                            <p class="text-white mt-3 leading-relaxed">g(n)과 h(n)을 더한 <strong>총 예상 비용</strong>입니다. AI는 수많은 갈림길 중 이 <span class="text-amber-300 font-bold underline decoration-2 underline-offset-4">f(n) 값이 가장 작은 곳(가장 짧을 것 같은 길)</span>을 골라 먼저 탐색합니다.</p>
+                        </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </section>
 
-    <section class="scroll-mt-24 space-y-12" id="activity">
-        <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
-            
-            <div class="lg:col-span-3 section-card bg-indigo-900 text-white !p-10 relative overflow-hidden">
-                <i class="fa-solid fa-compass absolute -top-10 -right-10 text-9xl text-white/5"></i>
-                <div class="relative z-10">
-                    <span class="text-amber-400 font-bold tracking-widest uppercase mb-2 block">Step 03</span>
-                    <h2 class="text-3xl font-black mb-6">힌트를 얻어 똑똑하게 찾기:<br>휴리스틱 탐색 (Heuristic Search)</h2>
-                    
-                    <p class="text-indigo-100 leading-relaxed mb-6 text-sm md:text-base">
-                        맹목적 탐색(DFS, BFS)은 경우의 수가 많은 현실 세계(바둑, 내비게이션 등)에서는 시간이 너무 오래 걸려 사용할 수 없습니다. 이를 해결하기 위해 <strong>'휴리스틱(경험적 지식, 어림짐작, 힌트)'</strong>을 사용합니다.
-                    </p>
+    <section class="scroll-mt-24 space-y-12" id="concept4">
+        <div class="text-center space-y-4">
+            <span class="text-rose-600 font-bold tracking-widest uppercase text-sm">Step 04. Fact Check</span>
+            <h2 class="text-4xl md:text-5xl font-black text-slate-900">학생들이 자주 헷갈리는 오개념 주의보</h2>
+            <div class="w-24 h-1.5 bg-rose-500 mx-auto rounded-full"></div>
+            <p class="text-lg text-slate-600 max-w-3xl mx-auto leading-relaxed mt-6">
+                컴퓨터가 마법처럼 문제를 푸는 것 같지만, 그 이면에는 철저한 수학적 논리가 있습니다. 탐색 알고리즘을 배울 때 가장 많이 착각하는 사실을 바로잡고 넘어갑시다.
+            </p>
+        </div>
 
-                    <div class="bg-white/10 backdrop-blur-md p-6 rounded-2xl border border-white/20 mb-6">
-                        <h4 class="font-bold text-amber-300 mb-3 text-lg"><i class="fa-solid fa-star text-amber-400 mr-2"></i>대표적인 알고리즘: A* (에이스타) 탐색</h4>
-                        <p class="text-indigo-50 text-sm leading-relaxed">
-                            현재까지 이동한 거리 비용에 <strong>'목표까지 남은 예상 거리(휴리스틱)'</strong>를 더하여, 총비용이 가장 적을 것으로 예상되는 길을 우선적으로 탐색합니다.<br><br>
-                            👉 <em>자동차 내비게이션이나 게임 속 캐릭터가 장애물을 피해 최단 경로로 이동할 때 가장 많이 사용되는 핵심 기술입니다.</em>
-                        </p>
-                    </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="warn-box p-8 md:p-10 rounded-3xl shadow-sm border border-rose-100">
+                <div class="flex flex-col mb-6">
+                    <span class="inline-block px-3 py-1 bg-rose-100 text-rose-700 font-bold text-sm rounded-lg mb-4 w-fit">흔한 착각 1</span>
+                    <h3 class="text-2xl font-black text-slate-800 leading-tight">"컴퓨터는 지도를 한 번에 싹 스캔해서 1초 만에 최적의 길을 짜잔! 하고 그린다."</h3>
+                </div>
+                
+                <div class="bg-white p-6 rounded-2xl border border-emerald-200 shadow-sm relative overflow-hidden mt-6">
+                    <div class="absolute top-0 left-0 w-2 h-full bg-emerald-500"></div>
+                    <h3 class="text-xl font-bold text-emerald-700 mb-3 flex items-center">
+                        <i class="fa-solid fa-check-double mr-2"></i> 진실: 한 번에 한 단계씩 차례대로!
+                    </h3>
+                    <p class="text-slate-600 leading-relaxed text-base">
+                        사람 눈에는 전체 지도가 한 번에 보이지만, 컴퓨터(인공지능)에게 지도는 깜깜한 어둠 속과 같습니다. 초기 상태에서 출발해 조작자(규칙)를 하나씩 끈질기게 적용해가며 상태 트리의 노드들을 <strong>순차적으로 계산하고 방문(Search)</strong>하여 길을 찾습니다. 그 연산 속도가 인간이 눈치채지 못할 만큼 워낙 빨라서 한 번에 그려낸 것처럼 보일 뿐입니다.
+                    </p>
                 </div>
             </div>
 
-            <div class="lg:col-span-2 section-card border-l-4 border-l-rose-500 bg-rose-50 flex flex-col justify-center !p-8">
-                <div class="flex items-center space-x-3 mb-4">
-                    <div class="w-10 h-10 bg-rose-200 text-rose-700 rounded-full flex items-center justify-center shrink-0">
-                        <i class="fa-solid fa-triangle-exclamation text-lg"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-rose-900">오개념 주의!</h3>
+            <div class="warn-box p-8 md:p-10 rounded-3xl shadow-sm border border-rose-100">
+                <div class="flex flex-col mb-6">
+                    <span class="inline-block px-3 py-1 bg-rose-100 text-rose-700 font-bold text-sm rounded-lg mb-4 w-fit">흔한 착각 2</span>
+                    <h3 class="text-2xl font-black text-slate-800 leading-tight">"A* 같은 똑똑한 휴리스틱 탐색은 언제나 무조건 100% 완벽한 최단 경로를 보장한다."</h3>
                 </div>
                 
-                <div class="space-y-4">
-                    <div class="bg-white p-4 rounded-xl shadow-sm border border-rose-100">
-                        <p class="font-bold text-slate-800 text-sm mb-1">❌ 흔한 착각 1</p>
-                        <p class="text-slate-600 text-sm">"탐색 알고리즘은 전체 지도를 한 번에 스캔해서 답을 짠! 하고 내놓는다."</p>
-                        <hr class="my-2 border-slate-100">
-                        <p class="text-emerald-600 text-sm font-bold">⭕ 진실</p>
-                        <p class="text-slate-600 text-sm">아닙니다. 컴퓨터는 한 번에 한 단계씩 상태 공간의 규칙에 따라 가지를 뻗어나가며 확인(Search)하는 과정을 거칩니다. 우리가 볼 땐 순식간이지만, 실제로는 수많은 연산을 하고 있습니다.</p>
-                    </div>
-
-                    <div class="bg-white p-4 rounded-xl shadow-sm border border-rose-100">
-                        <p class="font-bold text-slate-800 text-sm mb-1">❌ 흔한 착각 2</p>
-                        <p class="text-slate-600 text-sm">"휴리스틱 탐색은 항상 무조건 100% 완벽한 최단 경로를 보장한다."</p>
-                        <hr class="my-2 border-slate-100">
-                        <p class="text-emerald-600 text-sm font-bold">⭕ 진실</p>
-                        <p class="text-slate-600 text-sm">휴리스틱(어림짐작) 함수를 어떻게 설계하느냐에 따라 완벽한 최단 경로를 보장하지 못할 수도 있습니다. 때로는 '완벽한 정답'보다 '충분히 좋고 빠른 정답'을 찾는 데 목적을 둡니다.</p>
-                    </div>
+                <div class="bg-white p-6 rounded-2xl border border-emerald-200 shadow-sm relative overflow-hidden mt-6">
+                    <div class="absolute top-0 left-0 w-2 h-full bg-emerald-500"></div>
+                    <h3 class="text-xl font-bold text-emerald-700 mb-3 flex items-center">
+                        <i class="fa-solid fa-check-double mr-2"></i> 진실: 힌트(휴리스틱)의 질에 따라 다름!
+                    </h3>
+                    <p class="text-slate-600 leading-relaxed text-base">
+                        A* 알고리즘이 완벽한 최단 경로를 100% 보장하려면, 우리가 설정한 예상 남은 거리 h(n)이 실제 남은 거리보다 절대 커서는 안 된다는 조건(과대평가 금지, Admissible)을 만족해야 합니다. 게다가 복잡한 현실 세계에서는 '100% 완벽한 정답'을 찾기 위해 너무 오랜 시간을 끄는 것보다, 약간 오차가 있어도 <strong>'충분히 좋고 매우 빠른 정답'</strong>에 만족하도록 의도적으로 힌트의 성질을 조정하기도 합니다.
+                    </p>
                 </div>
             </div>
         </div>
     </section>
 
     <section class="scroll-mt-24 space-y-12" id="quiz">
-        <div class="text-center">
-            <h2 class="text-4xl font-black">학습 내용 스스로 점검하기</h2>
-            <p class="text-slate-600 mt-2">오늘 배운 문제 해결과 탐색의 원리를 퀴즈로 완성해보세요.</p>
+        <div class="text-center space-y-4">
+            <h2 class="text-4xl md:text-5xl font-black text-slate-900">학습 내용 스스로 점검하기</h2>
+            <p class="text-slate-600 mt-2 text-lg">오늘 배운 복잡한 탐색의 원리를 5개의 심화 퀴즈를 풀며 완벽하게 내 것으로 만들어보세요.</p>
         </div>
 
         <div class="max-w-3xl mx-auto space-y-8">
-            <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200">
-                <span class="inline-block px-3 py-1 bg-blue-100 text-blue-700 font-bold text-sm rounded-lg mb-4">Q1. 상태 공간의 이해</span>
-                <p class="text-xl font-bold mb-4 text-slate-800">탐색 문제에서 한 상태에서 다음 상태로 넘어가기 위한 행동 규칙(예: 상, 하, 좌, 우 이동)을 무엇이라고 부르나요?</p>
+            <div class="bg-white p-8 md:p-10 rounded-3xl shadow-lg border border-slate-100">
+                <span class="inline-block px-4 py-1.5 bg-blue-100 text-blue-800 font-bold text-sm rounded-lg mb-6">Q1. 문제의 구조화 (상태 공간)</span>
+                <p class="text-xl font-bold mb-6 text-slate-800 leading-relaxed">
+                    다음 중 현실의 문제를 컴퓨터가 풀 수 있도록 변환하는 '상태 공간'을 구성하는 3가지 필수 핵심 요소가 <strong>아닌</strong> 것은 무엇인가요?
+                </p>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <button class="quiz-btn" onclick="checkAnswer(this, false, '초기 상태는 문제가 처음 시작되는 출발점을 의미합니다.')">A. 초기 상태 (Initial State)</button>
-                    <button class="quiz-btn" onclick="checkAnswer(this, false, '목표 상태는 문제가 해결되어 탐색이 끝나는 지점입니다.')">B. 목표 상태 (Goal State)</button>
-                    <button class="quiz-btn" onclick="checkAnswer(this, true, '정답입니다! 조작자(Operator)는 상태를 변화시키는 구체적인 행동 규칙을 의미합니다.')">C. 조작자 / 규칙 (Operator)</button>
-                    <button class="quiz-btn" onclick="checkAnswer(this, false, '휴리스틱은 목표까지 얼마나 남았는지 짐작하는 힌트 또는 추론 값입니다.')">D. 휴리스틱 (Heuristic)</button>
+                    <button class="quiz-btn" onclick="checkAnswer(this, false, '오답입니다. 초기 상태는 탐색이 시작되는 출발점으로 반드시 필요합니다.')">A. 초기 상태 (Initial State)</button>
+                    <button class="quiz-btn" onclick="checkAnswer(this, false, '오답입니다. 조작자는 상태를 변화시키는 규칙으로 필수 요소입니다.')">B. 조작자 / 규칙 (Operator)</button>
+                    <button class="quiz-btn" onclick="checkAnswer(this, true, '정답입니다! 휴리스틱은 A* 탐색 등을 효율적으로 만들기 위한 힌트일 뿐, 모든 탐색 문제를 정의하는 필수 기본 요소는 아닙니다.')">C. 휴리스틱 함수 (Heuristic Function)</button>
+                    <button class="quiz-btn" onclick="checkAnswer(this, false, '오답입니다. 목표 상태는 문제가 해결된 도착점으로 반드시 필요합니다.')">D. 목표 상태 (Goal State)</button>
                 </div>
             </div>
 
-            <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200">
-                <span class="inline-block px-3 py-1 bg-emerald-100 text-emerald-700 font-bold text-sm rounded-lg mb-4">Q2. 탐색 알고리즘 구분</span>
-                <p class="text-xl font-bold mb-4 text-slate-800">어떤 미로를 탈출하기 위해 갈 수 있는 한 방향으로 계속 파고들다가, 막다른 길이 나오면 되돌아와 다른 길을 탐색하는 방식을 선택했습니다. 이 탐색 방법은 무엇인가요?</p>
+            <div class="bg-white p-8 md:p-10 rounded-3xl shadow-lg border border-slate-100">
+                <span class="inline-block px-4 py-1.5 bg-emerald-100 text-emerald-800 font-bold text-sm rounded-lg mb-6">Q2. 맹목적 탐색: DFS의 특징</span>
+                <p class="text-xl font-bold mb-6 text-slate-800 leading-relaxed">
+                    미로를 탐색할 때 <strong>깊이 우선 탐색(DFS)</strong> 방식을 사용하려고 합니다. 이 알고리즘의 특징으로 가장 알맞은 것은 무엇일까요?
+                </p>
                 <div class="grid grid-cols-1 gap-4">
-                    <button class="quiz-btn" onclick="checkAnswer(this, false, '오답입니다. 너비 우선 탐색은 출발점에서 가까운 얕은 곳부터 넓게 퍼지며 탐색하는 방식입니다.')">
-                        A. 너비 우선 탐색 (BFS)
+                    <button class="quiz-btn" onclick="checkAnswer(this, false, '오답입니다. 그것은 너비 우선 탐색(BFS)의 치명적인 단점입니다.')">
+                        A. 트리의 둘레를 넓게 스캔해야 하므로 메모리를 엄청나게 많이 소비한다.
                     </button>
-                    <button class="quiz-btn" onclick="checkAnswer(this, true, '정답입니다! 한 우물만 깊게 파고드는 방식은 깊이 우선 탐색(DFS)입니다.')">
-                        B. 깊이 우선 탐색 (DFS)
+                    <button class="quiz-btn" onclick="checkAnswer(this, false, '오답입니다. DFS는 찾은 경로가 최단 경로임을 절대 보장하지 않습니다. 우연히 처음 찾은 빙 돌아가는 길일 수도 있습니다.')">
+                        B. 탐색을 통해 목표를 발견했다면, 그 경로는 100% 가장 짧은 최단 경로임을 보장한다.
                     </button>
-                    <button class="quiz-btn" onclick="checkAnswer(this, false, '오답입니다. A* 알고리즘은 휴리스틱(힌트)을 활용하여 목적지에 가까운 곳을 먼저 탐색하는 지능적 탐색입니다.')">
-                        C. A* (에이스타) 알고리즘
+                    <button class="quiz-btn" onclick="checkAnswer(this, true, '정답입니다! DFS는 현재 파고드는 단일 경로만 기억하면 되므로 컴퓨터의 메모리(RAM)를 매우 적게 사용하는 장점이 있습니다.')">
+                        C. 진행 중인 하나의 깊은 경로만 기억하면 되므로 컴퓨터 메모리를 매우 적게 사용한다.
                     </button>
                 </div>
             </div>
 
-            <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200">
-                <span class="inline-block px-3 py-1 bg-amber-100 text-amber-700 font-bold text-sm rounded-lg mb-4">Q3. 실생활 적용</span>
-                <p class="text-xl font-bold mb-4 text-slate-800">스마트폰 내비게이션은 복잡한 도심에서 출발지부터 도착지까지의 최적 경로를 순식간에 찾아냅니다. 이때 모든 경우의 수를 확인하지 않고 '예상 남은 거리' 등의 힌트를 활용해 똑똑하게 경로를 찾는 탐색 방법의 명칭은 무엇일까요?</p>
+            <div class="bg-white p-8 md:p-10 rounded-3xl shadow-lg border border-slate-100">
+                <span class="inline-block px-4 py-1.5 bg-sky-100 text-sky-800 font-bold text-sm rounded-lg mb-6">Q3. 맹목적 탐색: BFS의 특징</span>
+                <p class="text-xl font-bold mb-6 text-slate-800 leading-relaxed">
+                    <strong>너비 우선 탐색(BFS)</strong>은 메모리를 많이 잡아먹는 치명적인 단점이 있음에도 불구하고 특정 상황에서 꼭 사용됩니다. BFS가 가지는 가장 강력하고 유일한 장점은 무엇인가요?
+                </p>
                 <div class="grid grid-cols-1 gap-4">
-                    <button class="quiz-btn" onclick="checkAnswer(this, false, '오답입니다. 맹목적 탐색은 아무런 정보나 힌트 없이 무작정 탐색하는 DFS, BFS 등을 말합니다. 내비게이션에 쓰기엔 너무 느립니다.')">
-                        A. 맹목적 탐색 (Blind Search)
+                    <button class="quiz-btn" onclick="checkAnswer(this, false, '오답입니다. 휴리스틱(힌트)을 사용하는 것은 A* 같은 정보 탐색(Heuristic Search)입니다. BFS는 힌트 없이 무작정 다 뒤집니다.')">
+                        A. 휴리스틱(힌트)을 사용하여 복잡한 연산을 순식간에 끝낼 수 있다.
                     </button>
-                    <button class="quiz-btn" onclick="checkAnswer(this, true, '정답입니다! 목표까지의 예상 비용(힌트)을 더해 효율적으로 경로를 찾는 방식을 휴리스틱 탐색이라고 합니다.')">
-                        B. 휴리스틱 탐색 (Heuristic Search)
+                    <button class="quiz-btn" onclick="checkAnswer(this, true, '정답입니다! BFS는 얕은 동심원부터 샅샅이 뒤지기 때문에, 목표를 발견하는 순간 그 길이가 가장 짧은 길(최단 경로)임을 무조건 보장합니다.')">
+                        B. 얕은 곳부터 꼼꼼히 탐색하므로 찾아낸 경로가 항상 '최단 경로'임을 100% 수학적으로 보장한다.
+                    </button>
+                    <button class="quiz-btn" onclick="checkAnswer(this, false, '오답입니다. 정답이 없는 구덩이에 빠질 위험이 있는 알고리즘은 깊이 우선 탐색(DFS)입니다.')">
+                        C. 우연히 정답이 없는 무한히 깊은 구덩이에 빠지더라도 스스로 빠져나와 다른 길을 탐색한다.
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-white p-8 md:p-10 rounded-3xl shadow-lg border border-slate-100">
+                <span class="inline-block px-4 py-1.5 bg-amber-100 text-amber-800 font-bold text-sm rounded-lg mb-6">Q4. A* 알고리즘의 수식 이해</span>
+                <p class="text-xl font-bold mb-6 text-slate-800 leading-relaxed">
+                    내비게이션에 널리 쓰이는 A* 알고리즘은 <strong>f(n) = g(n) + h(n)</strong> 공식을 사용하여 어떤 갈림길로 먼저 갈지 정합니다. 여기서 <strong>h(n)</strong>이 의미하는 바는 정확히 무엇인가요?
+                </p>
+                <div class="grid grid-cols-1 gap-4">
+                    <button class="quiz-btn" onclick="checkAnswer(this, false, '오답입니다. 출발점에서 현재 위치까지 걸린 실제 비용(과거)은 g(n)입니다.')">
+                        A. 출발점에서 현재 위치까지 실제로 이동하는 데 걸린 비용
+                    </button>
+                    <button class="quiz-btn" onclick="checkAnswer(this, true, '정답입니다! h(n)은 휴리스틱(Heuristic) 값으로, 현재 위치에서 목표까지 앞으로 얼마나 남았는지 예측한 힌트 값(예: 지도상의 직선거리)입니다.')">
+                        B. 현재 위치에서 목표 지점까지 앞으로 남은 예상 비용 (휴리스틱)
+                    </button>
+                    <button class="quiz-btn" onclick="checkAnswer(this, false, '오답입니다. g(n)과 h(n)을 더한 최종 전체 예상 비용의 합은 f(n)입니다.')">
+                        C. 출발부터 도착까지 탐색을 완료할 때 걸릴 것으로 예측되는 최종 총 비용
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-white p-8 md:p-10 rounded-3xl shadow-lg border border-slate-100">
+                <span class="inline-block px-4 py-1.5 bg-rose-100 text-rose-800 font-bold text-sm rounded-lg mb-6">Q5. 탐색 알고리즘의 진실 (오개념 방지)</span>
+                <p class="text-xl font-bold mb-6 text-slate-800 leading-relaxed">
+                    다음 중 인공지능 탐색 알고리즘에 대한 설명으로 올바른 것을 고르세요.
+                </p>
+                <div class="grid grid-cols-1 gap-4">
+                    <button class="quiz-btn" onclick="checkAnswer(this, false, '오답입니다! 컴퓨터는 사람처럼 전체 지도를 한 번에 스캔하여 정답을 알아내는 것이 아니라, 한 단계씩 노드를 방문하며 트리를 탐색합니다.')">
+                        A. 컴퓨터는 사람과 달리 시야가 넓어서 전체 미로를 단 한 번에 스캔하여 1초 만에 최적의 길을 알아낸다.
+                    </button>
+                    <button class="quiz-btn" onclick="checkAnswer(this, false, '오답입니다! 조합적 폭발 현상 때문에 맹목적 탐색으로는 복잡한 문제를 제시간에 풀 수 없어, 휴리스틱 같은 똑똑한 방법을 써야 합니다.')">
+                        B. 바둑이나 체스처럼 경우의 수가 우주의 원자 수만큼 많은 문제도 컴퓨터의 성능만 좋다면 무정보(맹목적) 탐색으로 1시간 안에 해결할 수 있다.
+                    </button>
+                    <button class="quiz-btn" onclick="checkAnswer(this, true, '정답입니다! 현실 세계에서는 약간의 오차가 있더라도 빠르게 쓸만한 결과를 내기 위해 휴리스틱을 의도적으로 조정(완벽한 최단거리 포기)하기도 합니다.')">
+                        C. A* 탐색에서 사용하는 휴리스틱(힌트)을 어떻게 설계하느냐에 따라, 완벽한 최단 경로가 보장되지 않을 수도 있다.
                     </button>
                 </div>
             </div>
@@ -357,13 +627,15 @@
 
 </main>
 
-<footer class="bg-slate-900 py-16 px-6 text-center rounded-t-[3rem] mt-10">
+<footer class="bg-slate-900 py-20 px-6 text-center rounded-t-[4rem] mt-10 shadow-[0_-10px_40px_rgba(0,0,0,0.1)]">
     <div class="max-w-4xl mx-auto flex flex-col items-center">
-        <div class="w-16 h-16 bg-blue-500/20 rounded-2xl flex items-center justify-center mb-6">
-            <i class="fa-solid fa-graduation-cap text-3xl text-blue-400"></i>
+        <div class="w-20 h-20 bg-blue-500/20 rounded-3xl flex items-center justify-center mb-8 border border-blue-500/30">
+            <i class="fa-solid fa-graduation-cap text-4xl text-blue-400"></i>
         </div>
-        <p class="text-white font-black text-3xl mb-3 tracking-tight">수고하셨습니다!</p>
-        <p class="text-slate-400 text-lg font-medium">인공지능이 길을 찾는 탐색의 원리를 완벽하게 학습했습니다.</p>
+        <p class="text-white font-black text-4xl mb-4 tracking-tight">수고하셨습니다!</p>
+        <p class="text-slate-400 text-xl font-medium max-w-lg leading-relaxed">
+            이제 인공지능이 길을 찾고 복잡한 경우의 수를 돌파하는 '탐색'의 핵심 원리를 전문가 수준으로 완벽하게 이해했습니다.
+        </p>
     </div>
 </footer>
 
@@ -373,55 +645,50 @@
         const container = btn.parentElement;
         const buttons = container.querySelectorAll('.quiz-btn');
 
+        // 다른 버튼 비활성화 (여러 번 클릭 방지)
         buttons.forEach(b => {
-
             if (!b.dataset.label) {
                 b.dataset.label = b.textContent;
             }
-
             b.classList.remove('correct', 'wrong');
             b.classList.add('disabled');
         });
 
+        // 정답/오답 표시
         if (isCorrect) {
-
             btn.classList.add('correct');
-
-            btn.innerHTML =
-                `<i class="fa-solid fa-circle-check mr-2"></i>${btn.dataset.label}`;
-
+            btn.innerHTML = `<i class="fa-solid fa-circle-check mr-3"></i>${btn.dataset.label}`;
         } else {
-
             btn.classList.add('wrong');
-
-            btn.innerHTML =
-                `<i class="fa-solid fa-circle-xmark mr-2"></i>${btn.dataset.label}`;
+            btn.innerHTML = `<i class="fa-solid fa-circle-xmark mr-3"></i>${btn.dataset.label}`;
         }
 
+        // 토스트 메시지 띄우기
         showToast(message, isCorrect ? 'success' : 'error');
 
+        // 충분히 읽을 수 있도록 6초 후 리셋
         setTimeout(() => {
-
             buttons.forEach(b => {
-
                 b.classList.remove('correct', 'wrong', 'disabled');
                 b.innerHTML = b.dataset.label;
-
             });
-
-        }, 4500);
+        }, 6000);
     }
 
     function showToast(message, type) {
         const toast = document.createElement('div');
-        toast.className = `fixed bottom-10 left-1/2 -translate-x-1/2 px-8 py-5 rounded-2xl text-white font-bold shadow-2xl transition-all transform translate-y-20 z-[1000] text-center max-w-md w-[90%] md:w-full leading-relaxed border-2 ${type === 'success' ? 'bg-blue-600 border-blue-400' : 'bg-rose-500 border-rose-400'}`;
+        toast.className = `fixed bottom-12 left-1/2 -translate-x-1/2 px-8 py-5 rounded-2xl text-white font-bold shadow-[0_15px_50px_rgba(0,0,0,0.3)] transition-all duration-300 transform translate-y-20 z-[1000] text-center max-w-md w-[90%] md:w-full leading-relaxed border-2 ${type === 'success' ? 'bg-blue-600 border-blue-400' : 'bg-rose-600 border-rose-400'}`;
         toast.innerText = message;
         document.body.appendChild(toast);
+        
+        // 애니메이션으로 나타나기
         setTimeout(() => toast.classList.remove('translate-y-20'), 10);
+        
+        // 충분히 읽을 수 있도록 5.5초 후 사라지기
         setTimeout(() => {
-            toast.classList.add('opacity-0', 'translate-y-5');
+            toast.classList.add('opacity-0', 'translate-y-10');
             setTimeout(() => toast.remove(), 500);
-        }, 4000);
+        }, 5500);
     }
 </script>
 </body>
