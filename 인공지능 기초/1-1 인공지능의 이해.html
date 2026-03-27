@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>Chapter 01. 인공지능의 이해 - 학습 자료 템플릿</title>
+    <title>Chapter 01. 인공지능의 이해</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -43,32 +43,31 @@
             transition: all 0.3s ease;
         }
 
-
         .quiz-btn {
-            width: 100%; /* w-full */
-            padding: 1.25rem; /* p-5 */
-            text-align: left; /* text-left */
-            border-radius: 1rem; /* rounded-2xl */
-            border: 2px solid #e2e8f0; /* border-slate-200 */
-            background-color: #f8fafc; /* bg-slate-50 */
-            font-weight: 500; /* font-medium */
-            color: #374151; /* text-slate-700 */
-            transition: all 0.25s ease; /* transition-all */
+            width: 100%;
+            padding: 1.25rem;
+            text-align: left;
+            border-radius: 1rem;
+            border: 2px solid #e2e8f0;
+            background-color: #f8fafc;
+            font-weight: 500;
+            color: #374151;
+            transition: all 0.25s ease;
         }
 
         .quiz-btn:hover {
-            background: #f0fdfa; /* hover:bg-teal-50 */
-            border-color: #5eead4; /* hover:border-teal-200 */
+            background: #f0fdfa;
+            border-color: #5eead4;
         }
 
         .quiz-btn.correct {
-            background: #4f46e5; /* bg-indigo-600 */
+            background: #4f46e5;
             color: white;
             border-color: #4f46e5;
         }
 
         .quiz-btn.wrong {
-            background: #f43f5e; /* bg-rose-500 */
+            background: #f43f5e;
             color: white;
             border-color: #f43f5e;
         }
@@ -111,10 +110,10 @@
                 Chapter 01. 인공지능의 이해
             </span>
         <h1 class="text-5xl md:text-7xl font-black mb-6 leading-tight">
-            인공지능(AI),<br>기계가 생각을 한다고?
+            기계가 스스로 판단하고<br>학습하는 원리
         </h1>
         <p class="text-xl md:text-2xl opacity-90 font-medium max-w-2xl mx-auto leading-relaxed">
-            우리 삶을 변화시키고 있는 인공지능. 기계는 어떻게 사람처럼 스스로 문제를 해결할 수 있는지 그 핵심 원리를 알아봅시다.
+            단순히 명령을 따르던 컴퓨터가 어떻게 스스로 문제를 해결하게 되었을까요? 일반 프로그램과의 차이부터 지능의 원리, 철학적 고민까지 완벽하게 파헤쳐 봅니다.
         </p>
     </div>
 </header>
@@ -123,173 +122,376 @@
     <div class="max-w-6xl mx-auto flex justify-between items-center">
         <div class="flex items-center space-x-2">
             <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white">
-                <i class="fa-solid fa-brain"></i>
+                <i class="fa-solid fa-brain "></i>
             </div>
             <span class="font-black text-2xl tracking-tight text-slate-800">인공지능 기초</span>
         </div>
-        <div class="hidden md:flex space-x-8 font-bold text-slate-500">
-            <a class="hover:text-indigo-600 transition" href="#intro">도입</a>
-            <a class="hover:text-indigo-600 transition" href="#concept">핵심개념</a>
-            <a class="hover:text-indigo-600 transition" href="#activity">심화학습</a>
-            <a class="hover:text-indigo-600 transition" href="#application">활용사례</a>
-            <a class="hover:text-indigo-600 transition" href="#quiz">자가진단</a>
+        <div class="hidden md:flex space-x-8 font-bold text-slate-500 overflow-x-auto">
+            <a class="hover:text-indigo-600 transition whitespace-nowrap" href="#intro">도입</a>
+            <a class="hover:text-indigo-600 transition whitespace-nowrap" href="#concept1">소프트웨어의 진화</a>
+            <a class="hover:text-indigo-600 transition whitespace-nowrap" href="#concept2">지능의 4요소</a>
+            <a class="hover:text-indigo-600 transition whitespace-nowrap" href="#concept3">에이전트와 한계</a>
+            <a class="hover:text-indigo-600 transition whitespace-nowrap" href="#activity">세상을 바꾸는 AI</a>
+            <a class="hover:text-indigo-600 transition whitespace-nowrap" href="#quiz">스스로 점검</a>
         </div>
     </div>
 </nav>
 
-<main class="max-w-5xl mx-auto px-6 py-20 space-y-24">
+<main class="max-w-5xl mx-auto px-6 py-20 space-y-28">
 
-    <section class="scroll-mt-24 space-y-12" id="concept">
+    <section class="scroll-mt-24 space-y-12" id="concept1">
         <div class="text-center space-y-4">
-            <h2 class="text-4xl font-black text-slate-900">핵심 키워드 이해하기</h2>
+            <span class="text-indigo-600 font-bold tracking-widest uppercase">Step 01</span>
+            <h2 class="text-4xl font-black text-slate-900">명령을 따르는 기계 vs 스스로 학습하는 기계</h2>
             <div class="w-20 h-1.5 bg-indigo-500 mx-auto rounded-full"></div>
+            <p class="text-lg text-slate-600 max-w-2xl mx-auto">컴퓨터는 원래 계산기(Computer)에서 출발했습니다. 그렇다면 우리가 흔히 쓰는 '일반 소프트웨어'와 최신 '인공지능'은 근본적으로 어떻게 다를까요?</p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div class="section-card">
-                <div class="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center mb-6">
-                    <i class="fa-solid fa-calculator text-2xl"></i>
+        <div class="section-card">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <div class="space-y-6 bg-slate-50 p-8 rounded-2xl border border-slate-200">
+                    <div class="flex items-center space-x-4 mb-2">
+                        <div class="w-12 h-12 bg-slate-200 text-slate-600 rounded-xl flex items-center justify-center shadow-inner">
+                            <i class="fa-solid fa-file-code text-2xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold">일반 소프트웨어<br><span class="text-base font-medium text-slate-500">"정해진 레시피대로만 요리하는 초보 요리사"</span></h3>
+                    </div>
+                    
+                    <div class="space-y-4 text-slate-700">
+                        <p class="leading-relaxed">
+                            개발자가 <strong>모든 규칙과 조건(if-then)을 미리 코드로 작성</strong>해 둔 프로그램입니다. 예외 상황이 발생하면 해결하지 못하고 오류를 냅니다.
+                        </p>
+                        <div class="bg-white p-4 rounded-xl border border-slate-200 text-sm">
+                            <span class="font-bold text-slate-800"><i class="fa-solid fa-code mr-2 text-slate-400"></i>작동 방식 (코드 예시)</span>
+                            <pre><code class="language-c block mt-2 text-slate-600">만약 (버튼이 눌리면) {
+   계산 결과를 화면에 띄워라;
+} 만약 (1시간이 지나면) {
+   에어컨 전원을 꺼라;
+}</code></pre>
+                        </div>
+                        <ul class="space-y-2">
+                            <li>🚫 <strong>한계:</strong> 사용자가 미리 설정하지 않은 상황(예: 사람이 방에 계속 있는데 1시간이 지남)에서는 유연하게 대처하지 못합니다.</li>
+                        </ul>
+                        <div class="mt-4 p-4 bg-slate-200/50 rounded-xl">
+                            <p class="text-sm font-bold text-slate-600 mb-2">대표 사례</p>
+                            <p class="font-medium text-sm">✅ 버튼을 눌러 계산하는 <strong class="text-slate-800">전자계산기</strong></p>
+                            <p class="font-medium text-sm mt-1">✅ 1시간 뒤 꺼지게 설정된 <strong class="text-slate-800">타이머 에어컨</strong></p>
+                            <p class="font-medium text-sm mt-1">✅ 리모컨 조종대로만 움직이는 <strong class="text-slate-800">장난감 로봇</strong></p>
+                        </div>
+                    </div>
                 </div>
-                <h3 class="text-3xl font-bold mb-4">일반 프로그램 vs 인공지능</h3>
-                <p class="text-slate-600 leading-relaxed mb-4">
-                    일반 소프트웨어는 정해진 규칙과 코드대로만 움직여요. 단순히 자료를 저장하거나 수식을 반복적으로 계산하는 일을 잘합니다. (예: 계산기 앱)
-                </p>
-                <p class="text-slate-600 leading-relaxed">
-                    하지만 <strong>인공지능 소프트웨어</strong>는 달라요. 방대한 데이터를 스스로 <span class="font-bold bg-amber-200 px-1 rounded">학습</span>하고, 예측할 수 없는 상황에서도 <span class="font-bold bg-amber-200 px-1 rounded">추론</span>과 <span class="font-bold bg-amber-200 px-1 rounded">판단</span>을 내립니다. (예: 자율주행 자동차)
-                </p>
-            </div>
 
-            <div class="section-card">
-                <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-2xl flex items-center justify-center mb-6">
-                    <i class="fa-solid fa-bolt text-2xl"></i>
+                <div class="space-y-6 bg-indigo-50 p-8 rounded-2xl border border-indigo-100 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 rounded-full blur-2xl -mr-10 -mt-10"></div>
+                    <div class="flex items-center space-x-4 mb-2 relative z-10">
+                        <div class="w-12 h-12 bg-indigo-600 text-white rounded-xl flex items-center justify-center shadow-lg shadow-indigo-200">
+                            <i class="fa-solid fa-brain text-2xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-indigo-900">인공지능(AI)<br><span class="text-base font-medium text-indigo-500">"재료에 맞춰 응용하는 베테랑 셰프"</span></h3>
+                    </div>
+                    
+                    <div class="space-y-4 text-indigo-900 relative z-10">
+                        <p class="leading-relaxed">
+                            규칙을 일일이 입력하지 않아도, 방대한 <span class="font-bold bg-amber-200 px-1 rounded">데이터를 학습(Learning)</span>하여 스스로 패턴을 찾고, 새로운 상황에서 <span class="font-bold bg-amber-200 px-1 rounded">추론(Inference)</span>하여 판단을 내립니다.
+                        </p>
+                        <div class="bg-white p-4 rounded-xl border border-indigo-100 text-sm shadow-sm">
+                            <span class="font-bold text-indigo-800"><i class="fa-solid fa-chart-network mr-2 text-indigo-400"></i>작동 방식 (데이터 기반)</span>
+                            <div class="mt-2 text-indigo-700 flex items-center space-x-2">
+                                <span class="bg-indigo-100 px-2 py-1 rounded">수만 장의 사진 데이터</span>
+                                <i class="fa-solid fa-arrow-right text-xs"></i>
+                                <span class="bg-indigo-100 px-2 py-1 rounded">스스로 고양이의 특징 발견</span>
+                                <i class="fa-solid fa-arrow-right text-xs"></i>
+                                <span class="bg-indigo-100 px-2 py-1 rounded">처음 보는 고양이도 인식</span>
+                            </div>
+                        </div>
+                        <ul class="space-y-2">
+                            <li>✨ <strong>장점:</strong> 환경이 변하거나 예상치 못한 문제가 발생해도, 학습된 경험을 바탕으로 가장 적절한 해결책을 찾아냅니다.</li>
+                        </ul>
+                        <div class="mt-4 p-4 bg-indigo-100/50 rounded-xl">
+                            <p class="text-sm font-bold text-indigo-600 mb-2">대표 사례</p>
+                            <p class="font-medium text-sm">✅ 내 지출을 파악해 조언하는 <strong class="text-indigo-800">맞춤형 자산 앱</strong></p>
+                            <p class="font-medium text-sm mt-1">✅ 사람 위치와 체온을 파악하는 <strong class="text-indigo-800">스마트 에어컨</strong></p>
+                            <p class="font-medium text-sm mt-1">✅ 스스로 장애물을 피하는 <strong class="text-indigo-800">자율주행 자동차</strong></p>
+                        </div>
+                    </div>
                 </div>
-                <h3 class="text-3xl font-bold mb-4">인공지능의 4가지 핵심 능력</h3>
-                <ul class="text-slate-600 leading-relaxed space-y-3">
-                    <li><i class="fa-solid fa-check text-purple-500 mr-2"></i><strong>인식:</strong> 센서나 마이크로 주변 환경을 알아채고 의미를 파악해요.</li>
-                    <li><i class="fa-solid fa-check text-purple-500 mr-2"></i><strong>학습:</strong> 수많은 경험과 데이터를 바탕으로 스스로 패턴을 익혀요.</li>
-                    <li><i class="fa-solid fa-check text-purple-500 mr-2"></i><strong>추론:</strong> 알고 있는 지식을 이용해 새로운 사실을 이끌어내요.</li>
-                    <li><i class="fa-solid fa-check text-purple-500 mr-2"></i><strong>문제 해결:</strong> 상황에 맞는 가장 좋은 선택(지능적 판단)을 내려 행동해요.</li>
-                </ul>
             </div>
         </div>
     </section>
 
-    <section class="scroll-mt-24 section-card !p-0 overflow-hidden" id="activity">
-        <div class="grid grid-cols-1 md:grid-cols-2">
-            <div class="p-10 md:p-12 space-y-6">
-                <span class="text-indigo-600 font-bold tracking-widest uppercase">Detailed Study</span>
-                <h2 class="text-3xl font-black">기계의 지능을 어떻게 평가할까?</h2>
-                <p class="text-slate-600 leading-relaxed">
-                    <strong>튜링 테스트 (Turing Test)</strong><br>
-                    1950년 앨런 튜링이 제안한 실험이에요. 심사관이 벽 너머의 상대(사람과 컴퓨터)와 채팅을 합니다. 이때 컴퓨터가 사람처럼 자연스럽게 대답해서 심사관을 감쪽같이 속이면, 그 컴퓨터에게 지능이 있다고 인정하는 방식입니다.
-                </p>
-                <div class="bg-rose-50 p-5 rounded-2xl border border-rose-100">
-                    <p class="text-rose-700 font-bold mb-2"><i class="fa-solid fa-triangle-exclamation mr-2"></i>잠깐! 오개념 주의: 진짜 이해한 걸까?</p>
-                    <p class="text-rose-600 text-sm leading-relaxed">
-                        튜링 테스트를 통과했다고 해서 기계가 단어의 '진짜 의미'를 이해한 것은 아닐 수 있어요. <strong>'중국어 방 실험'</strong>에 따르면, 중국어를 전혀 모르는 사람도 규칙이 적힌 책만 보고 알맞은 한자 카드를 내보낼 수 있거든요. 인공지능 역시 의미를 이해한다기보다는, 데이터 패턴을 통해 정답을 찾아내는 것에 가깝습니다.
-                    </p>
+    <section class="scroll-mt-24 space-y-12" id="concept2">
+        <div class="text-center space-y-4">
+            <span class="text-emerald-600 font-bold tracking-widest uppercase">Step 02</span>
+            <h2 class="text-4xl font-black text-slate-900">인간과 기계의 '지능' 작동 원리</h2>
+            <div class="w-20 h-1.5 bg-emerald-500 mx-auto rounded-full"></div>
+            <p class="text-lg text-slate-600 max-w-2xl mx-auto">기계가 사람처럼 지능적으로 행동하려면 어떤 능력이 필요할까요? 인간이 일상에서 문제를 해결하는 과정과 인공지능의 4가지 핵심 요소를 비교해 봅시다.</p>
+        </div>
+
+        <div class="section-card bg-white">
+            <h3 class="text-2xl font-bold mb-8 text-center text-slate-800">상황: "어? 화분의 잎이 노랗게 변하고 있네?"</h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div class="bg-slate-50 border border-slate-200 p-6 rounded-2xl relative pt-8 hover:-translate-y-2 transition-transform">
+                    <div class="absolute -top-5 left-1/2 -translate-x-1/2 w-10 h-10 bg-blue-500 text-white rounded-xl flex items-center justify-center font-bold text-lg shadow-lg">1</div>
+                    <div class="text-center">
+                        <i class="fa-solid fa-eye text-3xl text-blue-500 mb-4"></i>
+                        <h4 class="font-bold text-xl mb-2">인식 <span class="block text-sm font-normal text-slate-500 mt-1">(Recognition)</span></h4>
+                        <p class="text-sm text-slate-600 h-12">환경을 감지하고 개체를 분별하여 의미를 파악함</p>
+                        <div class="mt-4 text-left bg-white p-3 rounded-lg border border-slate-100 shadow-sm text-sm">
+                            <p class="text-slate-800"><strong>사람:</strong> 눈으로 노란 잎사귀 발견</p>
+                            <p class="mt-2 text-blue-600"><strong>AI:</strong> 카메라 센서로 색상 변화 감지 및 식물 객체 식별</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 border border-slate-200 p-6 rounded-2xl relative pt-8 hover:-translate-y-2 transition-transform">
+                    <div class="absolute -top-5 left-1/2 -translate-x-1/2 w-10 h-10 bg-purple-500 text-white rounded-xl flex items-center justify-center font-bold text-lg shadow-lg">2</div>
+                    <div class="text-center">
+                        <i class="fa-solid fa-lightbulb text-3xl text-purple-500 mb-4"></i>
+                        <h4 class="font-bold text-xl mb-2">추론 <span class="block text-sm font-normal text-slate-500 mt-1">(Inference)</span></h4>
+                        <p class="text-sm text-slate-600 h-12">기존 지식을 바탕으로 새로운 사실이나 결론을 유도함</p>
+                        <div class="mt-4 text-left bg-white p-3 rounded-lg border border-slate-100 shadow-sm text-sm">
+                            <p class="text-slate-800"><strong>사람:</strong> 잎이 노란 걸 보니 영양이나 수분 부족일 거야.</p>
+                            <p class="mt-2 text-purple-600"><strong>AI:</strong> 식물 질병 데이터를 검색하여 수분 부족 확률 85%로 계산</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 border border-slate-200 p-6 rounded-2xl relative pt-8 hover:-translate-y-2 transition-transform">
+                    <div class="absolute -top-5 left-1/2 -translate-x-1/2 w-10 h-10 bg-emerald-500 text-white rounded-xl flex items-center justify-center font-bold text-lg shadow-lg">3</div>
+                    <div class="text-center">
+                        <i class="fa-solid fa-book-open text-3xl text-emerald-500 mb-4"></i>
+                        <h4 class="font-bold text-xl mb-2">학습 <span class="block text-sm font-normal text-slate-500 mt-1">(Learning)</span></h4>
+                        <p class="text-sm text-slate-600 h-12">경험을 통해 패턴이나 지식을 습득하고 적응함</p>
+                        <div class="mt-4 text-left bg-white p-3 rounded-lg border border-slate-100 shadow-sm text-sm">
+                            <p class="text-slate-800"><strong>사람:</strong> 지난번에 물을 너무 안 줬더니 죽었었지. 기억하자.</p>
+                            <p class="mt-2 text-emerald-600"><strong>AI:</strong> 과거의 수분 공급 로그와 식물 생존율 데이터를 분석하여 적정 수분량 업데이트</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 border border-slate-200 p-6 rounded-2xl relative pt-8 hover:-translate-y-2 transition-transform">
+                    <div class="absolute -top-5 left-1/2 -translate-x-1/2 w-10 h-10 bg-rose-500 text-white rounded-xl flex items-center justify-center font-bold text-lg shadow-lg">4</div>
+                    <div class="text-center">
+                        <i class="fa-solid fa-gears text-3xl text-rose-500 mb-4"></i>
+                        <h4 class="font-bold text-xl mb-2">문제 해결 <span class="block text-sm font-normal text-slate-500 mt-1">(Problem Solving)</span></h4>
+                        <p class="text-sm text-slate-600 h-12">목표를 달성하기 위해 지능적인 전략을 세워 실행함</p>
+                        <div class="mt-4 text-left bg-white p-3 rounded-lg border border-slate-100 shadow-sm text-sm">
+                            <p class="text-slate-800"><strong>사람:</strong> 화분에 물을 흠뻑 주고 햇빛으로 옮기기</p>
+                            <p class="mt-2 text-rose-600"><strong>AI:</strong> 스마트 밸브를 열어 최적의 물(50ml)을 자동으로 공급</p>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="bg-slate-800 flex flex-col items-center justify-center p-8 text-center text-white">
-                <h3 class="text-2xl font-bold mb-6 text-indigo-300">지능형 에이전트 작동 원리</h3>
-                <div class="space-y-3 w-full max-w-sm">
+            
+            <div class="bg-indigo-50 border-l-4 border-indigo-500 p-5 rounded-r-xl">
+                <p class="text-indigo-900 font-medium">
+                    결국 <span class="font-bold bg-white px-2 py-0.5 rounded">인공지능</span>이란, 위 4가지(인식, 추론, 학습, 문제 해결) 과정을 컴퓨터 프로그램이 인간을 대신하여 스스로 수행할 수 있도록 구현한 기술입니다.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="scroll-mt-24 space-y-12" id="concept3">
+        <div class="text-center space-y-4">
+            <span class="text-purple-600 font-bold tracking-widest uppercase">Step 03</span>
+            <h2 class="text-4xl font-black text-slate-900">지능형 에이전트와 철학적 한계</h2>
+            <div class="w-20 h-1.5 bg-purple-500 mx-auto rounded-full"></div>
+            <p class="text-lg text-slate-600 max-w-2xl mx-auto">기계는 어떻게 행동으로 옮길까요? 그리고 컴퓨터가 정말로 사람처럼 '생각'하고 '이해'하는 것일까요?</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+            
+            <div class="lg:col-span-2 section-card bg-slate-800 text-white !p-8 flex flex-col justify-center">
+                <h3 class="text-2xl font-bold mb-6 text-indigo-300">로봇의 작동 구조 (Agent)</h3>
+                <p class="text-slate-300 text-sm mb-8 leading-relaxed">
+                    자율주행 자동차나 로봇 청소기 같은 <strong>지능형 에이전트</strong>는 다음 3단계를 끊임없이 반복하며 목표를 달성합니다.
+                </p>
+                
+                <div class="space-y-4">
                     <div class="bg-slate-700 p-4 rounded-xl flex items-center justify-between border border-slate-600">
                         <div class="text-left">
-                            <span class="block font-bold text-lg text-white">1. 입력 (인식)</span>
-                            <span class="text-xs text-slate-300">센서로 주변 환경 파악</span>
+                            <span class="block text-xs text-indigo-300 font-bold mb-1">입력 단계</span>
+                            <span class="block font-bold text-lg">1. 환경 감지 (Sensor)</span>
+                            <span class="text-sm text-slate-400">카메라, 레이더, 마이크 등</span>
                         </div>
-                        <i class="fa-solid fa-camera text-2xl text-slate-400"></i>
+                        <i class="fa-solid fa-satellite-dish text-2xl text-slate-400"></i>
                     </div>
-                    <div class="text-slate-500"><i class="fa-solid fa-arrow-down text-xl"></i></div>
-                    <div class="bg-indigo-600 p-4 rounded-xl flex items-center justify-between shadow-lg shadow-indigo-900/50 border border-indigo-500">
-                        <div class="text-left">
-                            <span class="block font-bold text-lg text-white">2. 판단 (학습·추론)</span>
-                            <span class="text-xs text-indigo-200">데이터를 바탕으로 최적의 결정</span>
+                    
+                    <div class="text-center text-slate-500"><i class="fa-solid fa-arrow-down text-xl"></i></div>
+                    
+                    <div class="bg-indigo-600 p-4 rounded-xl flex items-center justify-between shadow-lg shadow-indigo-900/50 border border-indigo-500 relative">
+                        <div class="absolute -left-2 top-1/2 -translate-y-1/2 w-4 h-8 bg-amber-400 rounded-r-lg"></div>
+                        <div class="text-left ml-4">
+                            <span class="block text-xs text-amber-200 font-bold mb-1">인공지능(AI) 단계</span>
+                            <span class="block font-bold text-lg">2. 지능적 판단 (Process)</span>
+                            <span class="text-sm text-indigo-200">데이터 학습 및 최적의 결정</span>
                         </div>
                         <i class="fa-solid fa-microchip text-2xl text-indigo-200"></i>
                     </div>
-                    <div class="text-slate-500"><i class="fa-solid fa-arrow-down text-xl"></i></div>
+                    
+                    <div class="text-center text-slate-500"><i class="fa-solid fa-arrow-down text-xl"></i></div>
+                    
                     <div class="bg-slate-700 p-4 rounded-xl flex items-center justify-between border border-slate-600">
                         <div class="text-left">
-                            <span class="block font-bold text-lg text-white">3. 출력 (행동)</span>
-                            <span class="text-xs text-slate-300">판단에 따라 실제 작동</span>
+                            <span class="block text-xs text-rose-300 font-bold mb-1">출력 단계</span>
+                            <span class="block font-bold text-lg">3. 행동 (Actuator)</span>
+                            <span class="text-sm text-slate-400">모터 이동, 스크린 출력, 스피커 음성</span>
                         </div>
                         <i class="fa-solid fa-robot text-2xl text-slate-400"></i>
                     </div>
                 </div>
-                <p class="mt-6 text-slate-400 text-sm break-keep">로봇 청소기나 챗봇은 이 3단계를 끊임없이 반복하며 목표를 달성합니다.</p>
+            </div>
+            
+            <div class="lg:col-span-3 space-y-6">
+                
+                <div class="section-card !p-8">
+                    <div class="flex items-start space-x-4">
+                        <div class="mt-1 w-10 h-10 bg-sky-100 text-sky-600 rounded-full flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-comments text-lg"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-xl font-bold text-slate-800 mb-2">기계의 지능을 평가하다: 튜링 테스트 (Turing Test)</h4>
+                            <p class="text-slate-600 leading-relaxed text-sm">
+                                1950년 영국의 수학자 앨런 튜링이 제안했습니다. 심사관이 벽 너머의 상대방(사람, 컴퓨터)과 채팅으로만 대화를 나눕니다. 대화가 끝난 후, <strong>심사관이 "누가 컴퓨터인지 모르겠다"고 속는다면 그 컴퓨터는 지능이 있다고 인정</strong>하는 방식입니다. 인공지능 발전의 중요한 기준이 되었습니다.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-card !p-8 border-l-4 border-l-rose-500 bg-rose-50/30">
+                    <div class="flex items-start space-x-4">
+                        <div class="mt-1 w-10 h-10 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-triangle-exclamation text-lg"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-xl font-bold text-rose-800 mb-2">오개념 주의: 인공지능이 진짜 '의미'를 이해할까?</h4>
+                            <p class="text-slate-700 font-medium text-sm mb-3">
+                                튜링 테스트를 통과했다고 해서 기계가 인간처럼 문장의 진짜 의미나 감정을 느낀다고 볼 수는 없습니다. 이를 반박하는 유명한 철학 실험이 바로 <strong>'중국어 방 실험(Chinese Room)'</strong>입니다.
+                            </p>
+                            
+                            <div class="bg-white p-4 rounded-xl border border-rose-100 mb-3 flex flex-col md:flex-row gap-4 items-center">
+                                <div class="bg-slate-100 p-3 rounded-lg text-center flex-1 w-full">
+                                    <span class="block text-xs text-slate-500 mb-1">방 밖 (질문)</span>
+                                    <span class="font-bold text-lg">你好 (안녕)</span>
+                                </div>
+                                <i class="fa-solid fa-arrow-right text-slate-300 hidden md:block"></i>
+                                <div class="bg-rose-50 border border-rose-200 p-3 rounded-lg text-center flex-[2] w-full">
+                                    <span class="block text-xs text-rose-600 font-bold mb-1">방 안의 사람 (중국어 모름)</span>
+                                    <span class="text-sm">"규칙 책을 보자. 你好가 들어오면 很高兴(반가워) 카드를 내보내라고 적혀있네."</span>
+                                </div>
+                                <i class="fa-solid fa-arrow-right text-slate-300 hidden md:block"></i>
+                                <div class="bg-slate-100 p-3 rounded-lg text-center flex-1 w-full">
+                                    <span class="block text-xs text-slate-500 mb-1">방 밖 (답변)</span>
+                                    <span class="font-bold text-lg">很高兴</span>
+                                </div>
+                            </div>
+                            
+                            <p class="text-slate-600 text-sm leading-relaxed">
+                                밖에서 보면 방 안의 사람이 중국어를 완벽히 이해하는 것 같지만, 실제로는 <span class="font-bold bg-amber-200 px-1 rounded">단순히 책의 규칙에 따라 기호(데이터)를 짝지어 배출</span>한 것뿐입니다. 현재의 인공지능 언어 모델들도 이처럼 방대한 데이터를 바탕으로 <strong>가장 확률이 높은 알맞은 답변을 조합</strong>해 내는 원리입니다.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </section>
 
-    <section class="scroll-mt-24 space-y-12" id="application">
+    <section class="scroll-mt-24 space-y-12" id="activity">
         <div class="text-center space-y-4">
-            <h2 class="text-4xl font-black text-slate-900">다양한 분야의 인공지능</h2>
-            <div class="w-20 h-1.5 bg-indigo-500 mx-auto rounded-full"></div>
+            <span class="text-amber-600 font-bold tracking-widest uppercase">Step 04</span>
+            <h2 class="text-4xl font-black text-slate-900">다양한 학문과 실생활 속 AI</h2>
+            <div class="w-20 h-1.5 bg-amber-500 mx-auto rounded-full"></div>
+            <p class="text-lg text-slate-600 max-w-2xl mx-auto">이러한 원리를 바탕으로 인공지능은 여러 분야에서 인간을 돕고 있습니다.</p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="section-card !p-8 hover:-translate-y-2 cursor-default">
-                <div class="w-14 h-14 bg-sky-100 text-sky-600 rounded-2xl flex items-center justify-center mb-5">
-                    <i class="fa-solid fa-eye text-2xl"></i>
+        <div class="bg-gradient-to-r from-slate-900 to-indigo-900 rounded-3xl p-10 text-white shadow-2xl relative overflow-hidden">
+            <i class="fa-solid fa-meteor absolute -top-10 -right-10 text-9xl text-white/10"></i>
+            <div class="relative z-10 grid md:grid-cols-2 gap-8 items-center">
+                <div class="space-y-4">
+                    <span class="inline-block px-3 py-1 bg-amber-400 text-amber-900 font-bold text-sm rounded-full">천문학 분야 놀라운 성과</span>
+                    <h3 class="text-3xl font-black leading-tight">인간 개입 없이 스스로<br>초신성을 발견한 'BTS 봇'</h3>
+                    <p class="text-indigo-100 leading-relaxed text-sm md:text-base">
+                        과거에는 천문학자들이 수백만 장의 우주 사진을 일일이 눈으로 확인하며 초신성(별의 폭발)을 찾아야 했습니다. 하지만 2023년, 미국의 대학에서 개발한 인공지능 <strong>'BTS 봇(Bright Transient Survey Bot)'</strong>은 140만 장의 이미지를 학습한 뒤, <strong>인간의 도움이나 검증 과정 전혀 없이 스스로 'SN2023tyk'라는 초신성을 발견</strong>하고 분류하는 데 성공했습니다. 인공지능의 <span class="text-amber-300 font-bold">자율적인 탐색과 판단 능력</span>을 보여주는 완벽한 사례입니다.
+                    </p>
                 </div>
-                <h3 class="text-xl font-bold mb-3">컴퓨터 비전</h3>
-                <p class="text-slate-600 text-sm leading-relaxed">
-                    시각 데이터를 분석합니다. 자율주행 자동차가 카메라로 표지판과 장애물을 인식하거나, 인공지능이 의료 영상(X-ray)을 보고 질병을 조기에 판독하는 데 사용됩니다.
-                </p>
-            </div>
-            
-            <div class="section-card !p-8 hover:-translate-y-2 cursor-default">
-                <div class="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center mb-5">
-                    <i class="fa-solid fa-comments text-2xl"></i>
+                <div class="bg-white/10 backdrop-blur-sm p-6 rounded-2xl border border-white/20">
+                    <h4 class="font-bold text-amber-300 mb-4 border-b border-white/20 pb-2">기타 실생활 활용 분야</h4>
+                    <ul class="space-y-4 text-sm text-indigo-50">
+                        <li class="flex items-start">
+                            <i class="fa-solid fa-user-doctor text-emerald-400 text-lg mr-3 mt-0.5 w-5 text-center"></i>
+                            <div>
+                                <strong class="text-white block mb-0.5">의학 분야 (의료 영상 판독)</strong>
+                                방대한 CT/MRI 사진 데이터를 학습해 의사보다 빠르고 미세하게 종양을 찾아내어 정확한 진단을 돕습니다.
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa-solid fa-traffic-light text-rose-400 text-lg mr-3 mt-0.5 w-5 text-center"></i>
+                            <div>
+                                <strong class="text-white block mb-0.5">교통 분야 (스마트 교차로)</strong>
+                                카메라 이미지 인식으로 차량 대기열을 실시간으로 분석해 신호를 제어하여 교통 체증을 스스로 줄입니다.
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa-solid fa-gamepad text-sky-400 text-lg mr-3 mt-0.5 w-5 text-center"></i>
+                            <div>
+                                <strong class="text-white block mb-0.5">게임 분야 (지능형 NPC)</strong>
+                                정해진 대사만 반복하던 예전과 달리, 플레이어의 성향에 맞춰 자연스럽게 대화하고 협력하는 NPC가 등장합니다.
+                            </div>
+                        </li>
+                    </ul>
                 </div>
-                <h3 class="text-xl font-bold mb-3">자연어 처리</h3>
-                <p class="text-slate-600 text-sm leading-relaxed">
-                    인간의 언어를 이해하고 새로운 문장을 생성합니다. 우리가 자주 쓰는 대화형 챗봇(ChatGPT 등), 자동 번역기, 긴 문서를 요약해주는 시스템의 핵심 기술입니다.
-                </p>
-            </div>
-
-            <div class="section-card !p-8 hover:-translate-y-2 cursor-default">
-                <div class="w-14 h-14 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center mb-5">
-                    <i class="fa-solid fa-chart-line text-2xl"></i>
-                </div>
-                <h3 class="text-xl font-bold mb-3">데이터 분석 및 예측</h3>
-                <p class="text-slate-600 text-sm leading-relaxed">
-                    방대한 데이터를 학습해 미래를 예측하거나 패턴을 찾습니다. 사용자 취향에 맞춘 영화/음악 추천, 날씨 및 기후 변화 예측, 금융 사기 탐지 등에 널리 활용됩니다.
-                </p>
             </div>
         </div>
     </section>
 
     <section class="scroll-mt-24 space-y-12" id="quiz">
         <div class="text-center">
-            <h2 class="text-4xl font-black">학습 내용 확인하기</h2>
-            <p class="text-slate-500 mt-3 font-medium">문제를 풀며 오늘 배운 내용을 스스로 점검해보세요.</p>
+            <h2 class="text-4xl font-black">학습 내용 스스로 점검하기</h2>
+            <p class="text-slate-600 mt-2">오늘 배운 내용을 문제를 풀며 완벽하게 내 것으로 만들어보세요.</p>
         </div>
 
         <div class="max-w-3xl mx-auto space-y-8">
-            <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 relative overflow-hidden">
-                <div class="absolute top-0 left-0 w-1 h-full bg-indigo-500"></div>
-                <p class="text-xl font-bold mb-6 text-slate-800">Q1. 다음 중 일반 소프트웨어와 비교할 때, '인공지능 소프트웨어'만의 특징으로 가장 알맞은 것은 무엇일까요?</p>
+            <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200">
+                <span class="inline-block px-3 py-1 bg-indigo-100 text-indigo-700 font-bold text-sm rounded-lg mb-4">Q1. 개념 이해: SW의 차이</span>
+                <p class="text-xl font-bold mb-4 text-slate-800">다음 중 '일반 소프트웨어'와 비교했을 때 '인공지능 소프트웨어'만이 가지는 핵심 특징으로 가장 올바른 것은 무엇인가요?</p>
                 <div class="grid grid-cols-1 gap-4">
-                    <button class="quiz-btn" onclick="checkAnswer(this, false, '일반 소프트웨어의 특징입니다. 정해진 코드대로 움직이는 일반 계산기는 인공지능이 아니에요!')">
-                        A. 정해진 수식과 규칙에 따라 빠르고 정확하게 계산만 수행한다.
+                    <button class="quiz-btn" onclick="checkAnswer(this, false, '오답입니다. 개발자가 미리 정해놓은 규칙과 코드(if-then)대로만 작동하는 것은 일반 소프트웨어의 특징입니다.')">
+                        A. 개발자가 미리 입력해둔 규칙과 코드에 따라 예외 없이 정확하게 작동한다.
                     </button>
-                    <button class="quiz-btn" onclick="checkAnswer(this, true, '정답입니다! 인공지능은 방대한 데이터를 스스로 학습하여 새로운 상황에 적응하고 예측할 수 있어요.')">
-                        B. 데이터를 스스로 학습하여 새로운 상황을 추론하고 예측하여 행동한다.
+                    <button class="quiz-btn" onclick="checkAnswer(this, true, '정답입니다! 인공지능은 방대한 데이터를 스스로 학습하여 새로운 상황을 추론하고 판단을 내릴 수 있습니다.')">
+                        B. 방대한 데이터를 스스로 학습하고, 이를 바탕으로 새로운 상황에 대한 예측과 판단을 내린다.
+                    </button>
+                    <button class="quiz-btn" onclick="checkAnswer(this, false, '오답입니다. 버튼을 누르는 대로 정해진 연산만 반복 수행하는 것은 일반 전자계산기입니다.')">
+                        C. 사용자가 입력하는 즉시 정해진 수식에 따라 반복적인 연산을 매우 빠르게 수행한다.
                     </button>
                 </div>
             </div>
 
-            <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 relative overflow-hidden">
-                <div class="absolute top-0 left-0 w-1 h-full bg-purple-500"></div>
-                <p class="text-xl font-bold mb-6 text-slate-800">Q2. 기계가 인간과 같이 지능적인 사고와 대화가 가능한지 판별하기 위해 1950년 앨런 튜링이 제안한 대화형 실험은 무엇일까요?</p>
+            <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200">
+                <span class="inline-block px-3 py-1 bg-emerald-100 text-emerald-700 font-bold text-sm rounded-lg mb-4">Q2. 지능의 4요소 적용</span>
+                <p class="text-xl font-bold mb-4 text-slate-800">지능형 로봇 청소기가 바닥에 새로 놓인 '전선'을 카메라 센서로 발견하고, 이를 장애물로 인지하여 피해갔습니다. 여기서 카메라로 전선을 발견하고 파악한 과정은 지능의 4요소 중 무엇에 해당할까요?</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <button class="quiz-btn" onclick="checkAnswer(this, false, '오답입니다. 학습은 과거의 경험을 바탕으로 새로운 지식을 쌓는 과정입니다.')">A. 학습 (Learning)</button>
+                    <button class="quiz-btn" onclick="checkAnswer(this, true, '정답입니다! 주변 환경을 감지하고 개체를 식별하는 과정을 인식이라고 합니다.')">B. 인식 (Recognition)</button>
+                    <button class="quiz-btn" onclick="checkAnswer(this, false, '오답입니다. 추론은 기존 지식을 바탕으로 새로운 결론을 이끌어내는 과정입니다.')">C. 추론 (Inference)</button>
+                    <button class="quiz-btn" onclick="checkAnswer(this, false, '오답입니다. 문제 해결은 최종적으로 모터를 구동해 전선을 피하는 행동 전체를 아우르는 전략 실행입니다.')">D. 문제 해결 (Problem Solving)</button>
+                </div>
+            </div>
+
+            <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200">
+                <span class="inline-block px-3 py-1 bg-rose-100 text-rose-700 font-bold text-sm rounded-lg mb-4">Q3. 철학적 이해: 오개념 방지</span>
+                <p class="text-xl font-bold mb-4 text-slate-800">존 설의 '중국어 방 실험'이 인공지능에 대해 시사하는 바(알려주는 교훈)로 가장 적절한 것은 무엇인가요?</p>
                 <div class="grid grid-cols-1 gap-4">
-                    <button class="quiz-btn" onclick="checkAnswer(this, true, '정답입니다! 튜링 테스트는 컴퓨터가 사람을 감쪽같이 속일 수 있는지 확인하는 실험이에요.')">
-                        A. 튜링 테스트 (Turing Test)
+                    <button class="quiz-btn" onclick="checkAnswer(this, false, '오답입니다. 튜링 테스트를 반박하기 위해 나온 실험으로, 기계가 완벽히 사람과 같아졌다는 것을 증명하지 않습니다.')">
+                        A. 언어 모델이 튜링 테스트를 통과한다면, 이는 곧 기계가 인간과 완전히 동일한 자아를 가졌음을 증명한다.
                     </button>
-                    <button class="quiz-btn" onclick="checkAnswer(this, false, '중국어 방 실험은 튜링 테스트를 반박하기 위해 나온 존 설의 사고 실험입니다. 의미를 모른 채 흉내만 낼 수도 있다는 것을 보여주죠.')">
-                        B. 중국어 방 실험 (Chinese Room)
+                    <button class="quiz-btn" onclick="checkAnswer(this, true, '정답입니다! 방 안의 사람이 규칙 책만 보고 기호를 맞추듯, AI도 내면적 의미를 이해하기보다 데이터 패턴과 규칙을 따라 알맞은 결과를 도출하는 것에 가깝습니다.')">
+                        B. 기계가 사람처럼 자연스러운 대화를 하더라도, 단어의 진짜 의미를 이해했다기보다는 규칙과 데이터 패턴을 통해 결과물을 조합해 낸 것에 가깝다.
+                    </button>
+                    <button class="quiz-btn" onclick="checkAnswer(this, false, '오답입니다. 실험의 의도와 정반대입니다. 오히려 겉보기엔 완벽한 결과물을 낼 수 있음을 전제로 합니다.')">
+                        C. 인공지능은 규칙을 알려주어도 중국어와 같은 복잡한 외국어는 결코 번역할 수 없다.
                     </button>
                 </div>
             </div>
@@ -298,12 +500,14 @@
 
 </main>
 
-<footer class="bg-slate-900 py-16 px-6 text-center mt-20">
-    <div class="w-12 h-12 bg-white/10 text-white rounded-xl flex items-center justify-center mx-auto mb-6">
-        <i class="fa-solid fa-brain text-xl"></i>
+<footer class="bg-slate-900 py-16 px-6 text-center rounded-t-[3rem] mt-10">
+    <div class="max-w-4xl mx-auto flex flex-col items-center">
+        <div class="w-16 h-16 bg-indigo-500/20 rounded-2xl flex items-center justify-center mb-6">
+            <i class="fa-solid fa-graduation-cap text-3xl text-indigo-400"></i>
+        </div>
+        <p class="text-white font-black text-3xl mb-3 tracking-tight">수고하셨습니다!</p>
+        <p class="text-slate-400 text-lg font-medium">인공지능의 깊은 원리까지 완벽하게 학습했습니다.</p>
     </div>
-    <p class="text-white font-black text-2xl mb-2 tracking-tight">인공지능 기초</p>
-    <p class="text-slate-400 font-medium text-sm">학생 스스로 학습하는 강의노트</p>
 </footer>
 
 <script>
@@ -348,19 +552,19 @@
 
             });
 
-        }, 3500);
+        }, 4500);
     }
 
     function showToast(message, type) {
         const toast = document.createElement('div');
-        toast.className = `fixed bottom-10 left-1/2 -translate-x-1/2 px-8 py-4 rounded-2xl text-white font-bold shadow-2xl transition-all transform translate-y-20 z-[1000] ${type === 'success' ? 'bg-indigo-600' : 'bg-rose-500'}`;
+        toast.className = `fixed bottom-10 left-1/2 -translate-x-1/2 px-8 py-5 rounded-2xl text-white font-bold shadow-2xl transition-all transform translate-y-20 z-[1000] text-center max-w-md w-[90%] md:w-full leading-relaxed border-2 ${type === 'success' ? 'bg-indigo-600 border-indigo-400' : 'bg-rose-500 border-rose-400'}`;
         toast.innerText = message;
         document.body.appendChild(toast);
         setTimeout(() => toast.classList.remove('translate-y-20'), 10);
         setTimeout(() => {
             toast.classList.add('opacity-0', 'translate-y-5');
             setTimeout(() => toast.remove(), 500);
-        }, 3000);
+        }, 4000);
     }
 </script>
 </body>
