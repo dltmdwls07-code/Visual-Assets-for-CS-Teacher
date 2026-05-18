@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>데이터 분석 기초 - 판다스(Pandas) 실습 시뮬레이션</title>
+    <!-- Tailwind CSS & Font Awesome -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Pretendard', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        /* Hero 배경 그라데이션 */
+        .hero-gradient {
+            background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+        }
+
+        /* 스크롤 시 특정 위치부터 상단 고정되는 네비게이션 */
+        .sticky-nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+            background-color: rgba(255, 255, 255, 0.9);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .section-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 2rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05);
+            border: 1px solid #f1f5f9;
+            transition: all 0.3s ease;
+        }
+
+        .quiz-btn {
+            width: 100%;
+            padding: 1.25rem;
+            text-align: left;
+            border-radius: 1rem;
+            border: 2px solid #e2e8f0;
+            background-color: #f8fafc;
+            font-weight: 500;
+            color: #374151;
+            transition: all 0.25s ease;
+        }
+
+        .quiz-btn:hover {
+            background: #f0fdfa;
+            border-color: #5eead4;
+        }
+
+        .quiz-btn.correct {
+            background: #4f46e5;
+            color: white;
+            border-color: #4f46e5;
+        }
+
+        .quiz-btn.wrong {
+            background: #f43f5e;
+            color: white;
+            border-color: #f43f5e;
+        }
+
+        .quiz-btn.disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .quiz-btn.correct:hover,
+        .quiz-btn.wrong:hover {
+            background: inherit;
+            border-color: inherit;
+        }
+
+        /* 커스텀 스크롤바 */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* 시뮬레이션 데이터 테이블 스타일 */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+            text-align: center;
+        }
+        .data-table th {
+            background-color: #f8fafc;
+            padding: 0.75rem;
+            font-weight: 700;
+            border: 1px solid #e2e8f0;
+            color: #475569;
+        }
+        .data-table td {
+            padding: 0.75rem;
+            border: 1px solid #e2e8f0;
+            color: #334155;
+        }
+        .data-table tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+        
+        .sim-result {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="text-slate-900">
+
+<!-- 1. 히어로 섹션 -->
+<header class="hero-gradient text-white py-24 px-6" id="intro">
+    <div class="max-w-4xl mx-auto text-center">
+        <span class="inline-block px-4 py-1.5 bg-white/20 rounded-full font-bold mb-6 backdrop-blur-md">
+            AI 융합 정보 실습
+        </span>
+        <h1 class="text-4xl md:text-6xl font-black mb-6 leading-tight">
+            판다스(Pandas) 기초<br>실습 시뮬레이션
+        </h1>
+        <p class="text-lg md:text-xl opacity-90 font-medium max-w-2xl mx-auto leading-relaxed">
+            파이썬 코드가 데이터를 어떻게 변화시키는지 눈으로 확인해 보세요.<br>
+            음성고등학교 해커톤 참가자 데이터를 활용하여 직접 실행해 봅니다!
+        </p>
+    </div>
+</header>
+
+<!-- 2. 상단 고정 네비게이션 -->
+<nav class="sticky-nav px-6 py-4">
+    <div class="max-w-6xl mx-auto flex justify-between items-center">
+        <div class="flex items-center space-x-2">
+            <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white">
+                <i class="fa-solid fa-code"></i>
+            </div>
+            <span class="font-black text-xl tracking-tight text-slate-800">Pandas 실습노트</span>
+        </div>
+        <div class="hidden md:flex space-x-8 font-bold text-slate-500">
+            <a class="hover:text-indigo-600 transition" href="#intro">도입</a>
+            <a class="hover:text-indigo-600 transition" href="#concept1">불러오기</a>
+            <a class="hover:text-indigo-600 transition" href="#concept2">살펴보기</a>
+            <a class="hover:text-indigo-600 transition" href="#concept3">다루기</a>
+            <a class="hover:text-indigo-600 transition" href="#quiz">자가진단</a>
+        </div>
+    </div>
+</nav>
+
+<main class="max-w-5xl mx-auto px-6 py-16 space-y-20">
+
+    <!-- 오늘의 실습 데이터 안내 -->
+    <section class="section-card bg-indigo-50 border-indigo-100">
+        <div class="flex items-start space-x-4">
+            <div class="w-12 h-12 bg-indigo-600 text-white rounded-2xl flex items-center justify-center flex-shrink-0">
+                <i class="fa-solid fa-database text-2xl"></i>
+            </div>
+            <div>
+                <h3 class="text-2xl font-bold mb-2">오늘의 실습 데이터: 해커톤 참가자 명단</h3>
+                <p class="text-slate-600 leading-relaxed mb-4">
+                    데이터 분석을 시작하려면 분석할 '표(데이터)'가 필요합니다. 오늘은 27명의 학생으로 구성된 해커톤 참가자 데이터를 사용합니다.<br>
+                    <span class="text-sm text-slate-500">* 참고: 데이터의 '실력' 기준(상/중/하)은 절대적인 기준이 아니라 <strong>각 학년별 상대적인 수준</strong>을 의미합니다.</span>
+                </p>
+                <div class="overflow-x-auto rounded-xl border border-slate-200">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>이름</th>
+                                <th>학년</th>
+                                <th>실력</th>
+                                <th>영양제</th>
+                                <th>수면시간</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>김철수</td><td>1</td><td>상</td><td>오메가3</td><td>6</td></tr>
+                            <tr><td>이영희</td><td>2</td><td>중</td><td>비타민D</td><td>8</td></tr>
+                            <tr><td>박지민</td><td>1</td><td>하</td><td>없음</td><td>5</td></tr>
+                            <tr><td>최동원</td><td>3</td><td>상</td><td>오메가3</td><td>7</td></tr>
+                            <tr><td>정수빈</td><td>2</td><td>상</td><td>비타민D</td><td>6</td></tr>
+                            <tr><td colspan="5" class="text-slate-400">... (총 27개 데이터) ...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 섹션 1: 불러오기 -->
+    <section class="scroll-mt-24 space-y-8" id="concept1">
+        <div class="text-center space-y-4 mb-10">
+            <h2 class="text-3xl font-black text-slate-900">1. 데이터 준비하기 (Import & Read)</h2>
+            <div class="w-16 h-1.5 bg-indigo-500 mx-auto rounded-full"></div>
+        </div>
+
+        <div class="section-card">
+            <h3 class="text-2xl font-bold mb-4">판다스 시작하고 데이터 표로 만들기</h3>
+            <p class="text-slate-600 mb-6">
+                파이썬에서 데이터를 표 형태로 다루려면 <span class="font-bold bg-amber-200 px-1 rounded">pandas</span>라는 도구를 가져와야 합니다. 보통 줄여서 <span class="font-bold bg-amber-200 px-1 rounded">pd</span>라고 부릅니다. 그 후, CSV(표 형태의 파일) 데이터를 읽어와서 <span class="font-bold bg-amber-200 px-1 rounded">df</span>(데이터프레임, DataFrame)라는 이름의 변수에 저장합니다.
+            </p>
+
+            <!-- 시뮬레이션 UI -->
+            <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="font-bold text-slate-700"><i class="fa-solid fa-laptop-code mr-2"></i>코드 작성 및 실행</span>
+                </div>
+                
+                <div class="bg-slate-800 rounded-xl p-4 text-white mb-6 relative shadow-md">
+                    <div class="flex justify-between items-center mb-3 border-b border-slate-700 pb-2">
+                        <span class="text-slate-400 text-sm font-mono">python_code.py</span>
+                        <button onclick="runSimulation('sim1-result', this)" class="bg-indigo-500 hover:bg-indigo-600 text-white text-sm px-4 py-1.5 rounded-lg transition-colors font-bold flex items-center">
+                            <i class="fa-solid fa-play mr-2"></i>실행
+                        </button>
+                    </div>
+                    <pre><code class="language-python font-mono text-sm leading-relaxed"><span class="text-pink-400">import</span> pandas <span class="text-pink-400">as</span> pd
+
+<span class="text-slate-400"># hackathon.csv 파일을 읽어서 df라는 이름표를 붙입니다.</span>
+df = pd.read_csv(<span class="text-green-300">'hackathon.csv'</span>)
+df</code></pre>
+                </div>
+
+                <!-- 시뮬레이션 결과 -->
+                <div id="sim1-result" class="sim-result">
+                    <div class="bg-white border border-emerald-200 rounded-xl p-4 shadow-sm">
+                        <div class="text-emerald-600 font-bold mb-2 text-sm"><i class="fa-solid fa-check-circle mr-1"></i>실행 결과 (데이터프레임 생성 완료!)</div>
+                        <div class="overflow-x-auto">
+                            <table class="data-table">
+                                <thead><tr><th></th><th>이름</th><th>학년</th><th>실력</th><th>영양제</th><th>수면시간</th></tr></thead>
+                                <tbody>
+                                    <tr><td class="font-bold text-slate-400">0</td><td>김철수</td><td>1</td><td>상</td><td>오메가3</td><td>6</td></tr>
+                                    <tr><td class="font-bold text-slate-400">1</td><td>이영희</td><td>2</td><td>중</td><td>비타민D</td><td>8</td></tr>
+                                    <tr><td class="font-bold text-slate-400">2</td><td>박지민</td><td>1</td><td>하</td><td>없음</td><td>5</td></tr>
+                                    <tr><td colspan="6" class="text-slate-400">... (총 27행) ...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 섹션 2: 살펴보기 -->
+    <section class="scroll-mt-24 space-y-8" id="concept2">
+        <div class="text-center space-y-4 mb-10">
+            <h2 class="text-3xl font-black text-slate-900">2. 데이터 살펴보기 (head, tail, info)</h2>
+            <div class="w-16 h-1.5 bg-indigo-500 mx-auto rounded-full"></div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- head() 시뮬레이션 -->
+            <div class="section-card flex flex-col">
+                <h3 class="text-xl font-bold mb-2">위에서부터 데이터 보기</h3>
+                <p class="text-slate-600 mb-4 text-sm flex-grow">
+                    데이터가 너무 많을 때 <span class="font-bold bg-amber-200 px-1 rounded">df.head()</span>를 사용하면 위에서부터 5개만 보여줍니다. 괄호 안에 숫자를 넣으면 그 숫자만큼 보여줍니다.
+                </p>
+                
+                <div class="bg-slate-800 rounded-xl p-4 text-white mb-4">
+                    <div class="flex justify-between items-center mb-3 border-b border-slate-700 pb-2">
+                        <button onclick="runSimulation('sim2-head', this)" class="bg-indigo-500 hover:bg-indigo-600 px-3 py-1 text-sm rounded transition font-bold"><i class="fa-solid fa-play mr-1"></i>실행</button>
+                    </div>
+                    <pre><code class="language-python text-sm font-mono">df.head(2) <span class="text-slate-400"># 위에서 2개만 출력</span></code></pre>
+                </div>
+                <div id="sim2-head" class="sim-result bg-white border border-slate-200 rounded-xl p-3">
+                    <table class="data-table">
+                        <thead><tr><th></th><th>이름</th><th>학년</th><th>실력</th><th>영양제</th><th>수면시간</th></tr></thead>
+                        <tbody>
+                            <tr><td class="font-bold text-slate-400">0</td><td>김철수</td><td>1</td><td>상</td><td>오메가3</td><td>6</td></tr>
+                            <tr><td class="font-bold text-slate-400">1</td><td>이영희</td><td>2</td><td>중</td><td>비타민D</td><td>8</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- tail() 시뮬레이션 -->
+            <div class="section-card flex flex-col">
+                <h3 class="text-xl font-bold mb-2">아래에서부터 데이터 보기</h3>
+                <p class="text-slate-600 mb-4 text-sm flex-grow">
+                    <span class="font-bold bg-amber-200 px-1 rounded">df.tail()</span>은 맨 아래에서부터 5개를 보여줍니다. 데이터가 끝까지 잘 들어왔는지 확인할 때 유용합니다.
+                </p>
+                
+                <div class="bg-slate-800 rounded-xl p-4 text-white mb-4">
+                    <div class="flex justify-between items-center mb-3 border-b border-slate-700 pb-2">
+                        <button onclick="runSimulation('sim2-tail', this)" class="bg-indigo-500 hover:bg-indigo-600 px-3 py-1 text-sm rounded transition font-bold"><i class="fa-solid fa-play mr-1"></i>실행</button>
+                    </div>
+                    <pre><code class="language-python text-sm font-mono">df.tail(2) <span class="text-slate-400"># 아래에서 2개만 출력</span></code></pre>
+                </div>
+                <div id="sim2-tail" class="sim-result bg-white border border-slate-200 rounded-xl p-3">
+                    <table class="data-table">
+                        <thead><tr><th></th><th>이름</th><th>학년</th><th>실력</th><th>영양제</th><th>수면시간</th></tr></thead>
+                        <tbody>
+                            <tr><td class="font-bold text-slate-400">25</td><td>홍길동</td><td>3</td><td>상</td><td>오메가3</td><td>5</td></tr>
+                            <tr><td class="font-bold text-slate-400">26</td><td>이순신</td><td>2</td><td>중</td><td>없음</td><td>7</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-card mt-8">
+            <h3 class="text-xl font-bold mb-2">데이터의 전체적인 정보 확인하기</h3>
+            <p class="text-slate-600 mb-4 text-sm">
+                <span class="font-bold bg-amber-200 px-1 rounded">df.info()</span>를 실행하면 행(데이터)의 총 개수, 열(속성)의 종류, 그리고 데이터가 비어있는지(결측치) 여부를 한눈에 확인할 수 있습니다.
+            </p>
+            <div class="bg-slate-800 rounded-xl p-4 text-white mb-4">
+                <div class="flex justify-between items-center mb-3 border-b border-slate-700 pb-2">
+                    <button onclick="runSimulation('sim2-info', this)" class="bg-indigo-500 hover:bg-indigo-600 px-3 py-1 text-sm rounded transition font-bold"><i class="fa-solid fa-play mr-1"></i>실행</button>
+                </div>
+                <pre><code class="language-python text-sm font-mono">df.info()</code></pre>
+            </div>
+            <div id="sim2-info" class="sim-result bg-slate-900 text-green-400 border border-slate-700 rounded-xl p-4 font-mono text-sm leading-relaxed overflow-x-auto">
+&lt;class 'pandas.core.frame.DataFrame'&gt;<br>
+RangeIndex: 27 entries, 0 to 26<br>
+Data columns (total 5 columns):<br>
+ #   Column  Non-Null Count  Dtype <br>
+---  ------  --------------  ----- <br>
+ 0   이름      27 non-null     object<br>
+ 1   학년      27 non-null     int64 <br>
+ 2   실력      27 non-null     object<br>
+ 3   영양제    27 non-null     object<br>
+ 4   수면시간   27 non-null     int64 <br>
+dtypes: int64(2), object(3)<br>
+memory usage: 1.2+ KB
+            </div>
+        </div>
+    </section>
+
+    <!-- 섹션 3: 추출 및 삭제 -->
+    <section class="scroll-mt-24 space-y-8" id="concept3">
+        <div class="text-center space-y-4 mb-10">
+            <h2 class="text-3xl font-black text-slate-900">3. 데이터 다루기 (추출과 삭제)</h2>
+            <div class="w-16 h-1.5 bg-indigo-500 mx-auto rounded-full"></div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- 특정 열 추출 -->
+            <div class="section-card">
+                <h3 class="text-xl font-bold mb-2"><i class="fa-solid fa-columns text-indigo-500 mr-2"></i>특정 열만 뽑아내기</h3>
+                <p class="text-slate-600 mb-4 text-sm">
+                    표 전체에서 하나의 속성(열)만 보고 싶다면 대괄호 안에 속성명을 적어줍니다.
+                </p>
+                <div class="bg-slate-800 rounded-xl p-4 text-white mb-4">
+                    <div class="flex justify-between items-center mb-3 border-b border-slate-700 pb-2">
+                        <button onclick="runSimulation('sim3-col', this)" class="bg-indigo-500 hover:bg-indigo-600 px-3 py-1 text-sm rounded transition font-bold"><i class="fa-solid fa-play mr-1"></i>실행</button>
+                    </div>
+                    <pre><code class="language-python text-sm font-mono">df_new = df[<span class="text-green-300">'실력'</span>]
+df_new.head(3)</code></pre>
+                </div>
+                <div id="sim3-col" class="sim-result bg-white border border-slate-200 rounded-xl p-3">
+                    <table class="data-table w-1/2">
+                        <thead><tr><th></th><th>실력</th></tr></thead>
+                        <tbody>
+                            <tr><td class="font-bold text-slate-400">0</td><td>상</td></tr>
+                            <tr><td class="font-bold text-slate-400">1</td><td>중</td></tr>
+                            <tr><td class="font-bold text-slate-400">2</td><td>하</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 조건에 맞는 행 추출 -->
+            <div class="section-card">
+                <h3 class="text-xl font-bold mb-2"><i class="fa-solid fa-filter text-indigo-500 mr-2"></i>조건에 맞는 데이터 찾기</h3>
+                <p class="text-slate-600 mb-4 text-sm">
+                    <span class="font-bold bg-amber-200 px-1 rounded">query()</span>를 사용하면 조건에 맞는 행만 골라낼 수 있습니다.
+                </p>
+                <div class="bg-slate-800 rounded-xl p-4 text-white mb-4">
+                    <div class="flex justify-between items-center mb-3 border-b border-slate-700 pb-2">
+                        <button onclick="runSimulation('sim3-query', this)" class="bg-indigo-500 hover:bg-indigo-600 px-3 py-1 text-sm rounded transition font-bold"><i class="fa-solid fa-play mr-1"></i>실행</button>
+                    </div>
+                    <pre><code class="language-python text-sm font-mono"><span class="text-slate-400"># 수면시간이 7시간 이상인 학생만 추출</span>
+df.query(<span class="text-green-300">'수면시간 &gt;= 7'</span>)</code></pre>
+                </div>
+                <div id="sim3-query" class="sim-result bg-white border border-slate-200 rounded-xl p-3">
+                    <table class="data-table">
+                        <thead><tr><th></th><th>이름</th><th>학년</th><th>실력</th><th>영양제</th><th>수면시간</th></tr></thead>
+                        <tbody>
+                            <tr><td class="font-bold text-slate-400">1</td><td>이영희</td><td>2</td><td>중</td><td>비타민D</td><td>8</td></tr>
+                            <tr><td class="font-bold text-slate-400">3</td><td>최동원</td><td>3</td><td>상</td><td>오메가3</td><td>7</td></tr>
+                            <tr><td class="font-bold text-slate-400">26</td><td>이순신</td><td>2</td><td>중</td><td>없음</td><td>7</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- 오개념 방지 박스 -->
+        <div class="bg-rose-50 border-l-4 border-rose-500 p-6 rounded-r-xl">
+            <h3 class="text-lg font-bold text-rose-700 mb-2"><i class="fa-solid fa-triangle-exclamation mr-2"></i>잠깐! 자주 헷갈리는 부분 (오개념 방지)</h3>
+            <p class="text-slate-700 mb-4">
+                데이터를 삭제할 때 <span class="font-bold bg-amber-200 px-1 rounded">df.drop()</span>을 사용합니다. 하지만 삭제 명령을 내려도 <strong>원본 데이터(df)는 스스로 변경되지 않습니다!</strong><br>
+                삭제한 결과를 저장하려면 1) 새로운 변수에 저장하거나 2) <span class="font-bold bg-amber-200 px-1 rounded">inplace=True</span> 옵션을 꼭 써야 합니다.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                <div class="bg-white p-4 rounded border border-rose-200">
+                    <span class="text-rose-500 font-bold"><i class="fa-solid fa-xmark mr-1"></i>원본이 안 바뀜</span><br>
+                    <code>df.drop('영양제', axis=1)</code>
+                </div>
+                <div class="bg-white p-4 rounded border border-emerald-200">
+                    <span class="text-emerald-500 font-bold"><i class="fa-solid fa-check mr-1"></i>올바른 방법</span><br>
+                    <code>new_df = df.drop('영양제', axis=1)</code><br>
+                    <code>df.drop('영양제', axis=1, inplace=True)</code>
+                </div>
+            </div>
+        </div>
+
+        <!-- 열 삭제 / 행 삭제 시뮬레이션 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="section-card">
+                <h3 class="text-xl font-bold mb-2">열(세로) 삭제하기</h3>
+                <p class="text-slate-600 mb-4 text-sm">
+                    속성 전체를 지울 때는 <span class="font-bold bg-amber-200 px-1 rounded">axis=1</span>을 적어줍니다. '영양제' 열을 지워봅시다.
+                </p>
+                <div class="bg-slate-800 rounded-xl p-4 text-white mb-4">
+                    <div class="flex justify-between items-center mb-3 border-b border-slate-700 pb-2">
+                        <button onclick="runSimulation('sim3-dropcol', this)" class="bg-indigo-500 hover:bg-indigo-600 px-3 py-1 text-sm rounded transition font-bold"><i class="fa-solid fa-play mr-1"></i>실행</button>
+                    </div>
+                    <pre><code class="language-python text-sm font-mono">new_df = df.drop(<span class="text-green-300">'영양제'</span>, axis=1)
+new_df.head(2)</code></pre>
+                </div>
+                <div id="sim3-dropcol" class="sim-result bg-white border border-slate-200 rounded-xl p-3">
+                    <table class="data-table">
+                        <thead><tr><th></th><th>이름</th><th>학년</th><th>실력</th><th>수면시간</th></tr></thead>
+                        <tbody>
+                            <tr><td class="font-bold text-slate-400">0</td><td>김철수</td><td>1</td><td>상</td><td>6</td></tr>
+                            <tr><td class="font-bold text-slate-400">1</td><td>이영희</td><td>2</td><td>중</td><td>8</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <h3 class="text-xl font-bold mb-2">행(가로) 삭제하기</h3>
+                <p class="text-slate-600 mb-4 text-sm">
+                    특정 데이터 한 줄을 지울 때는 인덱스(번호)와 <span class="font-bold bg-amber-200 px-1 rounded">axis=0</span>을 적어줍니다. 맨 첫번째 데이터(인덱스 0)를 지워봅시다.
+                </p>
+                <div class="bg-slate-800 rounded-xl p-4 text-white mb-4">
+                    <div class="flex justify-between items-center mb-3 border-b border-slate-700 pb-2">
+                        <button onclick="runSimulation('sim3-droprow', this)" class="bg-indigo-500 hover:bg-indigo-600 px-3 py-1 text-sm rounded transition font-bold"><i class="fa-solid fa-play mr-1"></i>실행</button>
+                    </div>
+                    <pre><code class="language-python text-sm font-mono">df.drop(0, axis=0, inplace=<span class="text-pink-400">True</span>)
+df.head(2)</code></pre>
+                </div>
+                <div id="sim3-droprow" class="sim-result bg-white border border-slate-200 rounded-xl p-3">
+                    <table class="data-table">
+                        <thead><tr><th></th><th>이름</th><th>학년</th><th>실력</th><th>영양제</th><th>수면시간</th></tr></thead>
+                        <tbody>
+                            <tr><td class="font-bold text-slate-400">1</td><td>이영희</td><td>2</td><td>중</td><td>비타민D</td><td>8</td></tr>
+                            <tr><td class="font-bold text-slate-400">2</td><td>박지민</td><td>1</td><td>하</td><td>없음</td><td>5</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 섹션 4: 퀴즈 -->
+    <section class="scroll-mt-24 space-y-8" id="quiz">
+        <div class="text-center mb-10">
+            <h2 class="text-4xl font-black">학습 내용 확인하기</h2>
+            <p class="text-slate-500 mt-2">오늘 시뮬레이션한 내용을 바탕으로 퀴즈를 풀어보세요.</p>
+        </div>
+
+        <div class="max-w-3xl mx-auto space-y-6">
+            <!-- 퀴즈 1 -->
+            <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
+                <p class="text-xl font-bold mb-4">Q1. 데이터가 너무 많아서 위에서 5개의 행만 미리 살펴보고 싶습니다. 올바른 코드는 무엇인가요?</p>
+                <div class="grid grid-cols-1 gap-3">
+                    <button class="quiz-btn" onclick="checkAnswer(this, true, '정답입니다! head()는 위에서부터 데이터를 보여줍니다.')">df.head()</button>
+                    <button class="quiz-btn" onclick="checkAnswer(this, false, 'tail()은 맨 아래쪽 데이터를 보여줍니다.')">df.tail()</button>
+                    <button class="quiz-btn" onclick="checkAnswer(this, false, 'info()는 데이터의 구조와 정보 요약을 보여줍니다.')">df.info()</button>
+                </div>
+            </div>
+
+            <!-- 퀴즈 2 -->
+            <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
+                <p class="text-xl font-bold mb-4">Q2. '학년'이라는 특정 열(속성)을 삭제하려고 합니다. 빈칸에 들어갈 옵션은 무엇일까요?<br>
+                <code class="bg-slate-100 px-2 py-1 rounded text-sm text-indigo-600 mt-2 inline-block">df.drop('학년', _______, inplace=True)</code></p>
+                <div class="grid grid-cols-1 gap-3">
+                    <button class="quiz-btn" onclick="checkAnswer(this, false, 'axis=0은 행(가로줄)을 삭제할 때 사용합니다.')">axis=0</button>
+                    <button class="quiz-btn" onclick="checkAnswer(this, true, '정답입니다! 열(속성)을 삭제할 때는 axis=1을 사용합니다.')">axis=1</button>
+                </div>
+            </div>
+
+            <!-- 퀴즈 3 -->
+            <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
+                <p class="text-xl font-bold mb-4">Q3. 해커톤 참가자 중 학년이 1학년인 학생들만 추출하고 싶습니다. 알맞은 코드는 무엇인가요?</p>
+                <div class="grid grid-cols-1 gap-3">
+                    <button class="quiz-btn" onclick="checkAnswer(this, false, '이 코드는 학년 열 전체를 삭제해 버립니다.')">df.drop('학년', axis=1)</button>
+                    <button class="quiz-btn" onclick="checkAnswer(this, true, '정답입니다! query()를 사용하여 조건에 맞는 행을 추출합니다.')">df.query('학년 == 1')</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<footer class="bg-slate-900 py-16 px-6 text-center">
+    <p class="text-white font-black text-2xl mb-2">AI 융합 정보 실습</p>
+    <p class="text-slate-400">판다스(Pandas) 기초 실습 시뮬레이션</p>
+</footer>
+
+<script>
+    // 시뮬레이션 실행 기능
+    function runSimulation(targetId, btnElement) {
+        const target = document.getElementById(targetId);
+        
+        // 결과 영역 보이기
+        target.style.display = 'block';
+        
+        // 버튼 상태 변경
+        btnElement.innerHTML = '<i class="fa-solid fa-check mr-2"></i>실행 완료';
+        btnElement.classList.remove('bg-indigo-500', 'hover:bg-indigo-600');
+        btnElement.classList.add('bg-emerald-500', 'hover:bg-emerald-600');
+        
+        // 1초 후 버튼 원상복구
+        setTimeout(() => {
+            btnElement.innerHTML = '<i class="fa-solid fa-play mr-2"></i>다시 실행';
+            btnElement.classList.remove('bg-emerald-500', 'hover:bg-emerald-600');
+            btnElement.classList.add('bg-indigo-500', 'hover:bg-indigo-600');
+        }, 2000);
+    }
+
+    // 퀴즈 정답 확인 기능
+    function checkAnswer(btn, isCorrect, message) {
+        const container = btn.parentElement;
+        const buttons = container.querySelectorAll('.quiz-btn');
+
+        buttons.forEach(b => {
+            if (!b.dataset.label) {
+                b.dataset.label = b.textContent;
+            }
+            b.classList.remove('correct', 'wrong');
+            b.classList.add('disabled');
+        });
+
+        if (isCorrect) {
+            btn.classList.add('correct');
+            btn.innerHTML = `<i class="fa-solid fa-circle-check mr-2"></i>${btn.dataset.label}`;
+        } else {
+            btn.classList.add('wrong');
+            btn.innerHTML = `<i class="fa-solid fa-circle-xmark mr-2"></i>${btn.dataset.label}`;
+        }
+
+        showToast(message, isCorrect ? 'success' : 'error');
+
+        setTimeout(() => {
+            buttons.forEach(b => {
+                b.classList.remove('correct', 'wrong', 'disabled');
+                b.innerHTML = b.dataset.label;
+            });
+        }, 3000);
+    }
+
+    // 토스트 메시지 기능
+    function showToast(message, type) {
+        const toast = document.createElement('div');
+        toast.className = `fixed bottom-10 left-1/2 -translate-x-1/2 px-8 py-4 rounded-2xl text-white font-bold shadow-2xl transition-all transform translate-y-20 z-[1000] ${type === 'success' ? 'bg-emerald-500' : 'bg-rose-500'}`;
+        toast.innerText = message;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.classList.remove('translate-y-20'), 10);
+        setTimeout(() => {
+            toast.classList.add('opacity-0', 'translate-y-5');
+            setTimeout(() => toast.remove(), 500);
+        }, 2500);
+    }
+</script>
+</body>
+</html>
